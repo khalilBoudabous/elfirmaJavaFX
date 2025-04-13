@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ModifierUtilisateurController"
+            prefHeight="400" prefWidth="600">
+
+    <VBox spacing="10" layoutX="20" layoutY="20">
+        <TextField fx:id="nomField" promptText="Nom"/>
+        <TextField fx:id="prenomField" promptText="Prénom"/>
+        <TextField fx:id="emailField" promptText="Email"/>
+        <PasswordField fx:id="passwordField" promptText="Mot de passe"/>
+        <TextField fx:id="telephoneField" promptText="Téléphone"/>
+
+        <!-- Champs spécifiques -->
+        <VBox fx:id="formAgriculteur" visible="false">
+            <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation"/>
+        </VBox>
+
+        <VBox fx:id="formExpert" visible="false">
+            <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise"/>
+        </VBox>
+
+        <VBox fx:id="formFournisseur" visible="false">
+            <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise"/>
+            <TextField fx:id="idFiscaleField" promptText="ID fiscale"/>
+            <TextField fx:id="categorieProduitField" promptText="Catégorie produit"/>
+        </VBox>
+
+        <Button text="Sauvegarder" onAction="#sauvegarderModifications"/>
+        <Button text="Retour" onAction="#retourListe"/>
+    </VBox>
+</AnchorPane>

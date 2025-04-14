@@ -7,9 +7,10 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ListeUtilisateursController"
-            prefHeight="400" prefWidth="800">
+            prefHeight="400" prefWidth="800"
+            stylesheets="@styles.css">
 
-    <VBox spacing="10" layoutX="20" layoutY="20">
+    <VBox spacing="20" layoutX="30" layoutY="30">
         <TableView fx:id="userTable">
             <columns>
                 <TableColumn text="Nom" prefWidth="100">
@@ -24,7 +25,7 @@
                 <TableColumn text="Rôle" prefWidth="100">
                     <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
                 </TableColumn>
-                <TableColumn text="Action" prefWidth="150">
+                <TableColumn text="Action" prefWidth="230">
                     <cellFactory>
                     </cellFactory>
                 </TableColumn>

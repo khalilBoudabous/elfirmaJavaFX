@@ -29,6 +29,7 @@ public class ListeUtilisateursController {
     public void initialize() {
         configureTableColumns();
         chargerUtilisateurs();
+
     }
 
     private void chargerUtilisateurs() {

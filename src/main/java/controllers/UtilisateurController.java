@@ -184,4 +184,19 @@ public class UtilisateurController {
             alert.showAndWait();
         }
     }
+    @FXML
+    private void goToLoginPage() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml")); // Adjust path if needed
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) nomField.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setContentText("Could not load login page: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
 }

@@ -199,7 +199,42 @@ public class UtilisateurService {
         if(u instanceof Expert) return "[\"ROLE_EXPERT\"]";
         return "[\"ROLE_ADMIN\"]";
     }
+    public Utilisateur checkLogin(String email, String password) {
+        String req = "SELECT * FROM utilisateur WHERE email = ? AND password = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String type = rs.getString("type");
+                Utilisateur u = createUserByType(type);
 
+                // Set common fields
+                u.setId(rs.getLong("id"));
+                u.setNom(rs.getString("nom"));
+                u.setPrenom(rs.getString("prenom"));
+                u.setEmail(rs.getString("email"));
+                u.setTelephone(rs.getString("telephone"));
+                u.setPassword(rs.getString("password"));
+
+                // Set specific fields
+                if (u instanceof Agriculteur a) {
+                    a.setAdresseExploitation(rs.getString("adresse_exploitation"));
+                } else if (u instanceof Fournisseur f) {
+                    f.setNomEntreprise(rs.getString("nom_entreprise"));
+                    f.setIdFiscale(rs.getString("id_fiscale"));
+                    f.setCategorieProduit(rs.getString("categorie_produit"));
+                } else if (u instanceof Expert e) {
+                    e.setDomaineExpertise(rs.getString("domaine_expertise"));
+                }
+                return u;
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error during login: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }

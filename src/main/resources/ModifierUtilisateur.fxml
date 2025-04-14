@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ModifierUtilisateurController"
-            prefHeight="400" prefWidth="600">
+            prefHeight="400" prefWidth="600"
+            stylesheets="@styles.css">
 
-    <VBox spacing="10" layoutX="20" layoutY="20">
-        <TextField fx:id="nomField" promptText="Nom"/>
-        <TextField fx:id="prenomField" promptText="Prénom"/>
-        <TextField fx:id="emailField" promptText="Email"/>
-        <PasswordField fx:id="passwordField" promptText="Mot de passe"/>
-        <TextField fx:id="telephoneField" promptText="Téléphone"/>
+    <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+            <TextField fx:id="nomField" promptText="Nom" styleClass="form-field"/>
+            <TextField fx:id="prenomField" promptText="Prénom" styleClass="form-field"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="form-field"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="form-field"/>
+            <TextField fx:id="telephoneField" promptText="Téléphone" styleClass="form-field"/>
 
-        <!-- Champs spécifiques -->
-        <VBox fx:id="formAgriculteur" visible="false">
-            <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation"/>
+            <!-- Specific fields -->
+            <VBox fx:id="formAgriculteur" visible="false" alignment="CENTER">
+                <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation" styleClass="form-field"/>
+            </VBox>
+
+            <VBox fx:id="formExpert" visible="false" alignment="CENTER">
+                <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise" styleClass="form-field"/>
+            </VBox>
+
+            <VBox fx:id="formFournisseur" visible="false" alignment="CENTER">
+                <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise" styleClass="form-field"/>
+                <TextField fx:id="idFiscaleField" promptText="ID fiscale" styleClass="form-field"/>
+                <TextField fx:id="categorieProduitField" promptText="Catégorie produit" styleClass="form-field"/>
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Sauvegarder" onAction="#sauvegarderModifications" styleClass="button"/>
+                <Button text="Retour" onAction="#retourListe" styleClass="button"/>
+            </HBox>
         </VBox>
-
-        <VBox fx:id="formExpert" visible="false">
-            <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise"/>
-        </VBox>
-
-        <VBox fx:id="formFournisseur" visible="false">
-            <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise"/>
-            <TextField fx:id="idFiscaleField" promptText="ID fiscale"/>
-            <TextField fx:id="categorieProduitField" promptText="Catégorie produit"/>
-        </VBox>
-
-        <Button text="Sauvegarder" onAction="#sauvegarderModifications"/>
-        <Button text="Retour" onAction="#retourListe"/>
-    </VBox>
+    </StackPane>
 </AnchorPane>

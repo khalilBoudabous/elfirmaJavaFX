@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import utils.RegexValidator?>
-
-<?import utils.RegexValidator?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.UtilisateurController"
-            prefHeight="400" prefWidth="600">
+            prefHeight="400" prefWidth="600"
+            stylesheets="@styles.css">
 
-    <VBox spacing="10" layoutX="20" layoutY="20">
-        <!-- Champs communs -->
-        <TextField fx:id="nomField" promptText="Nom" />
-        <TextField fx:id="prenomField" promptText="Prénom" />
-        <TextField fx:id="emailField" promptText="Email">
-        </TextField>
-        <PasswordField fx:id="passwordField" promptText="Mot de passe" />
-        <TextField fx:id="telephoneField" promptText="Téléphone">
-        </TextField>
-        <!-- Choix du rôle -->
-        <Label text="Rôle :" />
-        <HBox spacing="10">
-            <RadioButton fx:id="radioAgriculteur" text="Agriculteur" toggleGroup="$roleGroup"/>
-            <RadioButton fx:id="radioExpert" text="Expert" toggleGroup="$roleGroup"/>
-            <RadioButton fx:id="radioFournisseur" text="Fournisseur" toggleGroup="$roleGroup"/>
-        </HBox>
+    <!-- Centered content wrapper -->
+    <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+            <!-- Add style-class to labels -->
+            <Label text="Rôle :" styleClass="form-label"/>
 
-        <!-- Champs spécifiques dynamiques -->
-        <VBox fx:id="formAgriculteur" visible="false" managed="false">
-            <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation"/>
+            <!-- Add style-class to text fields -->
+            <TextField fx:id="nomField" promptText="Nom" styleClass="form-field"/>
+            <TextField fx:id="prenomField" promptText="Prénom" styleClass="form-field"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="form-field"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="form-field"/>
+            <TextField fx:id="telephoneField" promptText="Téléphone" styleClass="form-field"/>
+
+            <!-- Radio buttons container -->
+            <HBox spacing="10" alignment="CENTER">
+                <RadioButton fx:id="radioAgriculteur" text="Agriculteur" toggleGroup="$roleGroup" styleClass="radio-button"/>
+                <RadioButton fx:id="radioExpert" text="Expert" toggleGroup="$roleGroup" styleClass="radio-button"/>
+                <RadioButton fx:id="radioFournisseur" text="Fournisseur" toggleGroup="$roleGroup" styleClass="radio-button"/>
+            </HBox>
+            <!-- Dynamic fields -->
+            <VBox fx:id="formAgriculteur" visible="false" managed="false">
+                <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation"/>
+            </VBox>
+
+            <VBox fx:id="formExpert" visible="false" managed="false">
+                <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise"/>
+            </VBox>
+
+            <VBox fx:id="formFournisseur" visible="false" managed="false">
+                <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise"/>
+                <TextField fx:id="idFiscaleField" promptText="ID fiscale"/>
+                <TextField fx:id="categorieProduitField" promptText="Catégorie produit"/>
+            </VBox>
+
+            <!-- Buttons -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Sign In" onAction="#ajouterUtilisateur"/>
+                <Button text="Login" onAction="#goToLoginPage" />
+            </HBox>
         </VBox>
-
-        <VBox fx:id="formExpert" visible="false" managed="false">
-            <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise"/>
-        </VBox>
-
-        <VBox fx:id="formFournisseur" visible="false" managed="false">
-            <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise"/>
-            <TextField fx:id="idFiscaleField" promptText="ID fiscale"/>
-            <TextField fx:id="categorieProduitField" promptText="Catégorie produit"/>
-        </VBox>
-
-        <Button text="Ajouter utilisateur" onAction="#ajouterUtilisateur"/>
-    </VBox>
+    </StackPane>
 </AnchorPane>
-

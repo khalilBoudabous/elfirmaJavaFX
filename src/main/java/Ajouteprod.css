@@ -1,0 +1,72 @@
+/* ajouterprod.css */
+
+/* General container style */
+.main-container {
+    -fx-background-color: #f0fdf4; /* light greenish background */
+}
+
+/* Labels and Text styles */
+.text-area {
+    -fx-font-size: 16px;
+    -fx-fill: #2e7d32; /* rich green for text */
+    -fx-font-weight: bold;
+}
+
+/* TextFields and TextArea */
+.text-field, .text-area, .combo-box {
+    -fx-border-color: #a5d6a7;
+    -fx-border-width: 2px;
+    -fx-background-color: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 6px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #a5d6a7;
+    -fx-border-width: 2px;
+}
+
+/* Buttons */
+.button, .upload-button {
+    -fx-background-color: #66bb6a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 100, 0, 0.2), 4, 0.0, 0, 2);
+}
+
+.button:hover, .upload-button:hover {
+    -fx-background-color: #388e3c;
+}
+
+/* ComboBox style */
+.combo-box {
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-mark-color: #388e3c;
+}
+
+/* Image container */
+.image-container {
+    -fx-border-color: #a5d6a7;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(46, 125, 50, 0.3), 10, 0, 0, 5);
+}
+
+/* Optional hover style for text fields */
+.text-field:hover, .text-area:hover {
+    -fx-border-color: #66bb6a;
+}
+
+/* Smooth transitions (JavaFX supports limited transitions) */
+.button {
+    -fx-transition: background-color 0.3s ease;
+}

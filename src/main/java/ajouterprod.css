@@ -1,0 +1,63 @@
+.root {
+    -fx-primary-color: #3498db;
+    -fx-secondary-color: #2ecc71;
+    -fx-base-color: #ecf0f1;
+    -fx-font-family: 'Segoe UI';
+}
+
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #f5f6fa, #dcdde1);
+    -fx-padding: 30;
+}
+
+.form-grid {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 25;
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.text-field, .text-area, .combo-box {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+
+.button {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.upload-button {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.upload-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.image-container {
+    -fx-border-color: #bdc3c7;
+    -fx-border-style: dashed;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+}
+
+.drag-drop-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-style: italic;
+}

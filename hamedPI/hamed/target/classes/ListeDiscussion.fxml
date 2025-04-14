@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="890.0" prefWidth="1286.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ListeDiscussionController">
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="logo">
+               <image>
+                  <Image url="@img/logo-alfirma.jpg" />
+               </image>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </ImageView>
+            <Pane prefHeight="150.0" prefWidth="732.0" />
+            <Label onMouseClicked="#naviguateToConvList" text="Discussions">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Label>
+            <Label onMouseClicked="#naviguateToAdd" text="Ajouter Discussion">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <StackPane>
+         <children>
+            <VBox fx:id="DiscussionList" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="793.0" prefWidth="1286.0">
+                     <content>
+                        <VBox fx:id="DiscussionContainer" alignment="TOP_CENTER" prefHeight="793.0" prefWidth="1286.0" spacing="20.0">
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <VBox fx:id="MessageList" alignment="TOP_CENTER" fillWidth="false" prefHeight="200.0" prefWidth="1000.0" visible="false">
+               <children>
+                  <VBox alignment="BOTTOM_CENTER" prefHeight="613.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: lightgray;">
+                     <children>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="565.0" prefWidth="1000.0" style="-fx-background-color: transparent;">
+                           <content>
+                              <VBox fx:id="MessageContainer" prefHeight="530.0" prefWidth="1000.0" spacing="10.0">
+                                 <padding>
+                                    <Insets left="10.0" top="20.0" />
+                                 </padding></VBox>
+                           </content>
+                        </ScrollPane>
+                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="messageContent" maxWidth="-Infinity" prefHeight="47.0" prefWidth="900.0" promptText="Envoyer un Message">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#addMsg" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/send.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <StackPane.margin>
+                  <Insets top="50.0" />
+               </StackPane.margin>
+            </VBox>
+            <VBox fx:id="AddConvForm" alignment="TOP_CENTER" prefHeight="793.0" prefWidth="1286.0" spacing="20.0" visible="false">
+               <padding>
+                  <Insets left="50.0" right="50.0" top="20.0" />
+               </padding>
+               <children>
+                  <Label styleClass="title-label" text="Ajout Discussion">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="titreDiscussion" promptText="Titre">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <TextArea fx:id="DescriptionDiscussion" prefHeight="200.0" prefWidth="200.0" promptText="Description">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </TextArea>
+                  <ColorPicker fx:id="couleurDiscussion" />
+                  <Label fx:id="erreurMsg" styleClass="error-message" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#AjoutDiscussion" styleClass="button-ajout" text="Ajouter">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#AnnulerDiscussion" styleClass="button-annuler" text="Annuler">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>

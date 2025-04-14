@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="500.0" spacing="20.0" styleClass="message-item" stylesheets="@msgStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MessageController">
+   <children>
+      <Label fx:id="username" styleClass="username-label" text="Username">
+         <VBox.margin>
+            <Insets left="25.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="msg" maxWidth="1.7976931348623157E308" styleClass="message-label" text="Msg">
+         <VBox.margin>
+            <Insets left="25.0" />
+         </VBox.margin>
+      </Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#modifmsg" styleClass="button-modif" text="Modif" />
+            <Button mnemonicParsing="false" onAction="#suppmsg" styleClass="button-suppr" text="Suppr" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

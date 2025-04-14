@@ -1,0 +1,38 @@
+/* Conversation Item */
+.conversation-item {
+    -fx-background-color: #FFFCE3; /* Light beige background to match the theme */
+    -fx-padding: 10px; /* Padding for spacing */
+    -fx-border-radius: 8px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0.0, 0, 1); /* Subtle shadow */
+}
+
+/* Title Label */
+.conversation-item .title-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark gray text */
+    -fx-padding: 5px 0; /* Vertical padding */
+}
+
+/* Description Label */
+.conversation-item .description-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666; /* Medium gray text */
+    -fx-padding: 5px 0; /* Vertical padding */
+}
+
+/* Button Styles */
+.conversation-item .button {
+    -fx-min-width: 70px; /* Minimum width for buttons */
+    -fx-min-height: 30px; /* Minimum height for buttons */
+    -fx-background-color: #D9B353; /* Earthy yellow background */
+    -fx-text-fill: white; /* White text */
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px; /* Padding for button content */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0.0, 0, 1); /* Stronger shadow */
+}
+
+.conversation-item .button:hover {
+    -fx-background-color: #C7A54B; /* Slightly darker yellow on hover */
+}

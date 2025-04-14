@@ -1,0 +1,43 @@
+/* General Styles */
+.root {
+    -fx-background-color: #FFFCE3; /* Light beige background to match the theme */
+}
+
+/* Single Message Container */
+.message-item {
+    -fx-background-color: white; /* White background for contrast */
+    -fx-padding: 10px; /* Padding for spacing */
+    -fx-border-radius: 8px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0.0, 0, 1); /* Subtle shadow */
+}
+
+/* Username Label */
+.username-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark gray text */
+    -fx-padding: 5px 0; /* Vertical padding */
+}
+
+/* Message Label */
+.message-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666; /* Medium gray text */
+    -fx-padding: 5px 0; /* Vertical padding */
+}
+
+/* Buttons */
+.button-modif, .button-suppr {
+    -fx-min-width: 70px; /* Minimum width for buttons */
+    -fx-min-height: 30px; /* Minimum height for buttons */
+    -fx-background-color: #D9B353; /* Earthy yellow background */
+    -fx-text-fill: white; /* White text */
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px; /* Padding for button content */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0.0, 0, 1); /* Stronger shadow */
+}
+
+.button-modif:hover, .button-suppr:hover {
+    -fx-background-color: #C7A54B; /* Slightly darker yellow on hover */
+}

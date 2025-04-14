@@ -5,25 +5,37 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AjouterEvenement">
+<AnchorPane prefHeight="727.0" prefWidth="700.0" stylesheets="@formstylesheet.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AjouterEvenement">
    <children>
-      <Text layoutX="52.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Titre:" />
-      <TextField fx:id="tfTitre" layoutX="48.0" layoutY="53.0" prefHeight="26.0" prefWidth="200.0" />
-      <TextArea fx:id="tfDescription" layoutX="48.0" layoutY="177.0" prefHeight="102.0" prefWidth="200.0" />
-      <Text layoutX="49.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
-      <Text layoutX="52.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prix:" />
-      <TextField fx:id="tfPrix" layoutX="48.0" layoutY="113.0" prefHeight="26.0" prefWidth="200.0" />
-      <Text layoutX="50.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de places:" />
-      <TextField fx:id="tfNombrePlaces" layoutX="48.0" layoutY="312.0" prefHeight="26.0" prefWidth="200.0" />
-      <Text layoutX="310.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lieu:" />
-      <Text layoutX="312.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date début:" />
-      <DatePicker fx:id="tfDateDebut" layoutX="381.0" layoutY="90.0" />
-      <Text layoutX="310.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date fin:" />
-      <DatePicker fx:id="tfDateFin" layoutX="381.0" layoutY="147.0" />
-       <ComboBox fx:id="tfLieu" layoutX="374.0" layoutY="215.0" promptText="Select Location" />
-      <Button layoutX="360.0" layoutY="299.0" mnemonicParsing="false" onAction="#AjouterEvemenement" prefHeight="26.0" prefWidth="150.0" style="-fx-background-color: green;" text="Ajouter événement" textFill="WHITE" textOverrun="WORD_ELLIPSIS" />
+      <Text layoutX="213.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Titre:" />
+      <TextField fx:id="tfTitre" layoutX="209.0" layoutY="61.0" prefHeight="39.0" prefWidth="266.0" stylesheets="@formstylesheet.css" />
+      <TextArea fx:id="tfDescription" layoutX="209.0" layoutY="185.0" prefHeight="102.0" prefWidth="274.0" stylesheets="@formstylesheet.css" />
+      <Text layoutX="210.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+      <Text layoutX="213.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prix:" />
+      <TextField fx:id="tfPrix" layoutX="212.0" layoutY="121.0" prefHeight="39.0" prefWidth="266.0" />
+      <Text layoutX="211.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de places:" />
+      <TextField fx:id="tfNombrePlaces" layoutX="207.0" layoutY="319.0" prefHeight="39.0" prefWidth="273.0" stylesheets="@formstylesheet.css" />
+      <Text layoutX="222.0" layoutY="417.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lieu:" />
+      <Text layoutX="212.0" layoutY="502.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date début:" />
+      <DatePicker fx:id="tfDateDebut" layoutX="283.0" layoutY="467.0" prefHeight="26.0" prefWidth="200.0" />
+      <Text layoutX="213.0" layoutY="587.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date fin:" />
+      <DatePicker fx:id="tfDateFin" layoutX="279.0" layoutY="555.0" prefHeight="26.0" prefWidth="208.0" />
+      <ComboBox fx:id="tfLieu" layoutX="280.0" layoutY="388.0" prefHeight="50.0" prefWidth="246.0" promptText="Select Location" stylesheets="@formstylesheet.css" />
+      <Button layoutX="247.0" layoutY="633.0" mnemonicParsing="false" onAction="#AjouterEvemenement" prefHeight="44.0" prefWidth="189.0" style="-fx-background-color: green;" stylesheets="@formstylesheet.css" text="Ajouter événement" textFill="WHITE" textOverrun="WORD_ELLIPSIS" />
+      <HBox prefHeight="33.0" prefWidth="700.0" style="-fx-background-color: #3E7B27;" stylesheets="@formstylesheet.css">
+         <children>
+            <ImageView fitHeight="34.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Opera_Snapshot_2025-01-25_103545_www.brandcrowd.com.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

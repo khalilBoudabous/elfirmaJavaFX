@@ -17,13 +17,13 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/AjouterEvenement.fxml"));
+                getClass().getResource("/dbEvenement.fxml"));
 
         try {
             Parent root=fxmlLoader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Ajouter Evenement");
+            primaryStage.setTitle("Dashboard Evenement");
             primaryStage.show();
 
         } catch (IOException e) {

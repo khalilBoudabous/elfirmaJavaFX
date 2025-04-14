@@ -24,6 +24,8 @@ public class Main {
                 Date.valueOf("2025-06-1"), Date.valueOf("2024-06-5"), "ON_SITE", 20, 55);
 
         TicketService ts = new TicketService();
+
+       /*
         try {
             /* test EVENEMENT
 
@@ -34,18 +36,24 @@ public class Main {
             eventsList = es.recuperer();
             eventsList.forEach(event->System.out.println(event));
        */
+
+            /*
             es.ajouter(event2);
             for (int i = 0; i < event2.getNombrePlaces(); i++) {
-                Ticket ticket = new Ticket(0, event2.getId(), event2.getPrix(), false);
+                Ticket ticket = new Ticket(0, event2.getId(), event2.getPrix(), false,);
                 ts.ajouter(ticket);
             }
+            */
 
-
+/*
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    */
+        }
 
 }
 

@@ -3,15 +3,19 @@ package entities;
 
 public class Ticket {
     private int id,id_evenement;
+    private String titreEvenement;
     private float prix;
     private Boolean payée = false;
 
-    public Ticket(int id, int id_evenement, float prix, Boolean payée) {
+    public Ticket(int id, int id_evenement, String titreEvenement, float prix, Boolean payée) {
         this.id = id;
         this.id_evenement = id_evenement;
+        this.titreEvenement = titreEvenement;
         this.prix = prix;
         this.payée = payée;
     }
+
+    public Ticket() {}
 
     public int getId_evenement() {
         return id_evenement;
@@ -20,6 +24,10 @@ public class Ticket {
     public void setId_evenement(int id_evenement) {
         this.id_evenement = id_evenement;
     }
+
+    public String getTitreEvenement() { return titreEvenement;}
+
+    public void setTitreEvenement(String titreEvenement) {this.titreEvenement = titreEvenement;}
 
     public float getPrix() {
         return prix;
@@ -52,6 +60,7 @@ public class Ticket {
                 ", id_evenement=" + id_evenement +
                 ", prix=" + prix +
                 ", payée=" + payée +
+                ", titreEvenement='" + titreEvenement +
                 '}';
     }
 }

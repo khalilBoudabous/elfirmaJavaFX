@@ -1,5 +1,6 @@
 package services;
 
+import entities.Evenement;
 import utils.MyDatabase;
 import entities.Ticket;
 import java.util.*;
@@ -13,12 +14,13 @@ public class TicketService implements Service<Ticket> {
 
     @Override
     public void ajouter(Ticket ticket) throws SQLException {
-        String sql = "insert into ticket(prix, evenement_id, is_paid)" + "values(?,?,?)";
+        String sql = "insert into ticket(prix, evenement_id, is_paid, Titre_evenement)" + "values(?,?,?,?)";
 
         try (PreparedStatement ts = cnx.prepareStatement(sql)) {
             ts.setFloat(1, ticket.getPrix());
             ts.setInt(2,ticket.getId_evenement());
             ts.setBoolean(3, ticket.getPayée());
+            ts.setString(4, ticket.getTitreEvenement());
             ts.executeUpdate();
         }
     }
@@ -33,14 +35,63 @@ public class TicketService implements Service<Ticket> {
 
     @Override
     public void modifier(Ticket ticket) throws SQLException {
-        String sql = "update ticket set prix = ?, evenement_id = ?, is_paid = ? where id = ?";
+        String sql = "update ticket set prix = ?, evenement_id = ?, is_paid = ?, Titre_evenement = ? where id = ?";
         PreparedStatement ts = cnx.prepareStatement(sql);
         ts.setFloat(1, ticket.getPrix());
         ts.setInt(2, ticket.getId_evenement());
         ts.setBoolean(3, ticket.getPayée());
-        ts.setInt(4, ticket.getId());
+        ts.setString(4, ticket.getTitreEvenement());
+        ts.setInt(5, ticket.getId());
         ts.executeUpdate();
     }
+
+    public void deleteOldestTickets(int eventId, int limit) throws SQLException {
+        String sql = "DELETE FROM ticket WHERE evenement_id = ? ORDER BY id ASC LIMIT ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, limit);
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateAllTicketsForEvent(Evenement event) throws SQLException {
+        String sql = "UPDATE ticket SET  prix = ?, Titre_evenement = ? WHERE evenement_id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setFloat(1, event.getPrix());
+            ps.setString(2, event.getTitre());
+            ps.setInt(3, event.getId());
+            ps.executeUpdate();
+        }
+    }
+
+
+    public int countUnpaidTickets(int eventId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM ticket WHERE evenement_id = ? AND is_paid = false";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    public void deleteUnpaidTickets(int eventId, int limit) throws SQLException {
+        String sql = "DELETE FROM ticket WHERE evenement_id = ? AND is_paid = false LIMIT ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, limit);
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateUnpaidTicketsPrice(int eventId, float newPrice) throws SQLException {
+        String sql = "UPDATE ticket SET prix = ? WHERE evenement_id = ? AND is_paid = false";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setFloat(1, newPrice);
+            ps.setInt(2, eventId);
+            ps.executeUpdate();
+        }
+    }
+
 
     @Override
     public List<Ticket> recuperer() throws SQLException {
@@ -54,7 +105,8 @@ public class TicketService implements Service<Ticket> {
             float prix = rs.getFloat("prix");
             int id_evenement = rs.getInt("evenement_id");
             boolean paye = rs.getBoolean("is_paid");
-            Ticket ticket = new Ticket(id, id_evenement, prix, paye);
+            String titreEvenement = rs.getString("Titre_evenement");
+            Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye);
             tickets.add(ticket);
         }
         return tickets;

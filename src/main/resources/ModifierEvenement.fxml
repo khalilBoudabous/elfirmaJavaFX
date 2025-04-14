@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="670.0" prefWidth="544.0" stylesheets="@formstylesheet.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ModifierEvenement">
+   <children>
+      <Text layoutX="226.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Titre:" />
+      <TextField fx:id="tfTitre" layoutX="222.0" layoutY="68.0" prefHeight="39.0" prefWidth="272.0" />
+      <TextArea fx:id="tfDescription" layoutX="222.0" layoutY="192.0" prefHeight="102.0" prefWidth="272.0" />
+      <Text layoutX="223.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+      <Text layoutX="226.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prix:" />
+      <TextField fx:id="tfPrix" layoutX="222.0" layoutY="128.0" prefHeight="39.0" prefWidth="272.0" />
+      <Text layoutX="224.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de places:" />
+      <TextField fx:id="tfNombrePlaces" layoutX="222.0" layoutY="327.0" prefHeight="39.0" prefWidth="272.0" />
+      <Text layoutX="224.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lieu:" />
+      <Text layoutX="224.0" layoutY="479.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date début:" />
+      <DatePicker fx:id="tfDateDebut" layoutX="297.0" layoutY="447.0" prefHeight="26.0" prefWidth="210.0" />
+      <Text layoutX="222.0" layoutY="549.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date fin:" />
+      <DatePicker fx:id="tfDateFin" layoutX="293.0" layoutY="519.0" prefHeight="39.0" prefWidth="210.0" />
+      <ComboBox fx:id="tfLieu" layoutX="297.0" layoutY="385.0" prefHeight="49.0" prefWidth="210.0" promptText="Select Location" />
+      <Button layoutX="248.0" layoutY="599.0" mnemonicParsing="false" onAction="#ModifierEvemenement" prefHeight="26.0" prefWidth="150.0" style="-fx-background-color: green;" text="Sauvegarder mofication" textFill="WHITE" textOverrun="WORD_ELLIPSIS" />
+      <HBox prefHeight="27.0" prefWidth="730.0" style="-fx-background-color: #3E7B27;" stylesheets="@formstylesheet.css">
+         <children>
+            <ImageView fitHeight="54.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Opera_Snapshot_2025-01-25_103545_www.brandcrowd.com.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -1,187 +1,189 @@
 package controllers;
 
-import entities.*;
+import Dao.UtilisateurDao;
+import entities.Utilisateur;
+import utils.DBconnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationMessage;
-import services.UtilisateurService;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 public class UtilisateurController {
 
-    @FXML private TextField nomField, prenomField, emailField, telephoneField;
-    @FXML private TextField adresseExploitationField, domaineExpertiseField, nomEntrepriseField, idFiscaleField, categorieProduitField;
-    @FXML private RadioButton radioAgriculteur, radioExpert, radioFournisseur;
-    @FXML private VBox formAgriculteur, formExpert, formFournisseur;
-    @FXML private PasswordField passwordField;
+    // UI components
+    public Button btnGestionTerrain;
     @FXML
-    private TableView<Utilisateur> userTable;
-
-    private final ValidationSupport validationSupport = new ValidationSupport();
-
+    private TextField nomField;
+    @FXML
+    private TextField prenomField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField telephoneField;
+    @FXML
+    private TextField roleField;
+    @FXML
+    private PasswordField mdpField;
 
     @FXML
-    private ToggleGroup roleGroup;
+    private TableView<Utilisateur> tableView;
+    @FXML
+    private TableColumn<Utilisateur, String> colNom;
+    @FXML
+    private TableColumn<Utilisateur, String> colPrenom;
+    @FXML
+    private TableColumn<Utilisateur, String> colEmail;
+    @FXML
+    private TableColumn<Utilisateur, Integer> colTel;
+    @FXML
+    private TableColumn<Utilisateur, String> colRole;
 
-    private final UtilisateurService utilisateurService = new UtilisateurService();
+    private final UtilisateurDao utilisateurDao = new UtilisateurDao();
+    private ObservableList<Utilisateur> utilisateurs;
 
     @FXML
     public void initialize() {
+        // Set the table columns to match the User properties
+        colNom.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getNom()));
+        colPrenom.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getPrenom()));
+        colEmail.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEmail()));
+        colTel.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getTelephone()));
+        colRole.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRole()));
 
-        // Configuration de la validation
-        validationSupport.registerValidator(nomField, Validator.createEmptyValidator("Nom obligatoire"));
-        validationSupport.registerValidator(prenomField, Validator.createEmptyValidator("Prénom obligatoire"));
-
-
-        roleGroup = new ToggleGroup();
-        radioAgriculteur.setToggleGroup(roleGroup);
-        radioExpert.setToggleGroup(roleGroup);
-        radioFournisseur.setToggleGroup(roleGroup);
-
-        roleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-            formAgriculteur.setVisible(radioAgriculteur.isSelected());
-            formAgriculteur.setManaged(radioAgriculteur.isSelected());
-
-            formExpert.setVisible(radioExpert.isSelected());
-            formExpert.setManaged(radioExpert.isSelected());
-
-            formFournisseur.setVisible(radioFournisseur.isSelected());
-            formFournisseur.setManaged(radioFournisseur.isSelected());
-        });
-
+        // Load users into the table
+        chargerUtilisateurs();
     }
 
-
-
-    public void rafraichirListe() {
-        userTable.getItems().clear();
-        userTable.getItems().addAll(utilisateurService.getAllUtilisateurs());
+    private void chargerUtilisateurs() {
+        utilisateurs = FXCollections.observableArrayList(utilisateurDao.afficherUtilisateurs());
+        tableView.setItems(utilisateurs);
     }
 
     @FXML
     public void ajouterUtilisateur() {
-        boolean isValid = true;
-
-        // Validation des champs communs
-        StringBuilder errors = new StringBuilder();
-
-        if(nomField.getText().isEmpty()) errors.append("Nom est obligatoire\n");
-        if(prenomField.getText().isEmpty()) errors.append("Prénom est obligatoire\n");
-        if(emailField.getText().isEmpty()) errors.append("Email est obligatoire\n");
-        if(passwordField.getText().isEmpty()) errors.append("Mot de passe est obligatoire\n");
-        if(telephoneField.getText().isEmpty()) errors.append("Téléphone est obligatoire\n");
-
-        // Validation format email
-        if(!emailField.getText().matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
-            errors.append("Format email invalide\n");
-        }
-
-        // Validation téléphone (10 chiffres)
-        if(!telephoneField.getText().matches("\\d{8}")) {
-            errors.append("Téléphone doit contenir 8 chiffres\n");
-        }
-
-        // Validation rôle spécifique
-        if(radioAgriculteur.isSelected() && adresseExploitationField.getText().isEmpty()) {
-            errors.append("Adresse exploitation est obligatoire\n");
-        }
-        else if(radioExpert.isSelected() && domaineExpertiseField.getText().isEmpty()) {
-            errors.append("Domaine expertise est obligatoire\n");
-        }
-        else if(radioFournisseur.isSelected()) {
-            if(nomEntrepriseField.getText().isEmpty()) errors.append("Nom entreprise est obligatoire\n");
-            if(idFiscaleField.getText().isEmpty()) errors.append("ID fiscale est obligatoire\n");
-            if(categorieProduitField.getText().isEmpty()) errors.append("Catégorie produit est obligatoire\n");
-        }
-
-        if(errors.length() > 0) {
-            new Alert(Alert.AlertType.ERROR, errors.toString()).show();
-            return;
-        }
-
         String nom = nomField.getText();
         String prenom = prenomField.getText();
         String email = emailField.getText();
-        String password = passwordField.getText();
-        String telephone = telephoneField.getText();
+        int telephone = Integer.parseInt(telephoneField.getText());
+        String role = roleField.getText();
+        String motDePasse = mdpField.getText();
 
-        Utilisateur u = null;
+        // Create new user with form data
+        Utilisateur utilisateur = new Utilisateur(nom, prenom, email, telephone, role, motDePasse) {
+            @Override
+            public String getType() {
+                return "";
+            }
+        };
 
+        String sql = "INSERT INTO Utilisateur (nom, prenom, email, telephone, role, mot_de_passe, disc) VALUES (?, ?, ?, ?, ?, ?, 'Agriculteur')";
 
-        if (radioAgriculteur.isSelected()) {
-            Agriculteur a = new Agriculteur();
-            a.setAdresseExploitation(adresseExploitationField.getText());
-            u = a;
-        } else if (radioExpert.isSelected()) {
-            Expert e = new Expert();
-            e.setDomaineExpertise(domaineExpertiseField.getText());
-            u = e;
-        } else if (radioFournisseur.isSelected()) {
-            Fournisseur f = new Fournisseur();
-            f.setNomEntreprise(nomEntrepriseField.getText());
-            f.setIdFiscale(idFiscaleField.getText());
-            f.setCategorieProduit(categorieProduitField.getText());
-            u = f;
-        }
+        try (Connection conn = DBconnection.getConnection()) {
+            if (conn != null && !conn.isClosed()) {
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, utilisateur.getNom());
+                    stmt.setString(2, utilisateur.getPrenom());
+                    stmt.setString(3, utilisateur.getEmail());
+                    stmt.setInt(4, utilisateur.getTelephone());
+                    stmt.setString(5, utilisateur.getRole());
+                    stmt.setString(6, utilisateur.getMotDePasse());
 
-        if (u != null) {
-            u.setNom(nom);
-            u.setPrenom(prenom);
-            u.setEmail(email);
-            u.setPassword(password);
-            u.setTelephone(telephone);
-            //u.setRoles("user"); // ou autre valeur si besoin
-
-            utilisateurService.ajouter(u);
-            chargerVueListe(); // Ajoutez cette ligne
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Succès");
-            alert.setContentText("Utilisateur ajouté avec succès !");
-            alert.showAndWait();
-
-            // Tu peux aussi vider les champs ici si tu veux
-            viderChamps();
-
+                    stmt.executeUpdate();
+                    System.out.println("Utilisateur ajouté avec succès !");
+                    chargerUtilisateurs();  // Reload user list
+                    clearFields();           // Clear form fields
+                } catch (SQLException e) {
+                    System.err.println("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("La connexion à la base de données est fermée.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur de connexion à la base de données : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void viderChamps() {
+    @FXML
+    private void modifierUtilisateur() {
+        Utilisateur selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            try {
+                selected.setNom(nomField.getText());
+                selected.setPrenom(prenomField.getText());
+                selected.setEmail(emailField.getText());
+                selected.setTelephone(Integer.parseInt(telephoneField.getText()));
+                selected.setRole(roleField.getText());
+                selected.setMotDePasse(mdpField.getText());
+
+                utilisateurDao.modifierUtilisateur(selected);
+                chargerUtilisateurs();
+                clearFields();
+            } catch (Exception e) {
+                showAlert("Erreur", "Modification échouée.");
+            }
+        } else {
+            showAlert("Avertissement", "Sélectionnez un utilisateur.");
+        }
+    }
+
+    @FXML
+    private void supprimerUtilisateur() {
+        Utilisateur selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            utilisateurDao.supprimerUtilisateur(selected.getId());
+            chargerUtilisateurs();
+            clearFields();
+        } else {
+            showAlert("Avertissement", "Sélectionnez un utilisateur à supprimer.");
+        }
+    }
+
+    private void clearFields() {
         nomField.clear();
         prenomField.clear();
         emailField.clear();
-        passwordField.clear();
         telephoneField.clear();
-        adresseExploitationField.clear();
-        domaineExpertiseField.clear();
-        nomEntrepriseField.clear();
-        idFiscaleField.clear();
-        categorieProduitField.clear();
+        roleField.clear();
+        mdpField.clear();
     }
 
-    private void chargerVueListe() {
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    public void handleGestionTerrain(javafx.event.ActionEvent actionEvent) {
         try {
-            // Corrigez l'orthographe si nécessaire (Afficher au lieu de Afficer)
-            Parent root = FXMLLoader.load(getClass().getResource("/AfficherListUtilisateur.fxml"));
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Terrain.fxml"));
+            Parent root = loader.load();
+
+            // Créer une nouvelle scène avec le root
             Scene scene = new Scene(root);
-            Stage stage = (Stage) nomField.getScene().getWindow();
-            stage.setScene(scene);
+
+            // Obtenir le stage courant (ou créer un nouveau stage)
+            Stage stage = new Stage();
+            stage.setTitle("Gestion des Terrains");  // Titre de la fenêtre
+            stage.setScene(scene);  // Définir la scène
+            stage.show();  // Afficher la fenêtre
+
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur de navigation");
-            alert.setContentText("Impossible de charger la liste : " + e.getMessage());
-            alert.showAndWait();
         }
     }
 }

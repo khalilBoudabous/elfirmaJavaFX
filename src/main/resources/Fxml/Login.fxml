@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="20" styleClass="root" stylesheets="@../styles/register.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.LoginController">
+
+    <Label styleClass="title" text="Connexion" />
+
+    <TextField fx:id="emailField" promptText="Email" styleClass="text-field" />
+    <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="password-field" stylesheets="@../styles/register.css" />
+
+    <Button onAction="#handleLogin" styleClass="button" text="Se connecter" />
+
+    <Label fx:id="errorLabel" styleClass="error-message" />
+
+    <HBox alignment="CENTER" spacing="10">
+        <Label text="Nouvel utilisateur?" />
+        <Button onAction="#redirectToRegister" styleClass="link-button" text="Créer un compte" />
+    </HBox>
+</VBox>

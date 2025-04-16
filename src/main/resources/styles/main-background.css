@@ -1,0 +1,79 @@
+/* Main background styling */
+.main-background {
+    -fx-background-color: #E8F5E9; /* Light green background */
+    -fx-padding: 20px;
+}
+
+/* Title Label */
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50; /* Dark blue for text */
+    -fx-padding: 10px 0;
+}
+
+/* Back Button */
+.back-button {
+    -fx-background-color: #FF5722; /* Orange color */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-border-radius: 5px;
+}
+
+/* Form pane */
+.form-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 30px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, #BDC3C7, 8, 0.5, 0, 0);
+}
+
+/* Labels in the form */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50; /* Dark blue text for labels */
+}
+
+/* Text Fields and ComboBoxes */
+.form-textfield, .form-combobox, .form-datepicker {
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #BDC3C7; /* Light gray border */
+}
+
+/* Buttons in the form */
+.search-button, .add-button {
+    -fx-background-color: #2196F3; /* Blue background */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 18px;
+    -fx-border-radius: 5px;
+}
+
+/* Checkbox styling */
+.form-checkbox {
+    -fx-padding: 10px;
+}
+
+/* Table view styling */
+.table-view {
+    -fx-border-radius: 8px;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, #BDC3C7, 8, 0.5, 0, 0);
+}
+
+/* Table headers */
+.table-view .column-header {
+    -fx-background-color: #B3E5FC; /* Light blue background for headers */
+    -fx-text-fill: #2C3E50; /* Dark blue text */
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+/* Table columns */
+.table-view .table-column {
+    -fx-text-fill: #2C3E50;
+    -fx-padding: 10px;
+}

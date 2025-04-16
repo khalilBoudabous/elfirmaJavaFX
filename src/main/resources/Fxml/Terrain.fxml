@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane style="-fx-background-color: #f4f4f4;" styleClass="root" stylesheets="@../styles/terrain.css" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.TerrainController">
+    <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 24px; -fx-text-fill: #2C3E50; -fx-font-weight: bold;" styleClass="title" stylesheets="@../styles/terrain.css" text="Gestion des Terrains" />
+
+    <VBox alignment="CENTER" spacing="15" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+
+        <!-- Form Fields -->
+        <GridPane hgap="10" prefHeight="374.0" prefWidth="714.0" stylesheets="@../styles/terrain.css" vgap="10">
+            <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="idField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Superficie:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="superficieField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Localisation:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="localisationField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label text="Latitude:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="latitudeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <Label text="Longitude:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="longitudeField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+
+
+            <Label text="Type de sol:" GridPane.rowIndex="5" />
+            <ComboBox fx:id="typeSolCombo" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+            <Label text="Irrigation:" GridPane.rowIndex="6" />
+            <CheckBox fx:id="irrigationCheckbox" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+            <Label text="Statut:" GridPane.rowIndex="7" />
+            <ComboBox fx:id="statutCombo" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+
+
+
+        <!-- Action Buttons -->
+        <HBox alignment="CENTER" spacing="15">
+            <Button onAction="#handleAddTerrain" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
+            <Button onAction="#handleUpdateTerrain" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Modifier" />
+            <Button onAction="#handleDeleteTerrain" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer" />
+            <Button onAction="#initialize" style="-fx-background-color: #FF9800; -fx-text-fill: white;" text="Actualiser" />
+            <Button onAction="#navigateToLocationPage" style="-fx-background-color: #8BC34A; -fx-text-fill: yellow;" text="Voir Locations" />
+
+
+        </HBox>
+
+           <!-- Terrain Table -->
+        <TableView fx:id="terrainTable" style="-fx-pref-width: 800px; -fx-pref-height: 300px;">
+            <columns>
+                <TableColumn fx:id="colId" style="-fx-alignment: CENTER;" text="ID" />
+                <TableColumn fx:id="colSuperficie" style="-fx-alignment: CENTER;" text="Superficie" />
+                <TableColumn fx:id="colLocalisation" style="-fx-alignment: CENTER;" text="Localisation" />
+                <TableColumn fx:id="colLatitude" style="-fx-alignment: CENTER;" text="Latitude" />
+                <TableColumn fx:id="colLongitude" style="-fx-alignment: CENTER;" text="Longitude" />
+                <TableColumn fx:id="colTypeSol" style="-fx-alignment: CENTER;" text="Type de sol" />
+                <TableColumn fx:id="colIrrigation" style="-fx-alignment: CENTER;" text="Irrigation" />
+                <TableColumn fx:id="colStatut" style="-fx-alignment: CENTER;" text="Statut" />
+            </columns>
+        </TableView>
+    </VBox>
+</AnchorPane>
+

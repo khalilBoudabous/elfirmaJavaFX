@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Carte Leaflet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map;
+    let marker;
+
+    function initMap() {
+        const defaultCoords = [36.8065, 10.1815]; // Tunis par défaut
+        map = L.map('map').setView(defaultCoords, 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        marker = L.marker(defaultCoords).addTo(map);
+    }
+
+    function updateMap(lat, lng) {
+        const newCoords = [lat, lng];
+        map.setView(newCoords, 15);
+        marker.setLatLng(newCoords);
+    }
+
+    window.onload = initMap;
+</script>
+</body>
+</html>

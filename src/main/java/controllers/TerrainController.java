@@ -1,6 +1,5 @@
-package controllers ;
+package controllers;
 
-import test.MainFX;
 import entities.Terrain;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,25 +12,26 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.control.TextField;
-
+import test.MainFX;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Optional;
 
 public class TerrainController {
 
-    // Database configuration
     private static final String DB_URL = "jdbc:mysql://localhost:3306/mainelfirma";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
-    // Form fields
     @FXML private TextField idField;
     @FXML private TextField superficieField;
     @FXML private TextField localisationField;
@@ -40,12 +40,9 @@ public class TerrainController {
     @FXML private ComboBox<String> typeSolCombo;
     @FXML private CheckBox irrigationCheckbox;
     @FXML private ComboBox<String> statutCombo;
-
     @FXML private Button uploadButton;
     @FXML private ImageView terrainImageView;
-    private File selectedImageFile;
-
-    // Table view
+    @FXML private WebView mapView;
     @FXML private TableView<Terrain> terrainTable;
     @FXML private TableColumn<Terrain, Integer> colId;
     @FXML private TableColumn<Terrain, Double> colSuperficie;
@@ -57,7 +54,7 @@ public class TerrainController {
     @FXML private TableColumn<Terrain, String> colStatut;
 
     private final ObservableList<Terrain> terrainList = FXCollections.observableArrayList();
-
+    private File selectedImageFile;
 
     @FXML
     private void initialize() {
@@ -76,25 +73,37 @@ public class TerrainController {
         loadTerrains();
 
         terrainTable.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
-            if (selected != null) fillFormWithSelectedTerrain(selected);
+            if (selected != null) {
+                fillFormWithSelectedTerrain(selected);
+                updateMapView(selected.getLatitude(), selected.getLongitude());
+            }
         });
     }
+
+    private void updateMapView(double latitude, double longitude) {
+        WebEngine webEngine = mapView.getEngine();
+        // Construct the file path to the map.html in your resources folder
+        String filePath = Objects.requireNonNull(getClass().getResource("/Fxml/map.html")).toExternalForm();
+
+        // Pass the latitude and longitude as query parameters to map.html
+        String urlWithParams = filePath + "?lat=" + latitude + "&lng=" + longitude;
+
+        // Load the HTML file into the WebView with parameters
+        webEngine.load(urlWithParams);
+    }
+
 
     private void loadTerrains() {
         if (MainFX.getCurrentUser() == null) {
             showAlert("Error", "No user logged in. Please login again.");
             return;
         }
-
         terrainList.clear();
         String query = "SELECT * FROM terrain WHERE utilisateur_id = ?";
-
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query)) {
-
             stmt.setInt(1, MainFX.getCurrentUser().getId());
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 Terrain t = new Terrain(
                         rs.getInt("id"),
@@ -109,19 +118,15 @@ public class TerrainController {
                 );
                 terrainList.add(t);
             }
-
             terrainTable.setItems(terrainList);
         } catch (SQLException e) {
             showAlert("Database Error", "Failed to load terrains: " + e.getMessage());
-            e.printStackTrace();
         }
     }
-
 
     @FXML
     private void handleAddTerrain() {
         if (!validateInputs()) return;
-
         Terrain terrain = new Terrain(
                 Double.parseDouble(superficieField.getText()),
                 localisationField.getText(),
@@ -131,7 +136,6 @@ public class TerrainController {
                 irrigationCheckbox.isSelected(),
                 statutCombo.getValue()
         );
-
         if (selectedImageFile != null) {
             try {
                 File dest = new File("images/" + selectedImageFile.getName());
@@ -141,13 +145,9 @@ public class TerrainController {
                 showAlert("Image Error", "Image upload failed: " + e.getMessage());
             }
         }
-
-        String sql = "INSERT INTO terrain (superficie, localisation, latitude, longitude, type_sol, irrigation_disponible, statut, utilisateur_id, image) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO terrain (superficie, localisation, latitude, longitude, type_sol, irrigation_disponible, statut, utilisateur_id, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
             pstmt.setDouble(1, terrain.getSuperficie());
             pstmt.setString(2, terrain.getLocalisation());
             pstmt.setDouble(3, terrain.getLatitude());
@@ -157,7 +157,6 @@ public class TerrainController {
             pstmt.setString(7, terrain.getStatut());
             pstmt.setInt(8, MainFX.getCurrentUser().getId());
             pstmt.setString(9, terrain.getImage());
-
             if (pstmt.executeUpdate() > 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
@@ -179,7 +178,6 @@ public class TerrainController {
             return;
         }
         if (!validateInputs()) return;
-
         selected.setSuperficie(Double.parseDouble(superficieField.getText()));
         selected.setLocalisation(localisationField.getText());
         selected.setLatitude(Double.parseDouble(latitudeField.getText()));
@@ -187,7 +185,6 @@ public class TerrainController {
         selected.setTypeSol(typeSolCombo.getValue());
         selected.setIrrigationDisponible(irrigationCheckbox.isSelected());
         selected.setStatut(statutCombo.getValue());
-
         if (selectedImageFile != null) {
             try {
                 File dest = new File("images/" + selectedImageFile.getName());
@@ -197,12 +194,9 @@ public class TerrainController {
                 showAlert("Image Error", "Image upload failed: " + e.getMessage());
             }
         }
-
         String sql = "UPDATE terrain SET superficie=?, localisation=?, latitude=?, longitude=?, type_sol=?, irrigation_disponible=?, statut=?, image=? WHERE id=? AND utilisateur_id=?";
-
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
             pstmt.setDouble(1, selected.getSuperficie());
             pstmt.setString(2, selected.getLocalisation());
             pstmt.setDouble(3, selected.getLatitude());
@@ -213,7 +207,6 @@ public class TerrainController {
             pstmt.setString(8, selected.getImage());
             pstmt.setInt(9, selected.getId());
             pstmt.setInt(10, MainFX.getCurrentUser().getId());
-
             if (pstmt.executeUpdate() > 0) {
                 terrainTable.refresh();
                 showAlert("Success", "Terrain updated successfully");
@@ -230,21 +223,17 @@ public class TerrainController {
             showAlert("Error", "No terrain selected");
             return;
         }
-
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation");
         confirmation.setHeaderText("Delete Terrain");
         confirmation.setContentText("Are you sure you want to delete this terrain?");
         Optional<ButtonType> result = confirmation.showAndWait();
-
         if (result.isPresent() && result.get() == ButtonType.OK) {
             String sql = "DELETE FROM terrain WHERE id=? AND utilisateur_id=?";
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
                 pstmt.setInt(1, selected.getId());
                 pstmt.setInt(2, MainFX.getCurrentUser().getId());
-
                 if (pstmt.executeUpdate() > 0) {
                     terrainList.remove(selected);
                     showAlert("Success", "Terrain deleted successfully");
@@ -290,19 +279,24 @@ public class TerrainController {
         typeSolCombo.setValue(terrain.getTypeSol());
         irrigationCheckbox.setSelected(terrain.isIrrigationDisponible());
         statutCombo.setValue(terrain.getStatut());
-
         if (terrain.getImage() != null) {
             terrainImageView.setImage(new Image("file:" + terrain.getImage()));
         }
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
+    @FXML
     public void handleGoToLocation(ActionEvent actionEvent) {
+        try {
+            navigateToLocationPage();
+        } catch (IOException e) {
+            showAlert("Navigation Error", "Failed to navigate: " + e.getMessage());
+        }
     }
 }

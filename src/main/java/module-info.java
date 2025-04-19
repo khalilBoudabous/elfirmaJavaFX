@@ -1,13 +1,12 @@
 module com.salah.appcrud {
     requires javafx.fxml;
     requires java.sql;
-    requires java.desktop;
     requires jbcrypt;
     requires com.google.protobuf;
     requires com.jfoenix;
-    requires javafx.controls;
     requires itextpdf;
     requires mysql.connector.j;
+    requires javafx.web;
 
     // Ouvre les packages pour l'accès par FXML aux contrôleurs
     opens entities to javafx.fxml;

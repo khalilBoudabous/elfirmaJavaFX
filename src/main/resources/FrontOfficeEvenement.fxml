@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="658.0" prefWidth="1122.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.FrontOfficeEvenement">
+   <children>
+      <TabPane layoutY="29.0" prefHeight="626.0" prefWidth="1121.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Acceuil">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="Produits">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Explorer terrain">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+            <Tab fx:id="tabEvents" text="Evénements">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="729.0" prefWidth="1079.0">
+                     <children>
+                        <ScrollPane layoutY="-1.0" prefHeight="597.0" prefWidth="1122.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="597.0" prefWidth="1119.0">
+                                 <children>
+                                    <GridPane fx:id="gridEvents" layoutX="-1.0" layoutY="4.0" prefHeight="578.0" prefWidth="1107.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="320.1999938964844" minHeight="10.0" prefHeight="292.6000183105469" vgrow="ALWAYS" />
+                                        <RowConstraints maxHeight="365.6000305175781" minHeight="10.0" prefHeight="286.19998168945307" vgrow="ALWAYS" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

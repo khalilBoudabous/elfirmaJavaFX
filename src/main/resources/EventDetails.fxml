@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EventDetails">
+    <children>
+        <VBox spacing="10" prefWidth="600.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+                <Text fx:id="txtTitre" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+                <Label text="Description:" style="-fx-font-weight: bold;"/>
+                <TextArea fx:id="txtDescription" editable="false" wrapText="true" prefHeight="100.0"/>
+                <Label text="Dates:" style="-fx-font-weight: bold;"/>
+                <Text fx:id="txtDates" />
+                <Label text="Lieu:" style="-fx-font-weight: bold;"/>
+                <Text fx:id="txtLieu" />
+                <Label text="Informations pratiques:" style="-fx-font-weight: bold;"/>
+                <Text fx:id="txtInfos" />
+                <Button fx:id="btnInscription" text="S'inscrire" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" onAction="#handleInscription" />
+            </children>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@/cardstyles.css" />
+    </stylesheets>
+</AnchorPane>

@@ -14,6 +14,9 @@ public class MainFX extends Application {
         launch(args);
     }
 
+
+
+    /*
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
@@ -24,6 +27,32 @@ public class MainFX extends Application {
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Dashboard Evenement");
+            primaryStage.show();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    */
+
+    /*
+
+
+
+    */
+
+    @Override
+    public void start(Stage primaryStage) {
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getResource("/FrontOfficeEvenement.fxml"));
+
+        try {
+            Parent root=fxmlLoader.load();
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Welcome User");
             primaryStage.show();
 
         } catch (IOException e) {

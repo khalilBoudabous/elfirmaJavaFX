@@ -299,4 +299,21 @@ public class TerrainController {
             showAlert("Navigation Error", "Failed to navigate: " + e.getMessage());
         }
     }
+
+    @FXML
+    public void navigateToDashboard(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+
+            // Fermer l'ancienne fenêtre (optionnel)
+            Stage currentStage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            currentStage.close();
+        } catch (IOException e) {
+            showAlert("Navigation Error", "Failed to load Dashboard: " + e.getMessage());
+        }
+    }
 }

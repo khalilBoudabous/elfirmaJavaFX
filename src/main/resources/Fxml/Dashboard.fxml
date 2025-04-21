@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.DashboardController"
+      spacing="20" style="-fx-padding: 20; -fx-background-color: #f4f4f4;">
+
+    <!-- Header -->
+    <Text text="Dashboard Overview" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: #333;"/>
+
+    <!-- Status Cards (Active/Offline/Expired) -->
+    <HBox spacing="15" style="-fx-alignment: CENTER_LEFT;">
+        <VBox style="-fx-background-color: #e3f2fd; -fx-padding: 15; -fx-background-radius: 10;"
+              fx:id="cardActive">
+            <Label text="Active Terrains" style="-fx-font-weight: bold; -fx-text-fill: #0d47a1;"/>
+            <Label fx:id="lblActive" style="-fx-font-size: 18; -fx-text-fill: #0d47a1;"/>
+        </VBox>
+
+        <VBox style="-fx-background-color: #fff3e0; -fx-padding: 15; -fx-background-radius: 10;"
+              fx:id="cardOffline">
+            <Label text="Offline Terrains" style="-fx-font-weight: bold; -fx-text-fill: #e65100;"/>
+            <Label fx:id="lblOffline" style="-fx-font-size: 18; -fx-text-fill: #e65100;"/>
+        </VBox>
+
+        <VBox style="-fx-background-color: #ffebee; -fx-padding: 15; -fx-background-radius: 10;"
+              fx:id="cardExpired">
+            <Label text="Expired Terrains" style="-fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+            <Label fx:id="lblExpired" style="-fx-font-size: 18; -fx-text-fill: #c62828;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Pie Charts Section -->
+    <HBox spacing="30" style="-fx-alignment: CENTER;">
+        <VBox spacing="10" style="-fx-alignment: CENTER;">
+            <Label text="Terrain Status Distribution" style="-fx-font-weight: bold;"/>
+            <PieChart fx:id="pieHash" style="-fx-font-size: 14; -fx-legend-visible: true;" />
+        </VBox>
+
+        <VBox spacing="10" style="-fx-alignment: CENTER;">
+            <Label text="Location Types (Optional)" style="-fx-font-weight: bold;"/>
+            <PieChart fx:id="pieKey" style="-fx-font-size: 14; -fx-legend-visible: true;" />
+        </VBox>
+    </HBox>
+</VBox>

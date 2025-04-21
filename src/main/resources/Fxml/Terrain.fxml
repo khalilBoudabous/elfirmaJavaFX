@@ -81,6 +81,8 @@
             <Button onAction="#handleDeleteTerrain" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer" />
             <Button onAction="#initialize" style="-fx-background-color: #FF9800; -fx-text-fill: white;" text="Actualiser" />
             <Button onAction="#navigateToLocationPage" style="-fx-background-color: #8BC34A; -fx-text-fill: yellow;" text="Voir Locations" />
+            <Button onAction="#navigateToDashboard" style="-fx-background-color: #8BC34A; -fx-text-fill: yellow;" text="Dashboard" />
+
         </HBox>
 
         <!-- Terrain Table -->

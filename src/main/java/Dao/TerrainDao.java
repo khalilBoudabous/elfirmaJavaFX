@@ -6,6 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.DBconnection.getConnection;
+import static utils.DBconnection.getConnection;
+
+
 public class TerrainDao {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/mainelfirma";
     private static final String DB_USER = "root";
@@ -156,4 +160,23 @@ public class TerrainDao {
 
         return terrains;
     }
+
+
+    // Méthode pour compter les terrains par statut
+    public long countByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM terrain WHERE statut = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);  // Récupère le nombre de terrains avec le statut donné
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;  // Retourne 0 si une erreur se produit ou si aucun terrain n'est trouvé
+    }
 }
+
+

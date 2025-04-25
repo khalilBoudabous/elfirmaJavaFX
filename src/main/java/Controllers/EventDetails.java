@@ -1,6 +1,7 @@
 package Controllers;
 
 import entities.Evenement;
+import entities.Ticket;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -29,11 +30,47 @@ public class EventDetails {
 
     @FXML
     private void handleInscription() {
-        // Logique d'inscription
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Inscription");
+        if (event.getNombrePlaces() <= 0) {
+            showAlert("Erreur", "Aucune place disponible!");
+            return;
+        }
+        try {
+            services.TicketService ts = new services.TicketService();
+            services.EvenementService es = new services.EvenementService();
+
+            Ticket ticket = new Ticket();
+            ticket.setId_evenement(event.getId());
+            ticket.setPrix(event.getPrix());
+            ticket.setTitreEvenement(event.getTitre());
+            ticket.setPayée(false);
+            ticket.setUserId(1);
+
+            ts.ajouter(ticket);
+
+            event.setNombrePlaces(event.getNombrePlaces() - 1);
+            es.modifier(event);
+
+            // Optionally update UI info
+            txtInfos.setText("Prix: " + event.getPrix() + " € | Places disponibles: " + event.getNombrePlaces());
+            
+            // Refresh the event grid in FrontOfficeEvenement
+            Controllers.FrontOfficeEvenement.refreshEvents();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Inscription");
+            alert.setHeaderText(null);
+            alert.setContentText("Participation enregistrée pour l'événement: " + event.getTitre());
+            alert.showAndWait();
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur lors de l'inscription: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText("Inscription à l'événement: " + event.getTitre());
+        alert.setContentText(message);
         alert.showAndWait();
     }
 }

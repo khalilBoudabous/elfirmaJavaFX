@@ -1,7 +1,6 @@
 package entities;
 
 import java.sql.Date;
-
 public class Evenement {
 
     private int id, nombrePlaces;

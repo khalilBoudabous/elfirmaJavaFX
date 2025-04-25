@@ -1,18 +1,21 @@
 package entities;
 
-
 public class Ticket {
-    private int id,id_evenement;
+    private int id, id_evenement;
     private String titreEvenement;
     private float prix;
     private Boolean payée = false;
+    
+    // New user id field
+    private int userId;
 
-    public Ticket(int id, int id_evenement, String titreEvenement, float prix, Boolean payée) {
+    public Ticket(int id, int id_evenement, String titreEvenement, float prix, Boolean payée, int userId) {
         this.id = id;
         this.id_evenement = id_evenement;
         this.titreEvenement = titreEvenement;
         this.prix = prix;
         this.payée = payée;
+        this.userId = userId;
     }
 
     public Ticket() {}
@@ -25,9 +28,13 @@ public class Ticket {
         this.id_evenement = id_evenement;
     }
 
-    public String getTitreEvenement() { return titreEvenement;}
+    public String getTitreEvenement() {
+        return titreEvenement;
+    }
 
-    public void setTitreEvenement(String titreEvenement) {this.titreEvenement = titreEvenement;}
+    public void setTitreEvenement(String titreEvenement) {
+        this.titreEvenement = titreEvenement;
+    }
 
     public float getPrix() {
         return prix;
@@ -42,7 +49,7 @@ public class Ticket {
     }
 
     public void setPayée(Boolean payé) {
-        this.payée = payée;
+        this.payée = payé;
     }
 
     public int getId() {
@@ -52,6 +59,15 @@ public class Ticket {
     public void setId(int id) {
         this.id = id;
     }
+    
+    // Getter and setter for userId
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     @Override
     public String toString() {
@@ -60,7 +76,8 @@ public class Ticket {
                 ", id_evenement=" + id_evenement +
                 ", prix=" + prix +
                 ", payée=" + payée +
-                ", titreEvenement='" + titreEvenement +
+                ", titreEvenement='" + titreEvenement + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

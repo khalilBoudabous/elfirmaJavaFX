@@ -37,17 +37,18 @@ public class AfficherEvenement {
 
     private final EvenementService es = new EvenementService();
     @FXML
-    private TableColumn tcTitre;
+    private TableColumn<Ticket, String> tcTitre;
     @FXML
-    private TableColumn tcIdTicket;
+    private TableColumn<Ticket, Integer> tcIdTicket;
     @FXML
-    private TableColumn tcPaye;
+    private TableColumn<Ticket, Boolean> tcPaye;
     @FXML
-    private TableView tvTickets;
+    private TableColumn<Ticket, Float> tcPrix;
+    @FXML
+    private TableView<Ticket> tvTickets;
 
     private final TicketService ticketService = new TicketService();
-    @FXML
-    private TableColumn tcPrix;
+
 
     @FXML
     void initialize() {

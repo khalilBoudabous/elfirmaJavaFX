@@ -14,13 +14,13 @@ public class TicketService implements Service<Ticket> {
 
     @Override
     public void ajouter(Ticket ticket) throws SQLException {
-        String sql = "insert into ticket(prix, evenement_id, is_paid, Titre_evenement)" + "values(?,?,?,?)";
-
+        String sql = "insert into ticket(prix, utilisateur_id, evenement_id, is_paid, Titre_evenement) values(?,?,?,?,?)";
         try (PreparedStatement ts = cnx.prepareStatement(sql)) {
             ts.setFloat(1, ticket.getPrix());
-            ts.setInt(2,ticket.getId_evenement());
-            ts.setBoolean(3, ticket.getPayée());
-            ts.setString(4, ticket.getTitreEvenement());
+            ts.setInt(2, ticket.getUserId());
+            ts.setInt(3, ticket.getId_evenement());
+            ts.setBoolean(4, ticket.getPayée());
+            ts.setString(5, ticket.getTitreEvenement());
             ts.executeUpdate();
         }
     }
@@ -35,13 +35,14 @@ public class TicketService implements Service<Ticket> {
 
     @Override
     public void modifier(Ticket ticket) throws SQLException {
-        String sql = "update ticket set prix = ?, evenement_id = ?, is_paid = ?, Titre_evenement = ? where id = ?";
+        String sql = "update ticket set prix = ?, utilisateur_id = ?, evenement_id = ?, is_paid = ?, Titre_evenement = ? where id = ?";
         PreparedStatement ts = cnx.prepareStatement(sql);
         ts.setFloat(1, ticket.getPrix());
-        ts.setInt(2, ticket.getId_evenement());
-        ts.setBoolean(3, ticket.getPayée());
-        ts.setString(4, ticket.getTitreEvenement());
-        ts.setInt(5, ticket.getId());
+        ts.setInt(2, ticket.getUserId());
+        ts.setInt(3, ticket.getId_evenement());
+        ts.setBoolean(4, ticket.getPayée());
+        ts.setString(5, ticket.getTitreEvenement());
+        ts.setInt(6, ticket.getId());
         ts.executeUpdate();
     }
 
@@ -53,17 +54,6 @@ public class TicketService implements Service<Ticket> {
             ps.executeUpdate();
         }
     }
-
-    public void updateAllTicketsForEvent(Evenement event) throws SQLException {
-        String sql = "UPDATE ticket SET  prix = ?, Titre_evenement = ? WHERE evenement_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setFloat(1, event.getPrix());
-            ps.setString(2, event.getTitre());
-            ps.setInt(3, event.getId());
-            ps.executeUpdate();
-        }
-    }
-
 
     public int countUnpaidTickets(int eventId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ticket WHERE evenement_id = ? AND is_paid = false";
@@ -92,6 +82,25 @@ public class TicketService implements Service<Ticket> {
         }
     }
 
+    public int countPaidTickets(int eventId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM ticket WHERE evenement_id = ? AND is_paid = true";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    public void updateAllTicketsForEvent(Evenement event) throws SQLException {
+        String sql = "UPDATE ticket SET prix = ?, Titre_evenement = ? WHERE evenement_id = ? AND is_paid = false";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setFloat(1, event.getPrix());
+            ps.setString(2, event.getTitre());
+            ps.setInt(3, event.getId());
+            ps.executeUpdate();
+        }
+    }
+
 
     @Override
     public List<Ticket> recuperer() throws SQLException {
@@ -106,7 +115,9 @@ public class TicketService implements Service<Ticket> {
             int id_evenement = rs.getInt("evenement_id");
             boolean paye = rs.getBoolean("is_paid");
             String titreEvenement = rs.getString("Titre_evenement");
-            Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye);
+            // Retrieve user id
+            int userId = rs.getInt("user_id");
+            Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye, userId);
             tickets.add(ticket);
         }
         return tickets;

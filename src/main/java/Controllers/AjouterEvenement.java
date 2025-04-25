@@ -139,6 +139,8 @@ public class AjouterEvenement implements Initializable {
                 ticket.setPrix(prix);
                 ticket.setPayée(false);
                 ticket.setTitreEvenement(titreEvenement);
+                // Add user id to ticket
+                ticket.setUserId(1);
                 ts.ajouter(ticket);
             }
 

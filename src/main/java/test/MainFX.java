@@ -15,8 +15,8 @@ public class MainFX extends Application {
     }
 
 
+/*
 
-    /*
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
@@ -26,6 +26,7 @@ public class MainFX extends Application {
             Parent root=fxmlLoader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
             primaryStage.setTitle("Dashboard Evenement");
             primaryStage.show();
 
@@ -34,12 +35,6 @@ public class MainFX extends Application {
         }
 
     }
-
-    */
-
-    /*
-
-
 
     */
 
@@ -52,6 +47,7 @@ public class MainFX extends Application {
             Parent root=fxmlLoader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
             primaryStage.setTitle("Welcome User");
             primaryStage.show();
 

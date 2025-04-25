@@ -55,20 +55,12 @@ public class TicketService implements Service<Ticket> {
         }
     }
 
-    public int countUnpaidTickets(int eventId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM ticket WHERE evenement_id = ? AND is_paid = false";
+    public void updateAllTicketsForEvent(Evenement event) throws SQLException {
+        String sql = "UPDATE ticket SET  prix = ?, Titre_evenement = ? WHERE evenement_id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, eventId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
-        }
-    }
-
-    public void deleteUnpaidTickets(int eventId, int limit) throws SQLException {
-        String sql = "DELETE FROM ticket WHERE evenement_id = ? AND is_paid = false LIMIT ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, eventId);
-            ps.setInt(2, limit);
+            ps.setFloat(1, event.getPrix());
+            ps.setString(2, event.getTitre());
+            ps.setInt(3, event.getId());
             ps.executeUpdate();
         }
     }
@@ -78,25 +70,6 @@ public class TicketService implements Service<Ticket> {
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setFloat(1, newPrice);
             ps.setInt(2, eventId);
-            ps.executeUpdate();
-        }
-    }
-
-    public int countPaidTickets(int eventId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM ticket WHERE evenement_id = ? AND is_paid = true";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, eventId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
-        }
-    }
-
-    public void updateAllTicketsForEvent(Evenement event) throws SQLException {
-        String sql = "UPDATE ticket SET prix = ?, Titre_evenement = ? WHERE evenement_id = ? AND is_paid = false";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setFloat(1, event.getPrix());
-            ps.setString(2, event.getTitre());
-            ps.setInt(3, event.getId());
             ps.executeUpdate();
         }
     }
@@ -115,8 +88,8 @@ public class TicketService implements Service<Ticket> {
             int id_evenement = rs.getInt("evenement_id");
             boolean paye = rs.getBoolean("is_paid");
             String titreEvenement = rs.getString("Titre_evenement");
-            // Retrieve user id
-            int userId = rs.getInt("user_id");
+            // Retrieve user id (fixed column name)
+            int userId = rs.getInt("utilisateur_id");
             Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye, userId);
             tickets.add(ticket);
         }

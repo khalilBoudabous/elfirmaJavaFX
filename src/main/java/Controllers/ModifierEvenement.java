@@ -75,31 +75,6 @@ public class ModifierEvenement {
             // Gestion des tickets
             TicketService ticketService = new TicketService();
 
-            if (newPlaces != oldPlaces) {
-                int ticketsToAdjust = newPlaces - oldPlaces;
-
-                if (ticketsToAdjust < 0) {
-                    // Supprimer des tickets non payés
-                    int ticketsToRemove = -ticketsToAdjust;
-                    int unpaidTickets = ticketService.countUnpaidTickets(currentEvent.getId());
-                    int actualRemove = Math.min(ticketsToRemove, unpaidTickets);
-
-                    if (actualRemove > 0) {
-                        ticketService.deleteUnpaidTickets(currentEvent.getId(), actualRemove);
-                    }
-                } else {
-                    // Ajouter de nouveaux tickets
-                    for (int i = 0; i < ticketsToAdjust; i++) {
-                        Ticket newTicket = new Ticket();
-                        newTicket.setId_evenement(currentEvent.getId());
-                        newTicket.setPrix(newPrice);
-                        newTicket.setPayée(false);
-                        newTicket.setTitreEvenement(currentEvent.getTitre());
-                        ticketService.ajouter(newTicket);
-                    }
-                }
-            }
-
             // Mettre à jour le prix des tickets non payés et le titre de l'événement
             if (newPrice != oldPrice || !currentEvent.getTitre().equals(tfTitre.getText())) {
                 ticketService.updateAllTicketsForEvent(currentEvent);

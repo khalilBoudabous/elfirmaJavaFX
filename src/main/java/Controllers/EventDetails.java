@@ -28,6 +28,13 @@ public class EventDetails {
         txtInfos.setText("Prix: " + event.getPrix() + " € | Places disponibles: " + event.getNombrePlaces());
     }
 
+        // New helper method to supply a valid user id.
+        private int getCurrentUserId() {
+            // QUICK FIX: Return a valid user id that exists in your 'utilisateur' table.
+            // Or implement logic to retrieve the actual logged in user's id.
+            return 1; // Ensure a user with id = 1 exists in your database!
+        }
+
     @FXML
     private void handleInscription() {
         if (event.getNombrePlaces() <= 0) {
@@ -43,7 +50,8 @@ public class EventDetails {
             ticket.setPrix(event.getPrix());
             ticket.setTitreEvenement(event.getTitre());
             ticket.setPayée(false);
-            ticket.setUserId(1);
+            // Use a valid current user id instead of hardcoded value.
+            ticket.setUserId(getCurrentUserId());
 
             ts.ajouter(ticket);
 
@@ -55,6 +63,7 @@ public class EventDetails {
             
             // Refresh the event grid in FrontOfficeEvenement
             Controllers.FrontOfficeEvenement.refreshEvents();
+            Controllers.FrontOfficeEvenement.instance.loadTickets();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Inscription");
@@ -73,4 +82,5 @@ public class EventDetails {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

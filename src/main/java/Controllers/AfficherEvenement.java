@@ -23,6 +23,7 @@ import services.TicketService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class AfficherEvenement {
 
@@ -76,6 +77,12 @@ public class AfficherEvenement {
                 btn.setOnAction(event -> {
                     Evenement eventToDelete = getTableView().getItems().get(getIndex());
                     try {
+                        // Check if event can be deleted
+                        boolean canDelete = canDeleteEvent(eventToDelete);
+                        if (!canDelete) {
+                            showAlert("Suppression impossible", "Impossible de supprimer cet événement :\nIl existe des tickets payés et l'événement n'est pas encore terminé.");
+                            return;
+                        }
                         es.supprimer(eventToDelete);
                         loadData();
                         showAlert("Succès", "Événement supprimé avec succès!");
@@ -196,7 +203,7 @@ public class AfficherEvenement {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item ? "payé" : "non payé");
+                    setText(item ? "Etat du payement" : "non payé");
                 }
             }
         });
@@ -215,5 +222,27 @@ public class AfficherEvenement {
     @FXML
     public void AfficherTickets(Event event) {
         loadTicketsData();
+    }
+
+    /**
+     * Returns true if the event can be deleted:
+     * - All tickets are unpaid OR
+     * - The event's end date is before today
+     */
+    private boolean canDeleteEvent(Evenement event) throws SQLException {
+        // If event is finished, allow deletion
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate eventEnd = event.getDateFin().toLocalDate();
+        if (eventEnd.isBefore(today)) {
+            return true;
+        }
+        // Otherwise, check if all tickets are unpaid
+        List<Ticket> tickets = ticketService.recuperer();
+        for (Ticket t : tickets) {
+            if (t.getId_evenement() == event.getId() && t.getPayée()) {
+                return false; // Found a paid ticket
+            }
+        }
+        return true;
     }
 }

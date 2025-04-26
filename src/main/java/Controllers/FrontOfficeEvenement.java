@@ -15,26 +15,27 @@ import javafx.scene.layout.HBox;
 import entities.Ticket;
 import services.EvenementService;
 import services.TicketService;
-// For retrieving event dates
 import entities.Evenement;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Parent; // Added import
 
 public class FrontOfficeEvenement {
 
-    public static FrontOfficeEvenement instance; // new static instance
+    public static FrontOfficeEvenement instance;
 
     @FXML
     private GridPane gridEvents;
-    @FXML private ListView<Ticket> listTickets;
+    @FXML
+    private ListView<Ticket> listTickets;
 
     private final EvenementService evenementService = new EvenementService();
     private final TicketService ticketService = new TicketService();
-    private List<Evenement> eventsCache; // new field to cache events
+    private List<Evenement> eventsCache;
 
     @FXML
     public void initialize() {
@@ -42,19 +43,17 @@ public class FrontOfficeEvenement {
         loadEvents();
         loadTickets();
     }
-    
-    // Modified loadEvents method to cache events
+
     public void loadEvents() {
         try {
             List<Evenement> events = evenementService.recuperer();
-            eventsCache = events; // cache events for lookup
+            eventsCache = events;
             populateEventGrid(events);
         } catch (SQLException e) {
-            showAlert("Error", "Failed to load events: " + e.getMessage());
+             showAlert("Error", "Failed to load events: " + e.getMessage());
         }
     }
-    
-    // New helper method to retrieve event by id from cache
+
     private Evenement getEventById(int eventId) {
         if (eventsCache == null) return null;
         return eventsCache.stream()
@@ -62,8 +61,7 @@ public class FrontOfficeEvenement {
                 .findFirst()
                 .orElse(null);
     }
-    
-    // In loadTickets, update retrieval of event details using getEventById
+
     public void loadTickets() {
         try {
             listTickets.setItems(FXCollections.observableArrayList(ticketService.recuperer()));
@@ -83,13 +81,13 @@ public class FrontOfficeEvenement {
                             dates = "Dates inconnues";
                         }
                         Label info = new Label("Event: " + ticket.getTitreEvenement() +
-                                " | " + dates + " | Prix: " + ticket.getPrix());
+                                " | " + dates + " | Prix: " + ticket.getPrix() + " | Etat de payement: " + ticket.getPayée());
                         Button btnCancel = new Button("Cancel");
                         btnCancel.setOnAction(e -> {
-                            Alert conf = new Alert(Alert.AlertType.CONFIRMATION, 
+                            Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
                                     "Voulez-vous vraiment annuler votre participation ?", ButtonType.YES, ButtonType.NO);
                             Optional<ButtonType> result = conf.showAndWait();
-                            if(result.isPresent() && result.get() == ButtonType.YES) {
+                            if (result.isPresent() && result.get() == ButtonType.YES) {
                                 try {
                                     ticketService.supprimer(ticket);
                                     if (event != null) {
@@ -102,7 +100,7 @@ public class FrontOfficeEvenement {
                                 }
                             }
                         });
-                        Button btnPayer = new Button("payer");
+                        Button btnPayer = new Button("Payer");
                         btnPayer.setOnAction(e -> {
                             if (ticket.getPayée()) {
                                 new Alert(Alert.AlertType.INFORMATION, "Ce ticket est déjà payé.").showAndWait();
@@ -111,7 +109,7 @@ public class FrontOfficeEvenement {
                             Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
                                     "Voulez-vous procéder au paiement ?", ButtonType.YES, ButtonType.NO);
                             Optional<ButtonType> result = conf.showAndWait();
-                            if(result.isPresent() && result.get() == ButtonType.YES) {
+                            if (result.isPresent() && result.get() == ButtonType.YES) {
                                 try {
                                     ticket.setPayée(true);
                                     ticketService.modifier(ticket);
@@ -122,21 +120,35 @@ public class FrontOfficeEvenement {
                                 }
                             }
                         });
-                        HBox container = new HBox(10, info, btnCancel, btnPayer);
+                        Button btnViewDetails = new Button("View Details");
+                        btnViewDetails.setOnAction(e -> {
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/TicketDetails.fxml"));
+                                Parent pane = loader.load(); // Changed to Parent
+                                TicketDetailsController controller = loader.getController();
+                                controller.setTicketData(ticket, event);
+                                Stage stage = new Stage();
+                                stage.setTitle("Ticket Details");
+                                stage.setScene(new Scene(pane));
+                                stage.setMaximized(true);
+                                stage.show();
+                            } catch (IOException ex) {
+                                new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
+                            }
+                        });
+                        HBox container = new HBox(10, info, btnCancel, btnPayer, btnViewDetails);
                         setGraphic(container);
                     }
                 }
             });
             loadEvents();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, "Erreur de chargement des tickets: " + ex.getMessage()).showAndWait();
         }
     }
 
-
-    // New static refresh method
     public static void refreshEvents() {
-        if(instance != null) {
+        if (instance != null) {
             instance.loadEvents();
         }
     }
@@ -148,7 +160,7 @@ public class FrontOfficeEvenement {
             AnchorPane eventCard = createEventCard(event);
             gridEvents.add(eventCard, column, row);
             column++;
-            if (column == 2) { // 2 columns per row
+            if (column == 2) {
                 column = 0;
                 row++;
             }

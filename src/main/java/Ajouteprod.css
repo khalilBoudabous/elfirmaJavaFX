@@ -1,72 +1,54 @@
-/* ajouterprod.css */
-
-/* General container style */
-.main-container {
-    -fx-background-color: #f0fdf4; /* light greenish background */
-}
-
-/* Labels and Text styles */
-.text-area {
-    -fx-font-size: 16px;
-    -fx-fill: #2e7d32; /* rich green for text */
-    -fx-font-weight: bold;
-}
-
-/* TextFields and TextArea */
-.text-field, .text-area, .combo-box {
-    -fx-border-color: #a5d6a7;
-    -fx-border-width: 2px;
-    -fx-background-color: #ffffff;
-    -fx-font-size: 14px;
-    -fx-padding: 6px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-}
-
-.text-area {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #a5d6a7;
-    -fx-border-width: 2px;
-}
-
-/* Buttons */
-.button, .upload-button {
-    -fx-background-color: #66bb6a;
+/* Sidebar Button Styling */
+.sidebar-button {
+    -fx-background-color: #43a047;
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10 20;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(one-pass-box, rgba(0, 100, 0, 0.2), 4, 0.0, 0, 2);
 }
 
-.button:hover, .upload-button:hover {
-    -fx-background-color: #388e3c;
+.sidebar-button:hover {
+    -fx-background-color: #4caf50;
+    -fx-transition: -fx-background-color 0.3s ease;
 }
 
-/* ComboBox style */
-.combo-box {
-    -fx-font-size: 14px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-mark-color: #388e3c;
+/* Sign Out Button Styling */
+.signout-button {
+    -fx-background-color: #d32f2f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
 }
 
-/* Image container */
-.image-container {
-    -fx-border-color: #a5d6a7;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(46, 125, 50, 0.3), 10, 0, 0, 5);
+.signout-button:hover {
+    -fx-background-color: #e53935;
+    -fx-transition: -fx-background-color 0.3s ease;
 }
 
-/* Optional hover style for text fields */
-.text-field:hover, .text-area:hover {
-    -fx-border-color: #66bb6a;
+/* Product Button Styling */
+.product-button {
+    -fx-background-color: #43a047;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
 }
 
-/* Smooth transitions (JavaFX supports limited transitions) */
-.button {
-    -fx-transition: background-color 0.3s ease;
+.product-button:hover {
+    -fx-background-color: #4caf50;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+/* ScrollPane Styling */
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }

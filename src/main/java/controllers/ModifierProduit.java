@@ -122,6 +122,33 @@ public class ModifierProduit {
     @FXML
     public void modifierProduit() {
         try {
+            // Validation des champs
+            if (nomProduitField.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Le nom du produit est obligatoire.").showAndWait();
+                return;
+            }
+
+            if (prixField.getText().isEmpty() || !prixField.getText().matches("\\d+(\\.\\d{1,2})?")) {
+                new Alert(Alert.AlertType.WARNING, "Veuillez entrer un prix valide (ex: 10 ou 10.99).").showAndWait();
+                return;
+            }
+
+            if (quantiteField.getText().isEmpty() || !quantiteField.getText().matches("\\d+")) {
+                new Alert(Alert.AlertType.WARNING, "Veuillez entrer une quantité valide (nombre entier).").showAndWait();
+                return;
+            }
+
+            if (descriptionArea.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "La description est obligatoire.").showAndWait();
+                return;
+            }
+
+            if (categorieComboBox.getValue() == null) {
+                new Alert(Alert.AlertType.WARNING, "Veuillez sélectionner une catégorie.").showAndWait();
+                return;
+            }
+
+            // Mise à jour des données du produit
             produitActuel.setNom_produit(nomProduitField.getText());
             produitActuel.setPrix(Float.parseFloat(prixField.getText()));
             produitActuel.setQuantite(Integer.parseInt(quantiteField.getText()));
@@ -132,14 +159,17 @@ public class ModifierProduit {
                 produitActuel.setImage(selectedImageFile.getAbsolutePath());
             }
 
+            // Modification du produit
             produitService.modifier(produitActuel);
 
             new Alert(Alert.AlertType.INFORMATION, "Produit modifié avec succès").showAndWait();
 
+            // Recharger la liste des produits si le contrôleur d'affichage est défini
             if (affichageController != null) {
-                affichageController.initialize(); // Recharger la liste
+                affichageController.initialize();
             }
 
+            // Fermer la fenêtre actuelle
             Stage currentStage = (Stage) nomProduitField.getScene().getWindow();
             currentStage.close();
 

@@ -19,13 +19,14 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/Ajouterproduit.fxml"));
+                getClass().getResource("/Affichierproduitagriculteur.fxml"));
 
         try {
             Parent root=fxmlLoader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Modifier Produit");
+            primaryStage.setMaximized(true);
             primaryStage.show();
 
         } catch (IOException e) {

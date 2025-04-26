@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.ListeUtilisateursController"
+            prefHeight="400" prefWidth="800">
+
+    <VBox spacing="10" layoutX="20" layoutY="20">
+        <TableView fx:id="userTable">
+            <columns>
+                <TableColumn text="Nom" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="nom"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Prénom" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="prenom"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Email" prefWidth="150">
+                    <cellValueFactory><PropertyValueFactory property="email"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Rôle" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Action" prefWidth="150">
+                    <cellFactory>
+                    </cellFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+
+        <Button text="Retour" onAction="#retourAjout"/>
+    </VBox>
+</AnchorPane>

@@ -173,6 +173,7 @@ public class AfficherEvenement {
                 Parent root=fxmlLoader.load();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
+                stage.setMaximized(true);
                 stage.setTitle("Ajouter Evenement");
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();

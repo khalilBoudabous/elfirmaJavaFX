@@ -6,7 +6,7 @@ import utils.MyDatabase;
 
 public class Main {
     public static void main(String[] args) {
-        ProduitService produitService = new ProduitService();
+        /*ProduitService produitService = new ProduitService();
 
         Produit nouveauProduit = new Produit(
                 169, // id auto-incrémenté
@@ -22,11 +22,11 @@ public class Main {
 
         try {
             /*produitService.ajouter(nouveauProduit);
-            System.out.println("Produit ajouté avec succès !");*/
+            System.out.println("Produit ajouté avec succès !");
             produitService.supprimer(nouveauProduit);
         } catch (Exception e) {
             System.err.println("Erreur lors de l'ajout du produit : " + e.getMessage());
             e.printStackTrace();
-        }
+        }*/
     }
 }

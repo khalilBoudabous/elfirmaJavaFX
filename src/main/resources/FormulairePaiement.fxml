@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormulairePaiement" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+    <Label text="Formulaire de Paiement" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <Label text="Nom sur la carte" />
+    <TextField fx:id="cardNameField" promptText="Entrez le nom" />
+
+    <Label text="Numéro de carte" />
+    <TextField fx:id="cardNumberField" promptText="Entrez le numéro de carte" />
+
+    <Label text="Date d'expiration (MM/AA)" />
+    <TextField fx:id="expiryDateField" promptText="MM/AA" />
+
+    <Label text="CVV" />
+    <TextField fx:id="cvvField" promptText="Entrez le CVV" />
+
+    <Label text="Montant à payer" />
+    <Label fx:id="amountLabel" style="-fx-font-weight: bold;" />
+
+    <Label text="Code Promo" />
+    <TextField fx:id="codePromoField" promptText="Entrez le code promo" onKeyReleased="#validateCodePromo" />
+
+    <Label fx:id="codePromoStatusLabel" text="" />
+
+    <Button fx:id="payButton" text="Payer" onAction="#processPayment" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+    <Button fx:id="cancelButton" text="Annuler" onAction="#cancel" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
+</VBox>

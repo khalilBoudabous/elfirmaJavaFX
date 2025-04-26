@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class Ajouterproduit {
 
@@ -34,6 +36,8 @@ public class Ajouterproduit {
     @FXML private TextArea descriptionArea;
     @FXML private TextField nomProduitField;
     @FXML private TextField prixField;
+    @FXML private TextField discountPercentageField;
+    @FXML private TextField codePromoField;
 
     // Services
     private final ProduitService produitService = new ProduitService();
@@ -41,17 +45,23 @@ public class Ajouterproduit {
 
     // Variables
     private File selectedImageFile;
-    @FXML
-    private Button ajout;
+    private String generatedCodePromo;
+    @FXML private Button ajout;
 
-    /**
-     * Initialize method to set up the ComboBox and load categories.
-     */
+    // Constantes pour les validations
+    private static final int MAX_QUANTITE = 10000;
+    private static final float MAX_PRIX = 1000000.0f;
+    private static final int MIN_NOM_LENGTH = 2;
+    private static final int MAX_NOM_LENGTH = 100;
+    private static final int MIN_DESC_LENGTH = 10;
+    private static final int MAX_DESC_LENGTH = 500;
+    private static final String CODE_PROMO_PATTERN = "^[A-Z0-9]{8}$"; // 8 caractères alphanumériques
+    private static final String NOM_PATTERN = "^[a-zA-Z\\s-]+$"; // Lettres, espaces, tirets (pas de chiffres)
+
     @FXML
     public void initialize() {
         chargerCategories();
 
-        // Configure ComboBox to show category name
         categorieComboBox.setConverter(new javafx.util.StringConverter<>() {
             @Override
             public String toString(Categorie categorie) {
@@ -66,11 +76,21 @@ public class Ajouterproduit {
                         .orElse(null);
             }
         });
+
+        generatedCodePromo = generateCodePromo();
+        codePromoField.setText(generatedCodePromo);
     }
 
-    /**
-     * Load categories from the service and populate the ComboBox.
-     */
+    private String generateCodePromo() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder code = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) {
+            code.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return code.toString();
+    }
+
     private void chargerCategories() {
         try {
             List<Categorie> categories = categorieService.recuperer();
@@ -80,30 +100,20 @@ public class Ajouterproduit {
         }
     }
 
-    /**
-     * Handle category selection change event.
-     */
     @FXML
     private void handleCategorieChange(ActionEvent actionEvent) {
         Categorie selected = categorieComboBox.getValue();
         System.out.println("Catégorie sélectionnée : " + (selected != null ? selected.getNom_categorie() : "Aucune"));
     }
 
-    /**
-     * Handle image upload for the product.
-     */
     @FXML
     private void handleUploadImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Sélectionner une image de produit");
-
-        // Add image filter
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter(
                 "Fichiers image", "*.jpg", "*.jpeg", "*.png", "*.gif"
         );
         fileChooser.getExtensionFilters().add(imageFilter);
-
-        // Open file dialog
         selectedImageFile = fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
 
         if (selectedImageFile != null) {
@@ -112,47 +122,102 @@ public class Ajouterproduit {
                 productImage.setImage(image);
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Erreur lors du chargement de l'image", e);
-                new Alert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'image : " + e.getMessage()).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'image : " + e.getMessage()).showAndWait(); // Correction ici
             }
         }
     }
 
-    /**
-     * Add a new product by collecting data from input fields and saving it.
-     */
     @FXML
     public void ajouterproduit(ActionEvent actionEvent) {
         try {
-            // Get product data
-            String nomProduit = nomProduitField.getText();
-            String description = descriptionArea.getText();
+            // Validation des champs
+            String nomProduit = nomProduitField.getText().trim();
+            if (nomProduit.isEmpty()) {
+                showWarning("Veuillez entrer le nom du produit.");
+                return;
+            }
+            if (nomProduit.length() < MIN_NOM_LENGTH || nomProduit.length() > MAX_NOM_LENGTH) {
+                showWarning("Le nom du produit doit contenir entre " + MIN_NOM_LENGTH + " et " + MAX_NOM_LENGTH + " caractères.");
+                return;
+            }
+            if (!Pattern.matches(NOM_PATTERN, nomProduit)) {
+                showWarning("Le nom du produit ne doit contenir que des lettres, espaces ou tirets (pas de chiffres).");
+                return;
+            }
+
+            String description = descriptionArea.getText().trim();
+            if (description.isEmpty()) {
+                showWarning("Veuillez entrer une description pour le produit.");
+                return;
+            }
+            if (description.length() < MIN_DESC_LENGTH || description.length() > MAX_DESC_LENGTH) {
+                showWarning("La description doit contenir entre " + MIN_DESC_LENGTH + " et " + MAX_DESC_LENGTH + " caractères.");
+                return;
+            }
+
             int quantite = parseInt(quantiteField.getText(), "quantité");
+            if (quantite == -1) return;
+            if (quantite < 0) {
+                showWarning("La quantité ne peut pas être négative.");
+                return;
+            }
+            if (quantite > MAX_QUANTITE) {
+                showWarning("La quantité ne peut pas dépasser " + MAX_QUANTITE + ".");
+                return;
+            }
+
             float prix = parseFloat(prixField.getText(), "prix");
+            if (prix == -1) return;
+            if (prix < 0) {
+                showWarning("Le prix ne peut pas être négatif.");
+                return;
+            }
+            if (prix > MAX_PRIX) {
+                showWarning("Le prix ne peut pas dépasser " + MAX_PRIX + " DT.");
+                return;
+            }
 
-            if (quantite == -1 || prix == -1) return; // Exit if invalid data
-
-            // Validate category selection
             Categorie selectedCategorie = categorieComboBox.getValue();
             if (selectedCategorie == null) {
                 showWarning("Veuillez sélectionner une catégorie.");
                 return;
             }
 
-            // Validate image selection
             if (selectedImageFile == null) {
                 showWarning("Veuillez sélectionner une image pour le produit.");
                 return;
             }
 
-            // Create product and add it
+            // Validation du pourcentage de réduction
+            float discountPercentage;
+            try {
+                discountPercentage = discountPercentageField.getText().isEmpty() ? 0 : Float.parseFloat(discountPercentageField.getText());
+                if (discountPercentage < 0 || discountPercentage > 100) {
+                    showWarning("Le pourcentage de réduction doit être entre 0 et 100.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showWarning("Veuillez entrer un pourcentage de réduction valide (ex: 10).");
+                return;
+            }
+
+            // Récupérer et valider le code promo
+            String codePromo = codePromoField.getText().trim();
+            if (codePromo.isEmpty()) {
+                showWarning("Le code promo ne peut pas être vide.");
+                return;
+            }
+            if (!Pattern.matches(CODE_PROMO_PATTERN, codePromo)) {
+                showWarning("Le code promo doit contenir exactement 8 caractères alphanumériques.");
+                return;
+            }
+
+            // Créer le produit et l'ajouter
             String imagePath = selectedImageFile.getAbsolutePath();
-            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imagePath, description, nomProduit);
+            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imagePath, description, nomProduit, codePromo, discountPercentage);
             produitService.ajouter(produit);
 
-            // Show success message
             showInfo("Produit ajouté avec succès!");
-
-            // Redirect to product list page
             redirectToProductList();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erreur lors de l'ajout du produit", e);
@@ -160,9 +225,6 @@ public class Ajouterproduit {
         }
     }
 
-    /**
-     * Parse integer value from text input with validation.
-     */
     private int parseInt(String text, String fieldName) {
         try {
             return Integer.parseInt(text);
@@ -172,9 +234,6 @@ public class Ajouterproduit {
         }
     }
 
-    /**
-     * Parse float value from text input with validation.
-     */
     private float parseFloat(String text, String fieldName) {
         try {
             return Float.parseFloat(text);
@@ -184,23 +243,14 @@ public class Ajouterproduit {
         }
     }
 
-    /**
-     * Show warning alert with the specified message.
-     */
     private void showWarning(String message) {
         new Alert(Alert.AlertType.WARNING, message).showAndWait();
     }
 
-    /**
-     * Show error alert with the specified message.
-     */
     private void showError(String message) {
         new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 
-    /**
-     * Show information alert with the specified message.
-     */
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Ajout réussi");
@@ -209,16 +259,14 @@ public class Ajouterproduit {
         alert.showAndWait();
     }
 
-    /**
-     * Redirect to the product list page.
-     */
     private void redirectToProductList() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AffichierProduit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Affichierproduitagriculteur.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) nomProduitField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Liste des Produits");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Erreur lors du chargement de la page AffichierProduit", e);
@@ -226,9 +274,6 @@ public class Ajouterproduit {
         }
     }
 
-    /**
-     * Clear all input fields.
-     */
     private void clearFields() {
         nomProduitField.clear();
         quantiteField.clear();
@@ -237,5 +282,8 @@ public class Ajouterproduit {
         productImage.setImage(null);
         selectedImageFile = null;
         categorieComboBox.getSelectionModel().clearSelection();
+        discountPercentageField.clear();
+        generatedCodePromo = generateCodePromo();
+        codePromoField.setText(generatedCodePromo);
     }
 }

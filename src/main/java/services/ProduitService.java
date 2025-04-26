@@ -1,7 +1,6 @@
 package services;
 
 import entities.Produit;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,8 @@ public class ProduitService implements Service<Produit> {
 
     @Override
     public void ajouter(Produit produit) throws SQLException {
-        String sql = "INSERT INTO produit (nom_produit,description, image, quantite, prix,  categorie_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO produit (nom_produit, description, image, quantite, prix, categorie_id, code_promo, discount_percentage) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, produit.getNom_produit());
         ps.setString(2, produit.getDescription());
@@ -26,12 +25,14 @@ public class ProduitService implements Service<Produit> {
         ps.setInt(4, produit.getQuantite());
         ps.setFloat(5, produit.getPrix());
         ps.setInt(6, produit.getCategorie_id());
+        ps.setString(7, produit.getCode_promo());
+        ps.setFloat(8, produit.getDiscount_percentage());
         ps.executeUpdate();
     }
 
     @Override
     public void modifier(Produit produit) throws SQLException {
-        String sql = "UPDATE produit SET nom_produit = ?, quantite = ?, prix = ?, image = ?, description = ?, categorie_id = ? WHERE id = ?";
+        String sql = "UPDATE produit SET nom_produit = ?, quantite = ?, prix = ?, image = ?, description = ?, categorie_id = ?, code_promo = ?, discount_percentage = ? WHERE id = ?";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, produit.getNom_produit());
         ps.setInt(2, produit.getQuantite());
@@ -39,7 +40,9 @@ public class ProduitService implements Service<Produit> {
         ps.setString(4, produit.getImage());
         ps.setString(5, produit.getDescription());
         ps.setInt(6, produit.getCategorie_id());
-        ps.setInt(7, produit.getId());
+        ps.setString(7, produit.getCode_promo());
+        ps.setFloat(8, produit.getDiscount_percentage());
+        ps.setInt(9, produit.getId());
         ps.executeUpdate();
     }
 
@@ -50,7 +53,6 @@ public class ProduitService implements Service<Produit> {
         statement.setInt(1, produit.getId());
         statement.executeUpdate();
     }
-
 
     @Override
     public List<Produit> recuperer() throws SQLException {
@@ -67,10 +69,34 @@ public class ProduitService implements Service<Produit> {
                     rs.getFloat("prix"),
                     rs.getString("image"),
                     rs.getString("description"),
-                    rs.getString("nom_produit")
+                    rs.getString("nom_produit"),
+                    rs.getString("code_promo"),
+                    rs.getFloat("discount_percentage")
             );
             produits.add(p);
         }
         return produits;
+    }
+
+    public Produit getProduitByCodePromo(String codePromo) throws SQLException {
+        String sql = "SELECT * FROM produit WHERE code_promo = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, codePromo);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new Produit(
+                    rs.getInt("id"),
+                    rs.getInt("quantite"),
+                    rs.getInt("categorie_id"),
+                    rs.getFloat("prix"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("nom_produit"),
+                    rs.getString("code_promo"),
+                    rs.getFloat("discount_percentage")
+            );
+        }
+        return null;
     }
 }

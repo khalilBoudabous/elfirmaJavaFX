@@ -55,22 +55,18 @@ public class Affichierproduitagriculteur {
 
     @FXML
     public void initialize() {
-        // Populate category checkboxes
         populateCategories();
-        // Load products initially
         chargerProduits();
-        // Make FlowPane responsive to window resizing
-        productContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty().subtract(60)); // Subtract padding
-        // Set up pagination listener
+        productContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty().subtract(60));
         pagination.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> updatePage(newIndex.intValue()));
     }
 
     private void populateCategories() {
         try {
-            List<Categorie> categories = categorieService.recuperer(); // Fetch all categories
+            List<Categorie> categories = categorieService.recuperer();
             for (Categorie cat : categories) {
                 CheckBox checkBox = new CheckBox(cat.getNom_categorie());
-                checkBox.setUserData(cat.getId()); // Store category ID in userData
+                checkBox.setUserData(cat.getId());
                 categoryCheckBoxes.add(checkBox);
                 categoryBox.getChildren().add(checkBox);
             }
@@ -86,13 +82,9 @@ public class Affichierproduitagriculteur {
 
     private void chargerProduits() {
         try {
-            // Fetch all products
             List<Produit> produits = produitService.recuperer();
-            // Apply filters
             filteredProduits = filterProduits(produits);
-            // Update pagination
             updatePagination();
-            // Display first page
             updatePage(0);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,8 +93,8 @@ public class Affichierproduitagriculteur {
 
     private void updatePagination() {
         int pageCount = (int) Math.ceil((double) filteredProduits.size() / PRODUCTS_PER_PAGE);
-        pagination.setPageCount(pageCount > 0 ? pageCount : 1); // Ensure at least 1 page
-        pagination.setCurrentPageIndex(0); // Reset to first page after filtering
+        pagination.setPageCount(pageCount > 0 ? pageCount : 1);
+        pagination.setCurrentPageIndex(0);
     }
 
     private void updatePage(int pageIndex) {
@@ -117,7 +109,6 @@ public class Affichierproduitagriculteur {
     }
 
     private List<Produit> filterProduits(List<Produit> produits) {
-        // Filter by name
         String searchTerm = searchField.getText().trim().toLowerCase();
         if (!searchTerm.isEmpty()) {
             produits = produits.stream()
@@ -125,7 +116,6 @@ public class Affichierproduitagriculteur {
                     .collect(Collectors.toList());
         }
 
-        // Filter by category
         List<Integer> selectedCategoryIds = categoryCheckBoxes.stream()
                 .filter(CheckBox::isSelected)
                 .map(cb -> (Integer) cb.getUserData())
@@ -136,7 +126,6 @@ public class Affichierproduitagriculteur {
                     .collect(Collectors.toList());
         }
 
-        // Filter by price
         try {
             double minPrice = minPriceField.getText().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(minPriceField.getText());
             double maxPrice = maxPriceField.getText().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxPriceField.getText());
@@ -165,7 +154,6 @@ public class Affichierproduitagriculteur {
             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
         """);
 
-        // Add hover effect
         card.setOnMouseEntered(e -> card.setStyle("""
             -fx-background-color: #A5D6A7;
             -fx-border-color: #1B5E20;
@@ -192,7 +180,6 @@ public class Affichierproduitagriculteur {
         imageView.setFitHeight(160);
         imageView.setPreserveRatio(true);
 
-        // Add rounded corners to the image
         Rectangle clip = new Rectangle(200, 160);
         clip.setArcWidth(20);
         clip.setArcHeight(20);
@@ -221,14 +208,15 @@ public class Affichierproduitagriculteur {
         Label catLabel = new Label("Catégorie: " + nomCategorie);
         catLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #424242;");
 
-        // Fixed button layout
-        HBox buttonBox = new HBox();
+
+
+        HBox buttonBox = new HBox(10); // Ajout d'un espacement entre les boutons
         buttonBox.setPadding(new Insets(10, 0, 0, 0));
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setMinHeight(40); // Fixed height for consistency
+        buttonBox.setMinHeight(40);
 
         Button btnDetails = new Button("Détails");
-        btnDetails.setPrefWidth(100); // Fixed width for consistency
+        btnDetails.setPrefWidth(100);
         btnDetails.setStyle("""
             -fx-background-color: #388E3C;
             -fx-text-fill: white;
@@ -258,12 +246,42 @@ public class Affichierproduitagriculteur {
         """));
         btnDetails.setOnAction(e -> ouvrirFenetreDetails(produit));
 
-        buttonBox.getChildren().add(btnDetails);
+        Button btnPayer = new Button("Payer");
+        btnPayer.setPrefWidth(100);
+        btnPayer.setStyle("""
+            -fx-background-color: #4CAF50;
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+            -fx-padding: 8 20;
+            -fx-background-radius: 10;
+            -fx-cursor: hand;
+        """);
+        btnPayer.setOnMouseEntered(e -> btnPayer.setStyle("""
+            -fx-background-color: #2E7D32;
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+            -fx-padding: 8 20;
+            -fx-background-radius: 10;
+            -fx-cursor: hand;
+        """));
+        btnPayer.setOnMouseExited(e -> btnPayer.setStyle("""
+            -fx-background-color: #4CAF50;
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+            -fx-padding: 8 20;
+            -fx-background-radius: 10;
+            -fx-cursor: hand;
+        """));
+        btnPayer.setOnAction(e -> ouvrirFormulairePaiement(produit));
 
-        // Ensure buttonBox is at the bottom with consistent spacing
+        buttonBox.getChildren().addAll(btnDetails, btnPayer);
+
         Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS); // Push button to bottom
-        card.getChildren().addAll(imageView, nomLabel, descLabel, prixLabel, quantiteLabel, catLabel, spacer, buttonBox);
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        card.getChildren().addAll(imageView, nomLabel, descLabel, prixLabel, quantiteLabel, catLabel,  spacer, buttonBox);
 
         return card;
     }
@@ -279,7 +297,24 @@ public class Affichierproduitagriculteur {
             Stage stage = new Stage();
             stage.setTitle("Détails du Produit");
             stage.setScene(new Scene(root));
-            stage.setMaximized(true); // Maximize the window
+            stage.setMaximized(true);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ouvrirFormulairePaiement(Produit produit) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FormulairePaiement.fxml"));
+            Parent root = loader.load();
+
+            FormulairePaiement controller = loader.getController();
+            controller.setProduit(produit);
+
+            Stage stage = new Stage();
+            stage.setTitle("Formulaire de Paiement");
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

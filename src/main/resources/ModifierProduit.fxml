@@ -1,87 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="609.0" prefWidth="1046.0" styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ModifierProduit">
-   <children>
-      <AnchorPane layoutX="-2.0" layoutY="-1.0" prefHeight="645.0" prefWidth="259.0" styleClass="btn" stylesheets="@../java/mainFormDesign.css">
-         <children>
-            <Button layoutX="20.0" layoutY="180.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="210.0" stylesheets="@../java/mainFormDesign.css" text="Dashboard">
-               <styleClass>
-                  <String fx:value="nav-btn" />
-                  <String fx:value="btn" />
-               </styleClass>
-            </Button>
-            <Button layoutX="20.0" layoutY="243.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="210.0" stylesheets="@../java/mainFormDesign.css" text="Inventory">
-               <styleClass>
-                  <String fx:value="nav-btn" />
-                  <String fx:value="btn" />
-               </styleClass>
-            </Button>
-            <Button layoutX="20.0" layoutY="307.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="210.0" stylesheets="@../java/mainFormDesign.css" text="Menu">
-               <styleClass>
-                  <String fx:value="nav-btn" />
-                  <String fx:value="btn" />
-               </styleClass>
-            </Button>
-            <Button layoutX="20.0" layoutY="370.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="210.0" stylesheets="@../java/mainFormDesign.css" text="Customers">
-               <styleClass>
-                  <String fx:value="nav-btn" />
-                  <String fx:value="btn" />
-               </styleClass>
-            </Button>
-            <Button layoutX="59.0" layoutY="535.0" mnemonicParsing="false" stylesheets="@../java/mainFormDesign.css" text="Sign out">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <styleClass>
-                  <String fx:value="upload-button" />
-                  <String fx:value="button" />
-               </styleClass>
-            </Button>
-            <AnchorPane layoutX="14.0" layoutY="27.0" prefHeight="110.0" prefWidth="200.0" styleClass="column-header-background" stylesheets="@../java/mainFormDesign.css">
-               <children>
-                  <Label layoutX="89.0" layoutY="21.0" styleClass="column-header-background" stylesheets="@../java/mainFormDesign.css" text="EL_FIRMA">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="41.0" layoutY="58.0" styleClass="column-header-background" stylesheets="@../java/mainFormDesign.css" text="Welcome">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-         </children>
-      </AnchorPane>
-      <TextField fx:id="nomProduitField" layoutX="351.0" layoutY="122.0" styleClass="text-field" stylesheets="@../java/ajouterprod.css" />
-      <TextField fx:id="quantiteField" layoutX="353.0" layoutY="221.0" />
-      <Button fx:id="uploadButton" layoutX="711.0" layoutY="92.0" mnemonicParsing="false" onAction="#handleUploadImage" style="-fx-background-color: #74A063;" stylesheets="@../java/ajouterprod.css" text="uploadButton" />
-      <Button fx:id="ajout" layoutX="575.0" layoutY="518.0" mnemonicParsing="false" onAction="#modifierProduit" style="-fx-background-color: #74A063;" stylesheets="@../java/ajouterprod.css" text="Modifier produit" />
-      <Text layoutX="359.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Nom produit" />
-      <Text layoutX="366.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Quantité" />
-      <TextField fx:id="prixField" layoutX="351.0" layoutY="290.0" stylesheets="@../java/ajouterprod.css" />
-      <Text layoutX="366.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Prix" />
-      <Text layoutX="366.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Description" />
-      <Text layoutX="632.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Image" />
-      <ImageView fx:id="productImage" fitHeight="116.0" fitWidth="124.0" layoutX="838.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true" styleClass="image-container" />
-      <TextArea fx:id="descriptionArea" layoutX="353.0" layoutY="378.0" prefHeight="60.0" prefWidth="329.0" styleClass="text-area" stylesheets="@../java/ajouterprod.css" />
-      <Text layoutX="614.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-area" text="Catégorie" />
-      <ComboBox fx:id="categorieComboBox" layoutX="720.0" layoutY="258.0" onAction="#handleCategorieChange" prefHeight="44.0" prefWidth="237.0" promptText="Sélectionner une catégorie" style="-fx-background-color: #74A063;" styleClass="combo-box" stylesheets="@../java/ajouterprod.css" />
-   </children>
-   <stylesheets>
-      <URL value="@../java/ajouterprod.css" />
-      <URL value="@../java/Ajouteprod.css" />
-   </stylesheets>
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ModifierProduit" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+   <Label text="Modifier un Produit" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+   <Label text="Nom du Produit" />
+   <TextField fx:id="nomProduitField" promptText="Entrez le nom du produit" />
+
+   <Label text="Description" />
+   <TextArea fx:id="descriptionArea" promptText="Entrez la description" wrapText="true" />
+
+   <Label text="Quantité" />
+   <TextField fx:id="quantiteField" promptText="Entrez la quantité" />
+
+   <Label text="Prix" />
+   <TextField fx:id="prixField" promptText="Entrez le prix (ex: 12.5)" />
+
+   <Label text="Catégorie" />
+   <ComboBox fx:id="categorieComboBox" onAction="#handleCategorieChange" promptText="Sélectionnez une catégorie" />
+
+   <Label text="Image du Produit" />
+   <ImageView fx:id="productImage" fitWidth="200" fitHeight="200" preserveRatio="true" />
+   <Button fx:id="uploadButton" text="Charger une Image" onAction="#handleUploadImage" />
+
+   <Label text="Code Promo" />
+   <TextField fx:id="codePromoField" promptText="Entrez le code promo" />
+
+   <Label text="Pourcentage de Réduction (%)" />
+   <TextField fx:id="discountPercentageField" promptText="Entrez le pourcentage (0-100)" />
+
+   <Button fx:id="ajout" text="Modifier Produit" onAction="#modifierProduit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+</VBox>

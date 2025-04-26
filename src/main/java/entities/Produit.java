@@ -3,9 +3,11 @@ package entities;
 public class Produit {
     private int id, quantite, categorie_id;
     private float prix;
-    private String image, description, nom_produit;
+    private String image, description, nom_produit, code_promo; // Nouveau champ
+    private float discount_percentage; // Nouveau champ
 
-    public Produit(int id, int quantite, int categorie_id, float prix, String image, String description, String nom_produit) {
+    // Constructeur complet
+    public Produit(int id, int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage) {
         this.id = id;
         this.quantite = quantite;
         this.categorie_id = categorie_id;
@@ -13,7 +15,23 @@ public class Produit {
         this.image = image;
         this.description = description;
         this.nom_produit = nom_produit;
+        this.code_promo = code_promo;
+        this.discount_percentage = discount_percentage;
     }
+
+    // Constructeur pour ajout
+    public Produit(int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage) {
+        this.quantite = quantite;
+        this.categorie_id = categorie_id;
+        this.prix = prix;
+        this.image = image;
+        this.description = description;
+        this.nom_produit = nom_produit;
+        this.code_promo = code_promo;
+        this.discount_percentage = discount_percentage;
+    }
+
+    // Constructeur sans code promo (pour compatibilité avec les anciens produits)
     public Produit(int quantite, int categorie_id, float prix, String image, String description, String nom_produit) {
         this.quantite = quantite;
         this.categorie_id = categorie_id;
@@ -21,8 +39,11 @@ public class Produit {
         this.image = image;
         this.description = description;
         this.nom_produit = nom_produit;
+        this.code_promo = null;
+        this.discount_percentage = 0;
     }
 
+    // Getters et setters
     public int getId() {
         return id;
     }
@@ -79,6 +100,22 @@ public class Produit {
         this.quantite = quantite;
     }
 
+    public String getCode_promo() {
+        return code_promo;
+    }
+
+    public void setCode_promo(String code_promo) {
+        this.code_promo = code_promo;
+    }
+
+    public float getDiscount_percentage() {
+        return discount_percentage;
+    }
+
+    public void setDiscount_percentage(float discount_percentage) {
+        this.discount_percentage = discount_percentage;
+    }
+
     @Override
     public String toString() {
         return "Produit{" +
@@ -89,6 +126,8 @@ public class Produit {
                 ", image='" + image + '\'' +
                 ", description='" + description + '\'' +
                 ", nom_produit='" + nom_produit + '\'' +
+                ", code_promo='" + code_promo + '\'' +
+                ", discount_percentage=" + discount_percentage +
                 '}';
     }
 }

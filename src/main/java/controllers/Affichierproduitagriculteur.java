@@ -9,7 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -21,37 +24,130 @@ import services.CategorieService;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Affichierproduitagriculteur {
 
     private final ProduitService produitService = new ProduitService();
     private final CategorieService categorieService = new CategorieService();
+    private List<CheckBox> categoryCheckBoxes = new ArrayList<>();
+    private List<Produit> filteredProduits = new ArrayList<>();
+    private static final int PRODUCTS_PER_PAGE = 6;
 
     @FXML
     private FlowPane productContainer;
     @FXML
     private AnchorPane scrollPane;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private VBox categoryBox;
+    @FXML
+    private TextField minPriceField;
+    @FXML
+    private TextField maxPriceField;
+    @FXML
+    private Button filterButton;
+    @FXML
+    private Pagination pagination;
 
     @FXML
     public void initialize() {
+        // Populate category checkboxes
+        populateCategories();
+        // Load products initially
         chargerProduits();
         // Make FlowPane responsive to window resizing
         productContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty().subtract(60)); // Subtract padding
+        // Set up pagination listener
+        pagination.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> updatePage(newIndex.intValue()));
     }
 
-    private void chargerProduits() {
+    private void populateCategories() {
         try {
-            productContainer.getChildren().clear();
-            List<Produit> produits = produitService.recuperer();
-
-            for (Produit p : produits) {
-                VBox card = createProductCard(p);
-                productContainer.getChildren().add(card);
+            List<Categorie> categories = categorieService.recuperer(); // Fetch all categories
+            for (Categorie cat : categories) {
+                CheckBox checkBox = new CheckBox(cat.getNom_categorie());
+                checkBox.setUserData(cat.getId()); // Store category ID in userData
+                categoryCheckBoxes.add(checkBox);
+                categoryBox.getChildren().add(checkBox);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void applyFilters() {
+        chargerProduits();
+    }
+
+    private void chargerProduits() {
+        try {
+            // Fetch all products
+            List<Produit> produits = produitService.recuperer();
+            // Apply filters
+            filteredProduits = filterProduits(produits);
+            // Update pagination
+            updatePagination();
+            // Display first page
+            updatePage(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePagination() {
+        int pageCount = (int) Math.ceil((double) filteredProduits.size() / PRODUCTS_PER_PAGE);
+        pagination.setPageCount(pageCount > 0 ? pageCount : 1); // Ensure at least 1 page
+        pagination.setCurrentPageIndex(0); // Reset to first page after filtering
+    }
+
+    private void updatePage(int pageIndex) {
+        productContainer.getChildren().clear();
+        int startIndex = pageIndex * PRODUCTS_PER_PAGE;
+        int endIndex = Math.min(startIndex + PRODUCTS_PER_PAGE, filteredProduits.size());
+
+        for (int i = startIndex; i < endIndex; i++) {
+            VBox card = createProductCard(filteredProduits.get(i));
+            productContainer.getChildren().add(card);
+        }
+    }
+
+    private List<Produit> filterProduits(List<Produit> produits) {
+        // Filter by name
+        String searchTerm = searchField.getText().trim().toLowerCase();
+        if (!searchTerm.isEmpty()) {
+            produits = produits.stream()
+                    .filter(p -> p.getNom_produit().toLowerCase().contains(searchTerm))
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by category
+        List<Integer> selectedCategoryIds = categoryCheckBoxes.stream()
+                .filter(CheckBox::isSelected)
+                .map(cb -> (Integer) cb.getUserData())
+                .collect(Collectors.toList());
+        if (!selectedCategoryIds.isEmpty()) {
+            produits = produits.stream()
+                    .filter(p -> selectedCategoryIds.contains(p.getCategorie_id()))
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by price
+        try {
+            double minPrice = minPriceField.getText().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(minPriceField.getText());
+            double maxPrice = maxPriceField.getText().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxPriceField.getText());
+            produits = produits.stream()
+                    .filter(p -> p.getPrix() >= minPrice && p.getPrix() <= maxPrice)
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            // Ignore invalid price inputs
+        }
+
+        return produits;
     }
 
     private VBox createProductCard(Produit produit) {

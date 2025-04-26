@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" fitToHeight="true" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Affichierproduitagriculteur">
-    <content>
-        <AnchorPane fx:id="scrollPane">
-            <FlowPane fx:id="productContainer" hgap="20" vgap="20" prefWrapLength="1200" style="-fx-padding: 20 20 20 40;" alignment="TOP_LEFT"/>
-        </AnchorPane>
-    </content>
-</ScrollPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Affichierproduitagriculteur">
+    <!-- Left Sidebar: Filter Panel -->
+    <left>
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #F5F5F5; -fx-border-color: #388E3C; -fx-border-width: 0 1 0 0;">
+            <!-- Search by Name -->
+            <Label text="Rechercher" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+            <TextField fx:id="searchField" promptText="Rechercher..." />
+
+            <!-- Filter by Category -->
+            <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+            <VBox fx:id="categoryBox" spacing="5" />
+
+            <!-- Filter by Price -->
+            <Label text="Prix" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+            <TextField fx:id="minPriceField" promptText="Prix min" />
+            <TextField fx:id="maxPriceField" promptText="Prix max" />
+
+            <!-- Filter Button -->
+            <Button fx:id="filterButton" text="Filtrer" onAction="#applyFilters" style="-fx-background-color: #388E3C; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 5;" />
+        </VBox>
+    </left>
+
+    <!-- Center: Product Cards with Pagination -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <content>
+                <VBox spacing="20" alignment="TOP_CENTER">
+                    <AnchorPane fx:id="scrollPane">
+                        <FlowPane fx:id="productContainer" hgap="20" vgap="20" prefWrapLength="1200" style="-fx-padding: 20 20 20 40;" alignment="TOP_LEFT"/>
+                    </AnchorPane>
+                    <Pagination fx:id="pagination" styleClass="custom-pagination" style="-fx-padding: 20 0 30 0; -fx-page-information-visible: false;" />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

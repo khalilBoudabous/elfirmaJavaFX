@@ -1,0 +1,68 @@
+.custom-pagination .page {
+    -fx-background-color: #81C784;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8 14;
+    -fx-font-size: 16px;
+    -fx-text-fill: #2E7D32;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-spacing: 10; /* Space between page buttons */
+}
+
+.custom-pagination .page:hover {
+    -fx-background-color: #66BB6A;
+    -fx-border-color: #2E7D32;
+    -fx-text-fill: #FFFFFF;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-transition: -fx-background-color 0.3s, -fx-text-fill 0.3s;
+}
+
+.custom-pagination .page:selected {
+    -fx-background-color: #4CAF50;
+    -fx-border-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 4);
+}
+
+.custom-pagination .left-arrow-button,
+.custom-pagination .right-arrow-button {
+    -fx-background-color: #4CAF50;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.custom-pagination .left-arrow-button:hover,
+.custom-pagination .right-arrow-button:hover {
+    -fx-background-color: #2E7D32;
+    -fx-border-color: #2E7D32;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-transition: -fx-background-color 0.3s;
+}
+
+.custom-pagination .left-arrow-button .left-arrow,
+.custom-pagination .right-arrow-button .right-arrow {
+    -fx-background-color: white;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.custom-pagination .left-arrow-button:disabled,
+.custom-pagination .right-arrow-button:disabled {
+    -fx-background-color: #81C784;
+    -fx-opacity: 0.5;
+    -fx-effect: none;
+}
+
+.custom-pagination {
+    -fx-background-color: transparent;
+    -fx-spacing: 10; /* Space between arrow buttons and page buttons */
+}

@@ -5,7 +5,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ProfileController"
-            prefHeight="720" prefWidth="1080"
+            prefHeight="800" prefWidth="1550"
             stylesheets="@profile.css">
 
     <!-- Center the content -->
@@ -33,6 +33,7 @@
             </GridPane>
 
             <Button text="Modifier" onAction="#handleModify" styleClass="button"/>
+            <Button text="Retour" onAction="#handleRetour" styleClass="button"/>
         </VBox>
 
     </StackPane>

@@ -6,7 +6,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.UtilisateurController"
-            prefHeight="720" prefWidth="1080"
+            prefHeight="800" prefWidth="1550"
             stylesheets="@add.css">
 
     <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
@@ -46,7 +46,12 @@
                 <TextField fx:id="categorieProduitField" promptText="Catégorie produit" styleClass="form-field"/>
             </VBox>
 
-            <!-- Buttons -->
+
+            <VBox spacing="10" alignment="CENTER">
+                <Label fx:id="captchaLabel" text="CAPTCHA: " styleClass="form-label"/>
+                <TextField fx:id="captchaInput" promptText="Entrez le CAPTCHA" styleClass="form-field"/>
+            </VBox>
+
             <HBox spacing="20" alignment="CENTER">
                 <Button text="Sign In" onAction="#ajouterUtilisateur" styleClass="button"/>
                 <Button text="Login" onAction="#goToLoginPage" styleClass="button"/>

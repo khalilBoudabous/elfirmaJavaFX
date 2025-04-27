@@ -25,10 +25,15 @@ public class UtilisateurController {
     @FXML private VBox formAgriculteur, formExpert, formFournisseur;
     @FXML private PasswordField passwordField;
     @FXML
+
     private TableView<Utilisateur> userTable;
 
     private final ValidationSupport validationSupport = new ValidationSupport();
 
+    @FXML private Label captchaLabel;
+    @FXML private TextField captchaInput;
+
+    private String generatedCaptcha;
 
     @FXML
     private ToggleGroup roleGroup;
@@ -58,7 +63,7 @@ public class UtilisateurController {
             formFournisseur.setVisible(radioFournisseur.isSelected());
             formFournisseur.setManaged(radioFournisseur.isSelected());
         });
-
+        generateCaptcha();
     }
 
 
@@ -70,6 +75,13 @@ public class UtilisateurController {
 
     @FXML
     public void ajouterUtilisateur() {
+        // ➡️ First, check CAPTCHA
+        if (!captchaInput.getText().equalsIgnoreCase(generatedCaptcha)) {
+            new Alert(Alert.AlertType.ERROR, "CAPTCHA incorrect ! Veuillez réessayer.").show();
+            generateCaptcha(); // regenerate a new captcha
+            captchaInput.clear();
+            return;
+        }
         boolean isValid = true;
 
         // Validation des champs communs
@@ -152,7 +164,7 @@ public class UtilisateurController {
 
 
             viderChamps();
-
+            generateCaptcha();
         }
     }
 
@@ -167,6 +179,7 @@ public class UtilisateurController {
         nomEntrepriseField.clear();
         idFiscaleField.clear();
         categorieProduitField.clear();
+        captchaInput.clear();
     }
 
     private void chargerVueListe() {
@@ -201,4 +214,14 @@ public class UtilisateurController {
             alert.showAndWait();
         }
     }
+    private void generateCaptcha() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder captcha = new StringBuilder();
+        for (int i = 0; i < 5; i++) { // simple 5 letters/digits captcha
+            captcha.append(chars.charAt((int)(Math.random() * chars.length())));
+        }
+        generatedCaptcha = captcha.toString();
+        captchaLabel.setText("CAPTCHA : " + generatedCaptcha);
+    }
+
 }

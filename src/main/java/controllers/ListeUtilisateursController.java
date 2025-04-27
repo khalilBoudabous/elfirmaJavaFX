@@ -40,20 +40,30 @@ public class ListeUtilisateursController {
     private TableColumn<Utilisateur, String> nomColumn;
 
     private final UtilisateurService utilisateurService = new UtilisateurService();
+    @FXML
+    private TextField searchField;
+
+    private ObservableList<Utilisateur> utilisateursListeComplete = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         configureTableColumns();
         chargerUtilisateurs();
+        setupSearchFilter();
         userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        //afficherStatistiquesRole();
+
+        try {
+            afficherStatistiquesRole();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     private void chargerUtilisateurs() {
-        userTable.getItems().clear();
-        userTable.getItems().addAll(utilisateurService.getAllUtilisateurs());
+        utilisateursListeComplete.setAll(utilisateurService.getAllUtilisateurs());
+        userTable.setItems(utilisateursListeComplete);
     }
 
     @FXML
@@ -306,5 +316,24 @@ public class ListeUtilisateursController {
             }
         });
     }
+    private void setupSearchFilter() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                userTable.setItems(utilisateursListeComplete);
+            } else {
+                ObservableList<Utilisateur> filteredList = FXCollections.observableArrayList();
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                for (Utilisateur u : utilisateursListeComplete) {
+                    if (u.getNom().toLowerCase().contains(lowerCaseFilter)) {
+                        filteredList.add(u);
+                    }
+                }
+
+                userTable.setItems(filteredList);
+            }
+        });
+    }
+
 }
 

@@ -83,4 +83,17 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleRetour() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) nomLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

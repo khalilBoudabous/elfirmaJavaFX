@@ -163,3 +163,142 @@
     -fx-font-size: 14px;
     -fx-pref-height: 35px;
 }
+/* Root container styling */
+.root {
+    -fx-background-color: #f5f5f5;
+}
+/* Profile Page Styles */
+.root {
+    -fx-background-color: #f0f7f4; /* Light green background */
+}
+
+/* Header Label */
+.header-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32; /* Primary green color */
+    -fx-padding: 0 0 20px 0;
+}
+
+/* GridPane Container */
+GridPane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 25px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(46,125,50,0.1), 8, 0, 0, 0);
+    -fx-border-color: #c8e6c9; /* Light green border */
+    -fx-border-width: 1.5px;
+}
+
+/* Field Labels (Left Column) */
+GridPane Label:column-index(0) {
+    -fx-font-weight: 600;
+    -fx-text-fill: #455a64; /* Dark gray */
+    -fx-font-size: 14px;
+}
+
+/* Value Labels (Right Column) */
+GridPane Label:column-index(1) {
+    -fx-text-fill: #2E7D32; /* Green color */
+    -fx-font-size: 14px;
+    -fx-border-color: #c8e6c9; /* Light green border */
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 5px 8px;
+    -fx-background-color: #f8fffb; /* Very light green background */
+    -fx-background-radius: 4px;
+}
+
+/* Modify Button */
+.button {
+    -fx-background-color: #2E7D32; /* Primary green */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 30px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #1B5E20; /* Darker green on hover */
+}
+
+/* Dynamic Fields Container */
+#dynamicFields {
+    -fx-spacing: 12px;
+    -fx-padding: 15px 0 0 0;
+}
+
+/* Centering and spacing */
+VBox {
+    -fx-alignment: top-center;
+    -fx-spacing: 20px;
+}
+
+AnchorPane {
+    -fx-pref-width: 600px;
+    -fx-pref-height: 400px;
+}
+/* Center everything in AnchorPane */
+AnchorPane {
+    -fx-pref-width: 600px;
+    -fx-pref-height: 400px;
+    -fx-alignment: center;
+}
+
+/* Center VBox content */
+VBox {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+/* Center GridPane content */
+GridPane {
+    -fx-alignment: center;
+}
+
+/* Existing styles with centering adjustments */
+.root {
+    -fx-background-color: #f0f7f4;
+    -fx-alignment: center;
+}
+
+.header-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+    -fx-padding: 0 0 20px 0;
+    -fx-alignment: center;
+}
+
+GridPane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 25px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(46,125,50,0.1), 8, 0, 0, 0);
+    -fx-border-color: #c8e6c9;
+    -fx-border-width: 1.5px;
+    -fx-alignment: center; /* Added centering */
+}
+
+.button {
+    -fx-background-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 30px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-alignment: center; /* Center button text */
+}
+.hyperlink {
+    -fx-text-fill: #007bff;
+    -fx-border-color: transparent;
+    -fx-underline: true;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #0056b3;
+}

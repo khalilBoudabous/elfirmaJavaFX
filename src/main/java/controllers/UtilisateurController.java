@@ -140,17 +140,17 @@ public class UtilisateurController {
             u.setEmail(email);
             u.setPassword(password);
             u.setTelephone(telephone);
-            //u.setRoles("user"); // ou autre valeur si besoin
+
 
             utilisateurService.ajouter(u);
-            chargerVueListe(); // Ajoutez cette ligne
+            chargerVueListe();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
             alert.setContentText("Utilisateur ajouté avec succès !");
             alert.showAndWait();
 
-            // Tu peux aussi vider les champs ici si tu veux
+
             viderChamps();
 
         }
@@ -170,9 +170,10 @@ public class UtilisateurController {
     }
 
     private void chargerVueListe() {
+
         try {
             // Corrigez l'orthographe si nécessaire (Afficher au lieu de Afficer)
-            Parent root = FXMLLoader.load(getClass().getResource("/AfficherListUtilisateur.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) nomField.getScene().getWindow();
             stage.setScene(scene);
@@ -183,6 +184,7 @@ public class UtilisateurController {
             alert.setContentText("Impossible de charger la liste : " + e.getMessage());
             alert.showAndWait();
         }
+
     }
     @FXML
     private void goToLoginPage() {

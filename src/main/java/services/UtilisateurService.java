@@ -1,6 +1,7 @@
 package services;
 
 import entities.*;
+import jakarta.mail.MessagingException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import utils.MyDataBase;
@@ -8,15 +9,24 @@ import utils.MyDataBase;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UtilisateurService {
 
-    private final Connection cnx;
+    private  Connection cnx;
 
     public UtilisateurService() {
         cnx = MyDataBase.getInstance().getCnx();
     }
 
+    private void ensureConnection() throws SQLException {
+        if (cnx == null || cnx.isClosed()) {
+            cnx = MyDataBase.getInstance().getCnx();
+            if (cnx == null || cnx.isClosed()) {
+                throw new SQLException("Échec de reconnexion à la base");
+            }
+        }
+    }
     public void ajouter(Utilisateur u) {
         String req = "INSERT INTO utilisateur (email, roles, password, nom, prenom, telephone, type, adresse_exploitation, nom_entreprise, id_fiscale, categorie_produit, domaine_expertise, is_blocked) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // domain_expertise corrigé
@@ -24,7 +34,7 @@ public class UtilisateurService {
         try {
             PreparedStatement ps = cnx.prepareStatement(req);
 
-            // Remplissage commun
+
             ps.setString(1, u.getEmail());
             ps.setString(3, u.getPassword());
             ps.setString(4, u.getNom());
@@ -32,7 +42,7 @@ public class UtilisateurService {
             ps.setString(6, u.getTelephone());
             ps.setInt(13, 0);
 
-            // Gestion des rôles et colonnes spécifiques
+
             String role;
             if (u instanceof Agriculteur agriculteur) {
                 role = "ROLE_AGRICULTEUR";
@@ -68,7 +78,6 @@ public class UtilisateurService {
                 ps.setString(12, null); // domain_expertise
             }
 
-            // Formatage JSON pour les rôles
             ps.setString(2, "[\"" + role + "\"]");
 
             ps.executeUpdate();
@@ -95,6 +104,7 @@ public class UtilisateurService {
                 u.setEmail(rs.getString("email"));
                 u.setTelephone(rs.getString("telephone"));
                 u.setPassword(rs.getString("password"));
+                u.setBlocked(rs.getBoolean("is_blocked"));
 
                 // Remplir les champs spécifiques
                 if(u instanceof Agriculteur a) {
@@ -109,6 +119,7 @@ public class UtilisateurService {
                     e.setDomaineExpertise(rs.getString("domaine_expertise"));
                 }
 
+
                 utilisateurs.add(u);
             }
         } catch (SQLException e) {
@@ -122,6 +133,8 @@ public class UtilisateurService {
             case "agriculteur" -> new Agriculteur();
             case "fournisseur" -> new Fournisseur();
             case "expert" -> new Expert();
+            case "admin" -> new Admin();
+
             default -> new Utilisateur() {
                 @Override
                 public String getType() {
@@ -157,7 +170,7 @@ public class UtilisateurService {
             ps.setString(5, u.getPrenom());
             ps.setString(6, u.getTelephone());
 
-            // Paramètres spécifiques
+
             if(u instanceof Agriculteur a) {
                 ps.setString(7, a.getAdresseExploitation());
                 ps.setNull(8, Types.VARCHAR);
@@ -180,7 +193,7 @@ public class UtilisateurService {
                 ps.setString(11, e.getDomaineExpertise());
             }
             else {
-                // Cas par défaut (admin)
+
                 ps.setNull(7, Types.VARCHAR);
                 ps.setNull(8, Types.VARCHAR);
                 ps.setNull(9, Types.VARCHAR);
@@ -216,6 +229,8 @@ public class UtilisateurService {
                 u.setEmail(rs.getString("email"));
                 u.setTelephone(rs.getString("telephone"));
                 u.setPassword(rs.getString("password"));
+                u.setBlocked(rs.getBoolean("is_blocked")); // Ensure blocked status is set
+
 
                 // Set specific fields
                 if (u instanceof Agriculteur a) {
@@ -235,6 +250,171 @@ public class UtilisateurService {
         }
         return null;
     }
+    public Utilisateur getUtilisateurById(long id) throws SQLException {
+        String req = "SELECT * FROM utilisateur WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String type = rs.getString("type");
+                Utilisateur u = createUserByType(type);
+
+                u.setId(rs.getLong("id"));
+                u.setNom(rs.getString("nom"));
+                u.setPrenom(rs.getString("prenom"));
+                u.setEmail(rs.getString("email"));
+                u.setTelephone(rs.getString("telephone"));
+                u.setPassword(rs.getString("password"));
+
+                if (u instanceof Agriculteur a) {
+                    a.setAdresseExploitation(rs.getString("adresse_exploitation"));
+                } else if (u instanceof Fournisseur f) {
+                    f.setNomEntreprise(rs.getString("nom_entreprise"));
+                    f.setIdFiscale(rs.getString("id_fiscale"));
+                    f.setCategorieProduit(rs.getString("categorie_produit"));
+                } else if (u instanceof Expert e) {
+                    e.setDomaineExpertise(rs.getString("domaine_expertise"));
+                }
+                return u;
+            }
+        }
+        return null;
+    }
+
+    public Utilisateur findByEmail(String email) throws SQLException {
+        ensureConnection();
+        String sql = "SELECT * FROM utilisateur WHERE email = ?";
+
+        Connection conn = MyDataBase.getInstance().getCnx(); // Ne pas fermer cette connexion
+
+        try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Utilisateur user = createUserByType(rs.getString("type"));
+                user.setBlocked(rs.getBoolean("is_blocked")); // Récupérer le statut
+                // Création d'une implémentation concrète minimaliste
+//                Utilisateur user = new Utilisateur() {
+//
+//                    @Override
+//                    public String getType() throws SQLException {
+//                        return rs.getString("type"); // Adaptez selon votre schéma
+//                        user.setBlocked(rs.getBoolean("is_blocked")); // Récupérer le statut
+//
+//                    }
+//                };
+
+                // Hydratation des propriétés
+                user.setId(rs.getLong("id"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setTelephone(rs.getString("telephone"));
+//                user.setBlocked(rs.getBoolean("blocked"));
+
+                return user;
+            }
+            return null;
+        }
+    }
+
+
+
+    private String generateResetToken() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    public void blockUser(long id, boolean blocked) throws SQLException {
+        String req = "UPDATE utilisateur SET is_blocked = ? WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setBoolean(1, blocked);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+        }
+    }
+
+    // Ajoutez ces méthodes
+    public boolean handlePasswordResetRequest(String email) throws SQLException {
+        Utilisateur user = findByEmail(email);
+        if (user == null) return false;
+
+        String token = generateResetToken();
+        storeResetToken(user.getId(), token);
+
+        // Envoi d'e-mail
+        String subject = "Réinitialisation de mot de passe";
+        String content = "Votre code de réinitialisation est : " + token
+                + "\nCe code expirera dans 15 minutes.";
+
+        try {
+            MailService mailService = new MailService("khllboudabous@gmail.com", "xdlf jcxz ymms pyiy");
+            mailService.sendEmail(email, subject, content);
+            return true;
+        } catch (javax.mail.MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void storeResetToken(long userId, String token) throws SQLException {
+        ensureConnection();
+
+        String req = "INSERT INTO reset_password_request (user_id, token, expires_at) VALUES (?, ?, NOW() + INTERVAL 15 MINUTE)";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setLong(1, userId); // Paramètre 1: user_id
+            ps.setString(2, token); // Paramètre 2: token
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur stockage token: " + e.getMessage());
+            throw e;
+        }
+    }
+    public boolean resetPassword(String token, String newPassword) throws SQLException {
+        ensureConnection();
+
+        String req = "SELECT user_id FROM reset_password_request "
+                + "WHERE token = ? AND expires_at    > NOW()";
+
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setString(1, token);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                long userId = rs.getLong("user_id");
+                updateUserPassword(userId, newPassword);
+                deleteToken(token);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateUserPassword(long userId, String newPassword) throws SQLException {
+        ensureConnection();
+        String req = "UPDATE utilisateur SET password = ? WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setString(1, newPassword);
+            ps.setLong(2, userId);
+            ps.executeUpdate();
+        }
+    }
+
+    private void deleteToken(String token) throws SQLException {
+
+        String req = "DELETE FROM reset_password_request WHERE token = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setString(1, token);
+            ps.executeUpdate();
+        }
+    }
+
+
+
+
+
+
 
 
 }

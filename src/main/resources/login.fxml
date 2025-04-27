@@ -26,6 +26,7 @@
             <Button text="sign in" onAction="#redirectToAjouterUtilisateur" styleClass="button"/>
 
         </HBox>
+        <Hyperlink text="Forgot Password?" onAction="#handleForgotPassword" styleClass="hyperlink"/>
 
         <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
     </VBox>

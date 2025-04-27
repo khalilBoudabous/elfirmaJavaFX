@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ProfileController"
+            prefHeight="400" prefWidth="600"
+            stylesheets="@styles.css">
+
+    <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20;">
+        <Label text="Profile" styleClass="header-label"/>
+
+        <GridPane hgap="10" vgap="10">
+            <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="nomLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Prénom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="prenomLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="emailLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Téléphone:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="telephoneLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <VBox fx:id="dynamicFields" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+        </GridPane>
+
+        <Button text="Modifier" onAction="#handleModify" styleClass="button"/>
+    </VBox>
+</AnchorPane>

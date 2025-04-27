@@ -3,31 +3,34 @@ package Controllers;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import entities.Ticket;
-import services.EvenementService;
-import services.TicketService;
-import entities.Evenement;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
+import jfxtras.scene.control.agenda.Agenda;
+import jfxtras.scene.control.agenda.Agenda.AppointmentGroupImpl;
+import entities.Ticket;
+import entities.Evenement;
+import services.EvenementService;
+import services.TicketService;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.time.format.DateTimeFormatter;
 
 public class FrontOfficeEvenement {
 
@@ -37,6 +40,16 @@ public class FrontOfficeEvenement {
     private GridPane gridEvents;
     @FXML
     private ListView<Ticket> listTickets;
+    @FXML
+    private Agenda calendarAgenda;
+    @FXML
+    private Label lblCurrentMonth;
+    @FXML
+    private Button btnPreviousMonth;
+    @FXML
+    private Button btnNextMonth;
+
+    private LocalDate currentMonth;
 
     private final EvenementService evenementService = new EvenementService();
     private final TicketService ticketService = new TicketService();
@@ -45,8 +58,32 @@ public class FrontOfficeEvenement {
     @FXML
     public void initialize() {
         instance = this;
+        currentMonth = LocalDate.now(); // Initialize to the current month
+        updateCalendarView();
         loadEvents();
         loadTickets();
+        setupCalendar();
+    }
+
+    private void updateCalendarView() {
+        // Update the displayed month label
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        lblCurrentMonth.setText(currentMonth.format(formatter));
+
+        // Set the Agenda's displayed range to the current month
+        calendarAgenda.setDisplayedLocalDateTime(currentMonth.atStartOfDay());
+    }
+
+    @FXML
+    private void handlePreviousMonth() {
+        currentMonth = currentMonth.minusMonths(1); // Move to the previous month
+        updateCalendarView();
+    }
+
+    @FXML
+    private void handleNextMonth() {
+        currentMonth = currentMonth.plusMonths(1); // Move to the next month
+        updateCalendarView();
     }
 
     public void loadEvents() {
@@ -260,5 +297,39 @@ public class FrontOfficeEvenement {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void setupCalendar() {
+        calendarAgenda.setAllowDragging(false);
+        calendarAgenda.setAllowResize(false);
+
+        // Define appointment groups for styling
+        AppointmentGroupImpl upcomingGroup = new AppointmentGroupImpl();
+        upcomingGroup.setStyleClass("group0"); // Green for upcoming events
+        AppointmentGroupImpl pastGroup = new AppointmentGroupImpl();
+        pastGroup.setStyleClass("group1"); // Grey for past events
+
+        if (eventsCache != null) {
+            for (Evenement event : eventsCache) {
+                LocalDateTime start = convertToLocalDateTime(event.getDateDebut());
+                LocalDateTime end = convertToLocalDateTime(event.getDateFin());
+                calendarAgenda.appointments().add(
+                    new Agenda.AppointmentImplLocal()
+                        .withStartLocalDateTime(start)
+                        .withEndLocalDateTime(end)
+                        .withSummary(event.getTitre())
+                        .withDescription(event.getLieu())
+                        .withAppointmentGroup(
+                            start.isBefore(LocalDateTime.now()) ? pastGroup : upcomingGroup
+                        )
+                );
+            }
+        }
+    }
+
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        // Convert java.sql.Date to java.util.Date if necessary
+        java.util.Date utilDate = (date instanceof java.sql.Date) ? new java.util.Date(date.getTime()) : date;
+        return utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }

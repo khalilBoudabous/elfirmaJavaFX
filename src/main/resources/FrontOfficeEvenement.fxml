@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import jfxtras.scene.control.agenda.Agenda?>
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.FrontOfficeEvenement">
     <children>
         <!-- Navigation Bar -->
@@ -75,6 +76,20 @@
             <Tab text="Tickets">
                 <AnchorPane>
                     <ListView fx:id="listTickets" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+                </AnchorPane>
+            </Tab>
+            <Tab text="Calendrier">
+                <AnchorPane>
+                    <VBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" spacing="10">
+                        <!-- Navigation Buttons -->
+                        <HBox alignment="CENTER" spacing="10">
+                            <Button fx:id="btnPreviousMonth" text="Previous Month" onAction="#handlePreviousMonth" />
+                            <Label fx:id="lblCurrentMonth" text="Month Year" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                            <Button fx:id="btnNextMonth" text="Next Month" onAction="#handleNextMonth" />
+                        </HBox>
+                        <!-- Agenda Calendar -->
+                        <Agenda fx:id="calendarAgenda" />
+                    </VBox>
                 </AnchorPane>
             </Tab>
         </TabPane>

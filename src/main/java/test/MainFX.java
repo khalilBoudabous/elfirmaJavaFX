@@ -35,7 +35,6 @@ public class MainFX extends Application {
 
     */
 
-    /*
 
     @Override
     public void start(Stage primaryStage) {
@@ -57,7 +56,7 @@ public class MainFX extends Application {
     }
 
 
-    */
+    /*
 
     @Override
     public void start(Stage primaryStage) {
@@ -77,4 +76,6 @@ public class MainFX extends Application {
         }
 
     }
+
+     */
 }

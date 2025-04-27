@@ -50,6 +50,7 @@ public class EventCard {
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle("Détails de l'événement");
+			//stage.setMaximized(true);
 			stage.show();
 
 		} catch (IOException e) {

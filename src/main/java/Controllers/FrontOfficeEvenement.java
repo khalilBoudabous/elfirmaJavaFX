@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.Parent; // Added import
+import javafx.scene.Parent;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -55,7 +55,7 @@ public class FrontOfficeEvenement {
             eventsCache = events;
             populateEventGrid(events);
         } catch (SQLException e) {
-             showAlert("Error", "Failed to load events: " + e.getMessage());
+            showAlert("Erreur", "Failed to load events: " + e.getMessage());
         }
     }
 
@@ -85,9 +85,14 @@ public class FrontOfficeEvenement {
                         } else {
                             dates = "Dates inconnues";
                         }
+                        // Label for ticket information
                         Label info = new Label("Event: " + ticket.getTitreEvenement() +
                                 " | " + dates + " | Prix: " + ticket.getPrix() + " | Etat de payement: " + ticket.getPayée());
-                        Button btnCancel = new Button("Cancel");
+                        info.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;"); // Inline style for label
+
+                        // Buttons
+                        Button btnCancel = new Button("Annuler");
+                        btnCancel.setStyle("-fx-pref-width: 80px;"); // Fixed width
                         btnCancel.setOnAction(e -> {
                             Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
                                     "Voulez-vous vraiment annuler votre participation ?", ButtonType.YES, ButtonType.NO);
@@ -105,7 +110,9 @@ public class FrontOfficeEvenement {
                                 }
                             }
                         });
+
                         Button btnPayer = new Button("Payer");
+                        btnPayer.setStyle("-fx-pref-width: 80px;"); // Fixed width
                         btnPayer.setOnAction(e -> {
                             if (ticket.getPayée()) {
                                 new Alert(Alert.AlertType.INFORMATION, "Ce ticket est déjà payé.").showAndWait();
@@ -115,28 +122,28 @@ public class FrontOfficeEvenement {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/PaiementForm.fxml"));
                                 Parent paymentRoot = loader.load();
                                 PaymentController controller = loader.getController();
-                                // Pass ticket data to the payment form
                                 controller.setTicket(ticket);
                                 Stage stage = new Stage();
                                 stage.setTitle("Paiement");
                                 stage.setScene(new Scene(paymentRoot));
                                 stage.showAndWait();
-                                // After form closes, check if payment succeeded
-                                if(controller.isPaymentSuccess()){
+                                if (controller.isPaymentSuccess()) {
                                     ticket.setPayée(true);
                                     ticketService.modifier(ticket);
                                     new Alert(Alert.AlertType.INFORMATION, "Paiement effectué via Stripe.").showAndWait();
                                     loadTickets();
                                 }
-                            } catch(Exception ex) {
+                            } catch (Exception ex) {
                                 new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
                             }
                         });
+
                         Button btnViewDetails = new Button("View Details");
+                        btnViewDetails.setStyle("-fx-pref-width: 80px;"); // Fixed width
                         btnViewDetails.setOnAction(e -> {
                             try {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/TicketDetails.fxml"));
-                                Parent pane = loader.load(); // Changed to Parent
+                                Parent pane = loader.load();
                                 TicketDetailsController controller = loader.getController();
                                 controller.setTicketData(ticket, event);
                                 Stage stage = new Stage();
@@ -148,7 +155,14 @@ public class FrontOfficeEvenement {
                                 new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
                             }
                         });
-                        HBox container = new HBox(10, info, btnCancel, btnPayer, btnViewDetails);
+
+                        // Button container with fixed width
+                        HBox buttonContainer = new HBox(10, btnCancel, btnPayer, btnViewDetails);
+                        buttonContainer.setStyle("-fx-pref-width: 270px; -fx-alignment: center-right;"); // Fixed width and right alignment
+
+                        // Main container for label and buttons
+                        HBox container = new HBox(20, info, buttonContainer);
+                        container.setStyle("-fx-padding: 10px; -fx-alignment: center-left;"); // Padding and alignment
                         setGraphic(container);
                     }
                 }
@@ -170,40 +184,38 @@ public class FrontOfficeEvenement {
     }
 
     private void translateEvents(String targetLang) {
-        if(eventsCache == null) return;
+        if (eventsCache == null) return;
         try {
-            for(Evenement event : eventsCache) {
+            for (Evenement event : eventsCache) {
                 String translatedTitre = translateText(event.getTitre(), targetLang);
                 String translatedLieu = translateText(event.getLieu(), targetLang);
                 event.setTitre(translatedTitre);
                 event.setLieu(translatedLieu);
-                // Optionally, translate other fields as needed
             }
             gridEvents.getChildren().clear();
             populateEventGrid(eventsCache);
-        } catch(Exception e) {
+        } catch (Exception e) {
             showAlert("Erreur", "La traduction des événements a échoué: " + e.getMessage());
         }
     }
 
     private String translateText(String text, String targetLang) throws Exception {
-        // Use the free Google Translate API endpoint.
         String urlStr = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl="
-                        + targetLang + "&dt=t&q=" + URLEncoder.encode(text, "UTF-8");
+                + targetLang + "&dt=t&q=" + URLEncoder.encode(text, "UTF-8");
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
         StringBuilder response = new StringBuilder();
         String line;
-        while((line = reader.readLine()) != null){
+        while ((line = reader.readLine()) != null) {
             response.append(line);
         }
         reader.close();
         String resp = response.toString();
         int start = resp.indexOf("\"");
         int end = resp.indexOf("\"", start + 1);
-        if(start >= 0 && end > start) {
+        if (start >= 0 && end > start) {
             return resp.substring(start + 1, end);
         }
         return text;
@@ -249,5 +261,4 @@ public class FrontOfficeEvenement {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }

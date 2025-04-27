@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.FrontOfficeEvenement">
     <children>
-        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+        <!-- Navigation Bar -->
+        <HBox fx:id="navBar" styleClass="nav-bar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fx:id="logoImage" fitHeight="36.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Opera_Snapshot_2025-01-25_103545_www.brandcrowd.com.png" />
+                    </image>
+                </ImageView>
+                <Label styleClass="nav-title" text="El Firma" />
+            </children>
+        </HBox>
+        
+        <!-- Main Content -->
+        <TabPane fx:id="tabPane" layoutY="34.4" prefHeight="456.0" prefWidth="598.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
             <Tab text="Acceuil">
                 <AnchorPane />
             </Tab>
@@ -23,14 +42,26 @@
                 <AnchorPane />
             </Tab>
             <Tab fx:id="tabEvents" text="Evénements">
-                <AnchorPane AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-                    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-                        <!-- Replaced single translate button with two -->
-                        <Button fx:id="btnTranslateEventsEn" text="Translate Events to English" onAction="#handleTranslateEventsEn"/>
-                        <Button fx:id="btnTranslateEventsAr" text="Translate Events to Arabic" onAction="#handleTranslateEventsAr"/>
-                        <ScrollPane fitToWidth="true" fitToHeight="true">
+                <AnchorPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox>
+                     <children>
+                              <!-- Replaced single translate button with two -->
+                              <Button fx:id="btnTranslateEventsEn" onAction="#handleTranslateEventsEn" text="Translate Events to English">
+                           <HBox.margin>
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                           </HBox.margin>
+                        </Button>
+                              <Button fx:id="btnTranslateEventsAr" onAction="#handleTranslateEventsAr" text="Translate Events to Arabic">
+                           <HBox.margin>
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
                             <AnchorPane>
-                                <GridPane fx:id="gridEvents" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" hgap="20" vgap="20">
+                                <GridPane fx:id="gridEvents" hgap="20" vgap="20" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="ALWAYS" />
                                         <ColumnConstraints hgrow="ALWAYS" />
@@ -43,9 +74,12 @@
             </Tab>
             <Tab text="Tickets">
                 <AnchorPane>
-                    <ListView fx:id="listTickets" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"/>
+                    <ListView fx:id="listTickets" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
                 </AnchorPane>
             </Tab>
         </TabPane>
     </children>
+    <stylesheets>
+        <URL value="@stylesheetFront.css" />
+    </stylesheets>
 </AnchorPane>

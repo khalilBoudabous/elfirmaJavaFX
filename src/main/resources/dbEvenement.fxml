@@ -1,44 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@stylesheet.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controllers.AfficherEvenement"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+<AnchorPane prefHeight="642.0" prefWidth="1110.0" stylesheets="@stylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AfficherEvenement">
 
-   <AnchorPane AnchorPane.bottomAnchor="0.0"
-               AnchorPane.leftAnchor="0.0"
-               AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="0.0">
-      <BorderPane AnchorPane.bottomAnchor="0.0"
-                  AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0">
+   <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <HBox style="-fx-background-color: #3E7B27;"
-                  stylesheets="@stylesheet.css"
-                  BorderPane.alignment="CENTER">
+            <HBox style="-fx-background-color: #3E7B27;" stylesheets="@stylesheet.css" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fitHeight="51.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@Opera_Snapshot_2025-01-25_103545_www.brandcrowd.com.png" />
                      </image>
                   </ImageView>
-                  <Button alignment="CENTER"
-                          mnemonicParsing="false"
-                          prefHeight="44.0"
-                          prefWidth="178.0"
-                          style="-fx-background-color: #3E7B27;"
-                          stylesheets="@stylesheet.css"
-                          text="Gestion événement"
-                          textFill="WHITE" />
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="44.0" prefWidth="178.0" style="-fx-background-color: #3E7B27;" stylesheets="@stylesheet.css" text="Gestion événement" textFill="WHITE" />
                </children>
             </HBox>
          </top>
@@ -48,19 +35,14 @@
                   <Tab text="Liste des événements">
                      <content>
                         <AnchorPane>
-                           <TableView fx:id="tvEvenements"
-                                      stylesheets="@stylesheet.css"
-                                      AnchorPane.topAnchor="0.0"
-                                      AnchorPane.bottomAnchor="0.0"
-                                      AnchorPane.leftAnchor="0.0"
-                                      AnchorPane.rightAnchor="0.0">
+                           <TableView fx:id="tvEvenements" prefHeight="401.0" prefWidth="492.0" stylesheets="@stylesheet.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="0.0">
                               <columns>
-                                 <TableColumn fx:id="colTitre" text="Titre" />
-                                 <TableColumn fx:id="colNombrePlaces" text="Nombre de places" />
-                                 <TableColumn fx:id="colPrix" text="Prix" />
-                                 <TableColumn fx:id="colLieu" text="Lieu" />
-                                 <TableColumn fx:id="colModifier" />
-                                 <TableColumn fx:id="colSupprimer" text=" " />
+                                 <TableColumn fx:id="colTitre" prefWidth="212.00008249282837" text="Titre" />
+                                 <TableColumn fx:id="colNombrePlaces" prefWidth="144.800048828125" text="Nombre de places" />
+                                 <TableColumn fx:id="colPrix" minWidth="0.0" prefWidth="96.79998779296875" text="Prix" />
+                                 <TableColumn fx:id="colLieu" prefWidth="103.19998168945312" text="Lieu" />
+                                 <TableColumn fx:id="colModifier" prefWidth="179.20001220703125" />
+                                 <TableColumn fx:id="colSupprimer" prefWidth="181.599853515625" text=" " />
                               </columns>
                               <effect>
                                  <Blend />
@@ -72,11 +54,7 @@
                   <Tab onSelectionChanged="#AfficherTickets" text="Voir tickets">
                      <content>
                         <AnchorPane>
-                           <TableView fx:id="tvTickets"
-                                      AnchorPane.topAnchor="0.0"
-                                      AnchorPane.bottomAnchor="0.0"
-                                      AnchorPane.leftAnchor="0.0"
-                                      AnchorPane.rightAnchor="0.0">
+                           <TableView fx:id="tvTickets" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <columns>
                                  <TableColumn fx:id="tcTitre" text="Titre evenement" />
                                  <TableColumn fx:id="tcPrix" text="Prix" />
@@ -95,23 +73,9 @@
          <left>
             <VBox style="-fx-background-color: #7EA76F;" stylesheets="@stylesheet.css" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false"
-                          onAction="#AjouterEvenement"
-                          prefHeight="44.0"
-                          prefWidth="186.0"
-                          style="-fx-background-color: #74A063;"
-                          stylesheets="@stylesheet.css"
-                          text="Ajouter évenement"
-                          textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#AjouterEvenement" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Ajouter évenement" textFill="WHITE" />
                   <!-- New button to generate PDF of participant details -->
-                  <Button mnemonicParsing="false"
-                          onAction="#generatePDF"
-                          prefHeight="44.0"
-                          prefWidth="186.0"
-                          style="-fx-background-color: #74A063;"
-                          stylesheets="@stylesheet.css"
-                          text="Générer PDF"
-                          textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#generatePDF" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Générer PDF" textFill="WHITE" />
                </children>
             </VBox>
          </left>

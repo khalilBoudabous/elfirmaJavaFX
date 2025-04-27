@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane style="-fx-background-color: #FFFFFF;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DetailsProduit">
-    <HBox alignment="CENTER" spacing="0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);">
-        <!-- Left Section: Green background -->
-        <VBox alignment="TOP_CENTER" spacing="15" style="-fx-background-color: #2E7D32; -fx-background-radius: 10 0 0 10; -fx-padding: 20; -fx-pref-width: 300;">
-            <Label text="Détails du produit" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #FFFFFF;"/>
-            <ImageView fx:id="imageView" fitWidth="260" fitHeight="220" preserveRatio="true"/>
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label fx:id="quantiteLabel" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label fx:id="prixLabel" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
-            </HBox>
-        </VBox>
-        <!-- Right Section: White background -->
-        <VBox alignment="TOP_LEFT" spacing="15" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 10 10 0; -fx-padding: 20; -fx-pref-width: 500;">
-            <Label text="À propos du produit" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #000000;"/>
-            <ImageView fx:id="imageViewSmall" fitWidth="100" fitHeight="80" preserveRatio="true"/>
-            <Label fx:id="descLabel" wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #000000; -fx-max-width: 460;"/>
-            <!-- Button at the bottom right -->
-            <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 20 0 0 0;">
-                <Button text="Retour à la liste" onAction="#fermerFenetre" style="-fx-background-color: transparent; -fx-border-color: #F5A623; -fx-border-width: 1; -fx-border-radius: 5; -fx-text-fill: #F5A623; -fx-font-size: 14px; -fx-padding: 5 15; -fx-cursor: hand;" fx:id="retourButton">
-                    <style>
-                        #retourButton:hover {
-                        -fx-background-color: #FFF3E0;
-                        }
-                    </style>
-                </Button>
-            </HBox>
-        </VBox>
-    </HBox>
-</StackPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DetailsProduit" style="-fx-background-color: #F5F5F5;">
+    <!-- Center: Product Details -->
+    <center>
+        <HBox alignment="CENTER" spacing="0" style="-fx-background-color: #F1F8E9; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4); -fx-max-width: 900;">
+            <!-- Left Section: Green background -->
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-background-color: #2E7D32; -fx-background-radius: 10 0 0 10; -fx-padding: 20; -fx-pref-width: 350;">
+                <Label text="Détails du produit" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF; -fx-padding: 0 0 20 0;" />
+                <ImageView fx:id="imageView" fitWidth="300" fitHeight="250" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, #81C784, 10, 0.5, 0, 0); -fx-border-color: #388E3C; -fx-border-width: 1; -fx-border-radius: 10;" />
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="quantiteLabel" style="-fx-font-size: 16px; -fx-text-fill: #FFFFFF;" />
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="prixLabel" style="-fx-font-size: 16px; -fx-text-fill: #FFFFFF;" />
+                </HBox>
+            </VBox>
+
+            <!-- Right Section: White background -->
+            <VBox alignment="TOP_LEFT" spacing="15" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 10 10 0; -fx-padding: 20; -fx-pref-width: 550;">
+                <Label text="À propos du produit" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1B5E20; -fx-padding: 0 0 20 0;" />
+                <ImageView fx:id="imageViewSmall" fitWidth="120" fitHeight="100" preserveRatio="true" style="-fx-border-color: #388E3C; -fx-border-width: 1; -fx-border-radius: 5;" />
+                <Label fx:id="descLabel" wrapText="true" style="-fx-font-size: 16px; -fx-text-fill: #424242; -fx-max-width: 510;" />
+                <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 20 0 0 0;">
+                    <Button fx:id="retourButton" text="Retour à la liste" onAction="#fermerFenetre" style="-fx-background-color: #B0BEC5; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 35; -fx-cursor: hand;">
+                        <tooltip>
+                            <Tooltip text="Retourner à la liste des produits" />
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

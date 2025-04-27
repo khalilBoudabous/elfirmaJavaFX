@@ -6,35 +6,67 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Ajouterproduit" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
-   <Label text="Ajouter un Produit" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Ajouterproduit" style="-fx-background-color: #F5F5F5;">
+   <!-- Center: Product Form -->
+   <center>
+      <VBox maxWidth="500" spacing="15" alignment="CENTER" style="-fx-padding: 30; -fx-background-color: #F1F8E9; -fx-border-color: #388E3C; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+         <!-- Title -->
+         <Label text="Ajouter un Produit" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1B5E20; -fx-padding: 0 0 20 0;" />
 
-   <Label text="Nom du Produit" />
-   <TextField fx:id="nomProduitField" promptText="Entrez le nom du produit" />
+         <!-- Product Name -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Nom du Produit" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextField fx:id="nomProduitField" promptText="Entrez le nom du produit" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Description" />
-   <TextArea fx:id="descriptionArea" promptText="Entrez la description" wrapText="true" />
+         <!-- Description -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Description" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextArea fx:id="descriptionArea" promptText="Entrez la description" wrapText="true" prefHeight="100" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Quantité" />
-   <TextField fx:id="quantiteField" promptText="Entrez la quantité" />
+         <!-- Quantity -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Quantité" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextField fx:id="quantiteField" promptText="Entrez la quantité" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Prix" />
-   <TextField fx:id="prixField" promptText="Entrez le prix (ex: 12.5)" />
+         <!-- Price -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Prix" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextField fx:id="prixField" promptText="Entrez le prix (ex: 12.5)" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Catégorie" />
-   <ComboBox fx:id="categorieComboBox" onAction="#handleCategorieChange" promptText="Sélectionnez une catégorie" />
+         <!-- Category -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <ComboBox fx:id="categorieComboBox" onAction="#handleCategorieChange" promptText="Sélectionnez une catégorie" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Image du Produit" />
-   <ImageView fx:id="productImage" fitWidth="200" fitHeight="200" preserveRatio="true" />
-   <Button fx:id="uploadButton" text="Charger une Image" onAction="#handleUploadImage" />
+         <!-- Product Image -->
+         <VBox spacing="10" alignment="CENTER">
+            <Label text="Image du Produit" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <ImageView fx:id="productImage" fitWidth="200" fitHeight="200" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, #81C784, 10, 0.5, 0, 0); -fx-border-color: #388E3C; -fx-border-width: 1; -fx-border-radius: 10;" />
+            <Button fx:id="uploadButton" text="Charger une Image" onAction="#handleUploadImage" style="-fx-background-color: #66BB6A; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand;" />
+         </VBox>
 
-   <Label text="Pourcentage de Réduction (%)" />
-   <TextField fx:id="discountPercentageField" promptText="Entrez le pourcentage (0-100)" />
+         <!-- Discount -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Pourcentage de Réduction (%)" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextField fx:id="discountPercentageField" promptText="Entrez le pourcentage (0-100)" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Label text="Code Promo" />
-   <TextField fx:id="codePromoField" promptText="Code promo généré" />
+         <!-- Promo Code -->
+         <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Code Promo" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+            <TextField fx:id="codePromoField" promptText="Code promo généré" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+         </VBox>
 
-   <Button fx:id="ajout" text="Ajouter Produit" onAction="#ajouterproduit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
-</VBox>
+         <!-- Submit Button -->
+         <Button fx:id="ajout" text="Ajouter Produit" onAction="#ajouterproduit" style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 30; -fx-cursor: hand;" />
+      </VBox>
+   </center>
+</BorderPane>

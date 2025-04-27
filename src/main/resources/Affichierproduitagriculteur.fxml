@@ -11,35 +11,66 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Affichierproduitagriculteur">
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
+<BorderPane style="-fx-background-color: #F5F5F5;"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Affichierproduitagriculteur">
+
+
+    <!-- Top: Header -->
+    <top>
+        <HBox alignment="CENTER" style="-fx-background-color: linear-gradient(to bottom, #388E3C, #2E7D32); -fx-padding: 15;">
+            <Label text="Liste des Produits" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;">
+                <font>
+                    <Font name="System Bold" size="24.0" />
+                </font>
+            </Label>
+        </HBox>
+    </top>
     <!-- Left Sidebar: Filter Panel -->
     <left>
-        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #F5F5F5; -fx-border-color: #388E3C; -fx-border-width: 0 1 0 0;">
+        <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #FFFFFF; -fx-border-color: #388E3C; -fx-border-width: 0 1 0 0; -fx-background-radius: 10 0 0 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 2, 2);">
             <!-- Search by Name -->
-            <Label text="Rechercher" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="searchField" promptText="Rechercher..." onKeyReleased="#applyFilters" />
+            <Label text="Rechercher" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #1B5E20;" />
+            <TextField fx:id="searchField" promptText="Rechercher par nom..." onKeyReleased="#applyFilters" style="-fx-background-color: #F5F5F5; -fx-border-color: #A5D6A7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;">
+                <tooltip>
+                    <Tooltip text="Entrez le nom du produit à rechercher" />
+                </tooltip>
+            </TextField>
 
             <!-- Filter by Category -->
-            <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-            <VBox fx:id="categoryBox" spacing="5" />
+            <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #1B5E20;" />
+            <VBox fx:id="categoryBox" spacing="8" style="-fx-padding: 5 0 5 10;" />
 
             <!-- Filter by Price -->
-            <Label text="Prix" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="minPriceField" promptText="Prix min" onKeyReleased="#applyFilters" />
-            <TextField fx:id="maxPriceField" promptText="Prix max" onKeyReleased="#applyFilters" />
+            <Label text="Plage de Prix" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #1B5E20;" />
+            <TextField fx:id="minPriceField" promptText="Prix min (USD)" onKeyReleased="#applyFilters" style="-fx-background-color: #F5F5F5; -fx-border-color: #A5D6A7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;">
+                <tooltip>
+                    <Tooltip text="Entrez le prix minimum" />
+                </tooltip>
+            </TextField>
+            <TextField fx:id="maxPriceField" promptText="Prix max (USD)" onKeyReleased="#applyFilters" style="-fx-background-color: #F5F5F5; -fx-border-color: #A5D6A7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;">
+                <tooltip>
+                    <Tooltip text="Entrez le prix maximum" />
+                </tooltip>
+            </TextField>
 
             <!-- Filter Button -->
-            <Button fx:id="filterButton" text="Filtrer" onAction="#applyFilters" style="-fx-background-color: #388E3C; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 5;" />
+            <Button fx:id="filterButton" text="Filtrer" onAction="#applyFilters" style="-fx-background-color: #388E3C; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 1);">
+                <tooltip>
+                    <Tooltip text="Appliquer les filtres" />
+                </tooltip>
+            </Button>
         </VBox>
     </left>
 
     <!-- Center: Product Cards with Pagination -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true">
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" style="-fx-background: #E8F5E9; -fx-border-color: transparent;">
             <content>
                 <VBox spacing="20" alignment="TOP_CENTER">
                     <AnchorPane fx:id="scrollPane">
-                        <FlowPane fx:id="productContainer" hgap="20" vgap="20" prefWrapLength="1200" style="-fx-padding: 20 20 20 40;" alignment="TOP_LEFT"/>
+                        <FlowPane fx:id="productContainer" hgap="25" vgap="25" prefWrapLength="1200" style="-fx-background-color: #E8F5E9; -fx-padding: 30;" alignment="TOP_CENTER"/>
                     </AnchorPane>
                     <Pagination fx:id="pagination" style="-fx-padding: 20 0 30 0; -fx-page-information-visible: false;" />
                 </VBox>

@@ -33,7 +33,7 @@ public class Affichierproduitagriculteur {
     private final CategorieService categorieService = new CategorieService();
     private List<CheckBox> categoryCheckBoxes = new ArrayList<>();
     private List<Produit> filteredProduits = new ArrayList<>();
-    private static final int PRODUCTS_PER_PAGE = 6;
+    private static final int PRODUCTS_PER_PAGE = 10;
 
     @FXML
     private FlowPane productContainer;
@@ -58,6 +58,12 @@ public class Affichierproduitagriculteur {
         chargerProduits();
         productContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty().subtract(60));
         pagination.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> updatePage(newIndex.intValue()));
+
+        // Add event handlers programmatically
+        searchField.setOnKeyReleased(event -> applyFilters());
+        minPriceField.setOnKeyReleased(event -> applyFilters());
+        maxPriceField.setOnKeyReleased(event -> applyFilters());
+        filterButton.setOnAction(event -> applyFilters());
     }
 
     private void populateCategories() {
@@ -382,6 +388,7 @@ public class Affichierproduitagriculteur {
             Stage stage = new Stage();
             stage.setTitle("Formulaire de Paiement");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
             System.out.println("Fenêtre FormulairePaiement affichée avec succès.");
         } catch (Exception e) { // Changé de IOException à Exception pour capturer toutes les erreurs possibles

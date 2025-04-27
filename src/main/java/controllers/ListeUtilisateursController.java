@@ -14,10 +14,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.UtilisateurService;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,18 +78,35 @@ public class ListeUtilisateursController {
     }
 
     private class ButtonCell extends TableCell<Utilisateur, Void> {
-        private final HBox hbox = new HBox(5);
-        private final Button btnModifier = new Button("Modif");
-        private final Button btnSupprimer = new Button("Suppr");
-        private final Button btnBlock = new Button("Block");
 
-        public ButtonCell() {
-            hbox.getChildren().addAll(btnModifier, btnSupprimer, btnBlock);
+            private final HBox hbox = new HBox(10);
+            private final Button btnModifier = new Button();
+            private final Button btnSupprimer = new Button();
+            private final Button btnBlock = new Button();
 
-            // Style buttons to be more compact
-            btnModifier.setStyle("-fx-padding: 3 5 3 5; -fx-font-size: 12;");
-            btnSupprimer.setStyle("-fx-padding: 3 5 3 5; -fx-font-size: 12;");
-            btnBlock.setStyle("-fx-padding: 3 5 3 5; -fx-font-size: 12;");
+            public ButtonCell() {
+                hbox.getChildren().addAll(btnModifier, btnSupprimer, btnBlock);
+                hbox.getStyleClass().add("hbox-center");
+
+                ImageView editIcon = new ImageView(new Image(getClass().getResource("/icons/edit.png").toExternalForm()));
+                editIcon.setFitWidth(20);
+                editIcon.setFitHeight(20);
+
+                ImageView deleteIcon = new ImageView(new Image(getClass().getResource("/icons/delete.png").toExternalForm()));
+                deleteIcon.setFitWidth(20);
+                deleteIcon.setFitHeight(20);
+
+                ImageView blockIcon = new ImageView(new Image(getClass().getResource("/icons/block.png").toExternalForm()));
+                blockIcon.setFitWidth(20);
+                blockIcon.setFitHeight(20);
+                btnModifier.setGraphic(editIcon);
+                btnSupprimer.setGraphic(deleteIcon);
+                btnBlock.setGraphic(blockIcon);
+
+                // Apply button style
+                btnModifier.getStyleClass().add("table-button");
+                btnSupprimer.getStyleClass().add("table-button");
+                btnBlock.getStyleClass().add("table-button");
 
             btnModifier.setOnAction(event -> {
                 Utilisateur user = getTableView().getItems().get(getIndex());
@@ -97,6 +117,7 @@ public class ListeUtilisateursController {
                 Utilisateur user = getTableView().getItems().get(getIndex());
                 supprimerUtilisateur(user);
             });
+
             btnBlock.setOnAction(event -> {
                 Utilisateur user = getTableView().getItems().get(getIndex());
                 blockUtilisateur(user);
@@ -113,6 +134,7 @@ public class ListeUtilisateursController {
             }
         }
     }
+
 
     private void ouvrirModification(Utilisateur user) {
         try {

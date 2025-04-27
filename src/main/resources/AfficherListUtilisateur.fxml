@@ -8,11 +8,16 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.ListeUtilisateursController"
-            prefHeight="500" prefWidth="900"
-            stylesheets="@styles.css">
+            prefHeight="720" prefWidth="1080"
+            stylesheets="@list.css">
 
-    <VBox spacing="20" layoutX="30" layoutY="30">
-        <TableView fx:id="userTable">
+    <VBox spacing="30" alignment="CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+
+        <!-- Title -->
+        <Label text="Liste des Utilisateurs" styleClass="page-title"/>
+
+        <!-- TableView -->
+        <TableView fx:id="userTable" prefHeight="400" prefWidth="800">
             <columns>
                 <TableColumn fx:id="nomColumn" text="Nom" prefWidth="100">
                     <cellValueFactory><PropertyValueFactory property="nom"/></cellValueFactory>
@@ -30,22 +35,22 @@
                     <cellValueFactory><PropertyValueFactory property="blocked"/></cellValueFactory>
                 </TableColumn>
                 <TableColumn text="Action" prefWidth="150">
-                    <cellFactory>
-                    </cellFactory>
+                    <cellFactory/>
                 </TableColumn>
             </columns>
         </TableView>
 
-        <Button text="Retour" onAction="#retourAjout"/>
-        <Button text="AjouterUser" onAction="#ajouterUtilisateur"/>
-        <Button text="Exporter PDF" onAction="#genererPDF"/>
-        <!-- Add the new sort button -->
-        <Button text="Trier par Nom" onAction="#trierParNom"/>
-        <PieChart fx:id="rolePieChart" prefHeight="400" prefWidth="400"/>
+        <!-- Buttons below -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Retour" onAction="#retourAjout"/>
+            <Button text="Ajouter Utilisateur" onAction="#ajouterUtilisateur"/>
+            <Button text="Exporter PDF" onAction="#genererPDF"/>
+            <Button text="Trier par Nom" onAction="#trierParNom"/>
+        </HBox>
 
-
+        <!-- PieChart -->
+        <PieChart fx:id="rolePieChart" prefHeight="300" prefWidth="300"/>
 
     </VBox>
-    <HBox spacing="20">
-</HBox>
+
 </AnchorPane>

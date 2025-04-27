@@ -2,52 +2,58 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.UtilisateurController"
-            prefHeight="400" prefWidth="600"
-            stylesheets="@styles.css">
+            prefHeight="720" prefWidth="1080"
+            stylesheets="@add.css">
 
-    <!-- Centered content wrapper -->
     <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
                AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
-            <!-- Add style-class to labels -->
+
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+
+            <!-- Title -->
             <Label text="Rôle :" styleClass="form-label"/>
 
-            <!-- Add style-class to text fields -->
+            <!-- Fields -->
             <TextField fx:id="nomField" promptText="Nom" styleClass="form-field"/>
             <TextField fx:id="prenomField" promptText="Prénom" styleClass="form-field"/>
             <TextField fx:id="emailField" promptText="Email" styleClass="form-field"/>
             <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="form-field"/>
             <TextField fx:id="telephoneField" promptText="Téléphone" styleClass="form-field"/>
 
-            <!-- Radio buttons container -->
+            <!-- Role Selection -->
             <HBox spacing="10" alignment="CENTER">
                 <RadioButton fx:id="radioAgriculteur" text="Agriculteur" toggleGroup="$roleGroup" styleClass="radio-button"/>
                 <RadioButton fx:id="radioExpert" text="Expert" toggleGroup="$roleGroup" styleClass="radio-button"/>
                 <RadioButton fx:id="radioFournisseur" text="Fournisseur" toggleGroup="$roleGroup" styleClass="radio-button"/>
             </HBox>
-            <!-- Dynamic fields -->
-            <VBox fx:id="formAgriculteur" visible="false" managed="false">
-                <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation"/>
+
+            <!-- Dynamic Fields -->
+            <VBox fx:id="formAgriculteur" visible="false" managed="false" spacing="10">
+                <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation" styleClass="form-field"/>
             </VBox>
 
-            <VBox fx:id="formExpert" visible="false" managed="false">
-                <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise"/>
+            <VBox fx:id="formExpert" visible="false" managed="false" spacing="10">
+                <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise" styleClass="form-field"/>
             </VBox>
 
-            <VBox fx:id="formFournisseur" visible="false" managed="false">
-                <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise"/>
-                <TextField fx:id="idFiscaleField" promptText="ID fiscale"/>
-                <TextField fx:id="categorieProduitField" promptText="Catégorie produit"/>
+            <VBox fx:id="formFournisseur" visible="false" managed="false" spacing="10">
+                <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise" styleClass="form-field"/>
+                <TextField fx:id="idFiscaleField" promptText="ID fiscale" styleClass="form-field"/>
+                <TextField fx:id="categorieProduitField" promptText="Catégorie produit" styleClass="form-field"/>
             </VBox>
 
             <!-- Buttons -->
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Sign In" onAction="#ajouterUtilisateur"/>
-                <Button text="Login" onAction="#goToLoginPage" />
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Sign In" onAction="#ajouterUtilisateur" styleClass="button"/>
+                <Button text="Login" onAction="#goToLoginPage" styleClass="button"/>
             </HBox>
+
         </VBox>
+
     </StackPane>
+
 </AnchorPane>

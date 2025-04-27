@@ -52,6 +52,7 @@ public class ForgotPasswordController {
             Stage resetStage = new Stage();
             resetStage.setScene(new Scene(loader.load()));
             resetStage.setTitle("Réinitialiser le mot de passe");
+
             resetStage.initModality(Modality.APPLICATION_MODAL);
             resetStage.show();
         } catch (IOException e) {

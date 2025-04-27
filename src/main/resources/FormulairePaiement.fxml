@@ -9,23 +9,22 @@
     <Label text="Formulaire de Paiement" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
 
     <Label text="Nom sur la carte" />
-    <TextField fx:id="cardNameField" promptText="Entrez le nom" />
+    <TextField fx:id="cardNameField" promptText="Entrez le nom sur la carte" />
 
     <Label text="Numéro de carte" />
     <TextField fx:id="cardNumberField" promptText="Entrez le numéro de carte" />
 
-    <Label text="Date d'expiration (MM/AA)" />
-    <TextField fx:id="expiryDateField" promptText="MM/AA" />
+    <Label text="Date d'expiration (MM/YY)" />
+    <TextField fx:id="expiryDateField" promptText="MM/YY" />
 
     <Label text="CVV" />
     <TextField fx:id="cvvField" promptText="Entrez le CVV" />
 
     <Label text="Montant à payer" />
-    <Label fx:id="amountLabel" style="-fx-font-weight: bold;" />
+    <Label fx:id="amountLabel" text="0.00 DT" style="-fx-font-weight: bold;" />
 
     <Label text="Code Promo" />
-    <TextField fx:id="codePromoField" promptText="Entrez le code promo" onKeyReleased="#validateCodePromo" />
-
+    <TextField fx:id="codePromoField" promptText="Entrez un code promo" onAction="#validateCodePromo" />
     <Label fx:id="codePromoStatusLabel" text="" />
 
     <Button fx:id="payButton" text="Payer" onAction="#processPayment" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />

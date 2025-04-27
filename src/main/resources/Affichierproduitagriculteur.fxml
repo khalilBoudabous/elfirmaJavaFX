@@ -17,7 +17,7 @@
         <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #F5F5F5; -fx-border-color: #388E3C; -fx-border-width: 0 1 0 0;">
             <!-- Search by Name -->
             <Label text="Rechercher" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="searchField" promptText="Rechercher..." />
+            <TextField fx:id="searchField" promptText="Rechercher..." onKeyReleased="#applyFilters" />
 
             <!-- Filter by Category -->
             <Label text="Catégorie" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
@@ -25,8 +25,8 @@
 
             <!-- Filter by Price -->
             <Label text="Prix" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-            <TextField fx:id="minPriceField" promptText="Prix min" />
-            <TextField fx:id="maxPriceField" promptText="Prix max" />
+            <TextField fx:id="minPriceField" promptText="Prix min" onKeyReleased="#applyFilters" />
+            <TextField fx:id="maxPriceField" promptText="Prix max" onKeyReleased="#applyFilters" />
 
             <!-- Filter Button -->
             <Button fx:id="filterButton" text="Filtrer" onAction="#applyFilters" style="-fx-background-color: #388E3C; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 5;" />
@@ -41,7 +41,7 @@
                     <AnchorPane fx:id="scrollPane">
                         <FlowPane fx:id="productContainer" hgap="20" vgap="20" prefWrapLength="1200" style="-fx-padding: 20 20 20 40;" alignment="TOP_LEFT"/>
                     </AnchorPane>
-                    <Pagination fx:id="pagination" styleClass="custom-pagination" style="-fx-padding: 20 0 30 0; -fx-page-information-visible: false;" />
+                    <Pagination fx:id="pagination" style="-fx-padding: 20 0 30 0; -fx-page-information-visible: false;" />
                 </VBox>
             </content>
         </ScrollPane>

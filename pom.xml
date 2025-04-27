@@ -46,11 +46,16 @@
             <version>1.37.0</version>
         </dependency>
 
-        <!-- Ajout de la dépendance pour lire le fichier .env -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
             <version>5.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>29.0.0</version>
         </dependency>
     </dependencies>
 

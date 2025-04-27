@@ -8,11 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -330,8 +326,13 @@ public class Affichierproduitagriculteur {
 
     private void ouvrirFenetreDetails(Produit produit) {
         try {
+            System.out.println("Chargement de DetailsProduit.fxml...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailsProduit.fxml"));
+            if (loader.getLocation() == null) {
+                throw new IOException("DetailsProduit.fxml introuvable à l'emplacement /DetailsProduit.fxml");
+            }
             Parent root = loader.load();
+            System.out.println("DetailsProduit.fxml chargé avec succès.");
 
             DetailsProduit controller = loader.getController();
             controller.setProduit(produit);
@@ -341,6 +342,7 @@ public class Affichierproduitagriculteur {
             stage.setScene(new Scene(root));
             stage.setMaximized(true);
             stage.show();
+            System.out.println("Fenêtre DetailsProduit affichée avec succès.");
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre de détails", e);
             e.printStackTrace();
@@ -349,8 +351,30 @@ public class Affichierproduitagriculteur {
 
     private void ouvrirFormulairePaiement(Produit produit) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FormulairePaiement.fxml"));
+            System.out.println("Tentative de chargement de FormulairePaiement.fxml...");
+            // Essayez différents chemins pour localiser le fichier FXML
+            String[] possiblePaths = {
+                    "/FormulairePaiement.fxml",
+                    "/fxml/FormulairePaiement.fxml",
+                    "/resources/FormulairePaiement.fxml"
+            };
+
+            FXMLLoader loader = null;
+            for (String path : possiblePaths) {
+                System.out.println("Essai du chemin : " + path);
+                loader = new FXMLLoader(getClass().getResource(path));
+                if (loader.getLocation() != null) {
+                    System.out.println("Chemin trouvé : " + path);
+                    break;
+                }
+            }
+
+            if (loader == null || loader.getLocation() == null) {
+                throw new IOException("FormulairePaiement.fxml introuvable après avoir essayé tous les chemins possibles.");
+            }
+
             Parent root = loader.load();
+            System.out.println("FormulairePaiement.fxml chargé avec succès.");
 
             FormulairePaiement controller = loader.getController();
             controller.setProduit(produit);
@@ -359,9 +383,16 @@ public class Affichierproduitagriculteur {
             stage.setTitle("Formulaire de Paiement");
             stage.setScene(new Scene(root));
             stage.show();
-        } catch (IOException e) {
+            System.out.println("Fenêtre FormulairePaiement affichée avec succès.");
+        } catch (Exception e) { // Changé de IOException à Exception pour capturer toutes les erreurs possibles
             logger.log(Level.SEVERE, "Erreur lors de l'ouverture du formulaire de paiement", e);
             e.printStackTrace();
+            // Afficher une alerte à l'utilisateur
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Impossible d'ouvrir le formulaire de paiement");
+            alert.setContentText("Une erreur s'est produite : " + e.getMessage());
+            alert.showAndWait();
         }
     }
 }

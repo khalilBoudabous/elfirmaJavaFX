@@ -78,10 +78,12 @@
                                       AnchorPane.leftAnchor="0.0"
                                       AnchorPane.rightAnchor="0.0">
                               <columns>
-                                 <TableColumn fx:id="tcIdTicket" text="ID ticket" />
                                  <TableColumn fx:id="tcTitre" text="Titre evenement" />
                                  <TableColumn fx:id="tcPrix" text="Prix" />
                                  <TableColumn fx:id="tcPaye" text="Payement" />
+                                 <TableColumn fx:id="tcNom" text="Nom" />
+                                 <TableColumn fx:id="tcPrenom" text="Prénom" />
+                                 <TableColumn fx:id="tcEmail" text="Email" />
                               </columns>
                            </TableView>
                         </AnchorPane>
@@ -91,9 +93,7 @@
             </TabPane>
          </center>
          <left>
-            <VBox style="-fx-background-color: #7EA76F;"
-                  stylesheets="@stylesheet.css"
-                  BorderPane.alignment="CENTER">
+            <VBox style="-fx-background-color: #7EA76F;" stylesheets="@stylesheet.css" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false"
                           onAction="#AjouterEvenement"
@@ -102,6 +102,15 @@
                           style="-fx-background-color: #74A063;"
                           stylesheets="@stylesheet.css"
                           text="Ajouter évenement"
+                          textFill="WHITE" />
+                  <!-- New button to generate PDF of participant details -->
+                  <Button mnemonicParsing="false"
+                          onAction="#generatePDF"
+                          prefHeight="44.0"
+                          prefWidth="186.0"
+                          style="-fx-background-color: #74A063;"
+                          stylesheets="@stylesheet.css"
+                          text="Générer PDF"
                           textFill="WHITE" />
                </children>
             </VBox>

@@ -5,11 +5,14 @@ import utils.MyDatabase;
 import entities.Ticket;
 import java.util.*;
 import java.sql.*;
-
+import services.UtilisateurService;
+import entities.Utilisateur;
 
 public class TicketService implements Service<Ticket> {
 
     private Connection cnx;
+    private UtilisateurService utilisateurService = new UtilisateurService();
+
     public TicketService() {cnx = MyDatabase.getInstance().getConnection();}
 
     @Override
@@ -88,9 +91,19 @@ public class TicketService implements Service<Ticket> {
             int id_evenement = rs.getInt("evenement_id");
             boolean paye = rs.getBoolean("is_paid");
             String titreEvenement = rs.getString("Titre_evenement");
-            // Retrieve user id (fixed column name)
             int userId = rs.getInt("utilisateur_id");
+
             Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye, userId);
+            
+
+            // Optionally, fetch user name from UtilisateurService
+            // Utilisateur user = utilisateurService.getUtilisateurById(userId);
+            // if (user != null) {
+            //     ticket.setNomUser(user.getNom() + " " + user.getPrenom());
+            //     // always sync email from user entity:
+            //      ticket.setEmailUser(user.getEmail());
+            // }
+
             tickets.add(ticket);
         }
         return tickets;

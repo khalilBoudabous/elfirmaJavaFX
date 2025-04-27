@@ -23,6 +23,11 @@ import java.util.Optional;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent; // Added import
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class FrontOfficeEvenement {
 
@@ -145,6 +150,56 @@ public class FrontOfficeEvenement {
         } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, "Erreur de chargement des tickets: " + ex.getMessage()).showAndWait();
         }
+    }
+
+    @FXML
+    private void handleTranslateEventsEn() {
+        translateEvents("en");
+    }
+
+    @FXML
+    private void handleTranslateEventsAr() {
+        translateEvents("ar");
+    }
+
+    private void translateEvents(String targetLang) {
+        if(eventsCache == null) return;
+        try {
+            for(Evenement event : eventsCache) {
+                String translatedTitre = translateText(event.getTitre(), targetLang);
+                String translatedLieu = translateText(event.getLieu(), targetLang);
+                event.setTitre(translatedTitre);
+                event.setLieu(translatedLieu);
+                // Optionally, translate other fields as needed
+            }
+            gridEvents.getChildren().clear();
+            populateEventGrid(eventsCache);
+        } catch(Exception e) {
+            showAlert("Erreur", "La traduction des événements a échoué: " + e.getMessage());
+        }
+    }
+
+    private String translateText(String text, String targetLang) throws Exception {
+        // Use the free Google Translate API endpoint.
+        String urlStr = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl="
+                        + targetLang + "&dt=t&q=" + URLEncoder.encode(text, "UTF-8");
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        StringBuilder response = new StringBuilder();
+        String line;
+        while((line = reader.readLine()) != null){
+            response.append(line);
+        }
+        reader.close();
+        String resp = response.toString();
+        int start = resp.indexOf("\"");
+        int end = resp.indexOf("\"", start + 1);
+        if(start >= 0 && end > start) {
+            return resp.substring(start + 1, end);
+        }
+        return text;
     }
 
     public static void refreshEvents() {

@@ -132,19 +132,8 @@ public class AjouterEvenement implements Initializable {
                 throw new SQLException("Échec de la génération de l'ID de l'événement");
             }
 
-            // Création des tickets
-            for (int i = 0; i < nombrePlaces; i++) {
-                Ticket ticket = new Ticket();
-                ticket.setId_evenement(evenement.getId());
-                ticket.setPrix(prix);
-                ticket.setPayée(false);
-                ticket.setTitreEvenement(titreEvenement);
-                // Add user id to ticket
-                ticket.setUserId(1);
-                ts.ajouter(ticket);
-            }
 
-            afficherAlerte("Succès", "Événement et tickets ajoutés avec succès !");
+            afficherAlerte("Succès", "Événement ajouté avec succès !");
             reinitialiserChamps();
 
             // Fermeture de la fenêtre

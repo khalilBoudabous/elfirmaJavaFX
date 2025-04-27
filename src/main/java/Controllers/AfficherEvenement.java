@@ -40,8 +40,6 @@ public class AfficherEvenement {
     @FXML
     private TableColumn<Ticket, String> tcTitre;
     @FXML
-    private TableColumn<Ticket, Integer> tcIdTicket;
-    @FXML
     private TableColumn<Ticket, Boolean> tcPaye;
     @FXML
     private TableColumn<Ticket, Float> tcPrix;
@@ -193,7 +191,6 @@ public class AfficherEvenement {
 
     // Ajouter cette méthode
     private void configureTicketColumns() {
-        tcIdTicket.setCellValueFactory(new PropertyValueFactory<>("id"));
         tcTitre.setCellValueFactory(new PropertyValueFactory<>("titreEvenement"));
         tcPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
         tcPaye.setCellValueFactory(new PropertyValueFactory<>("payée"));
@@ -204,7 +201,7 @@ public class AfficherEvenement {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item ? "Etat du payement" : "non payé");
+                    setText(item ? "payé" : "non payé");
                 }
             }
         });
@@ -245,5 +242,18 @@ public class AfficherEvenement {
             }
         }
         return true;
+    }
+
+    @FXML
+    public void generatePDF(ActionEvent event) {
+        try {
+            List<Ticket> tickets = ticketService.recuperer();
+            // Specify output PDF file path; change if needed.
+            String outputPath = "c:\\Users\\Oumayma\\Downloads\\participants.pdf";
+            utils.PDFGenerator.generateTicketsPDF(tickets, outputPath);
+            showAlert("Succès", "PDF généré avec succès à : " + outputPath);
+        } catch (Exception e) {
+            showAlert("Erreur", "Échec de la génération du PDF: " + e.getMessage());
+        }
     }
 }

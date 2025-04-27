@@ -20,6 +20,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import javafx.stage.FileChooser;
 import java.io.File;
+import services.UtilisateurService;
+import entities.Utilisateur;
 
 public class TicketDetailsController {
 
@@ -43,41 +45,53 @@ public class TicketDetailsController {
     public void setTicketData(Ticket ticket, Evenement event) {
         lblEventTitle.setText(ticket.getTitreEvenement());
         lblPrice.setText("Price: " + ticket.getPrix());
-        //lblUserName.setText("Name: " + ticket.getNom_user());
-        //lblUserEmail.setText("Email: " + ticket.getEmail_user());
+
+        // Fetch user info by userId
+        String userFullName = "";
+        String userEmail = "";
+        try {
+            UtilisateurService utilisateurService = new UtilisateurService();
+            Utilisateur user = utilisateurService.getUtilisateurById(ticket.getUserId());
+            if (user != null) {
+                userFullName = user.getNom() + " " + user.getPrenom();
+                userEmail = user.getEmail();
+            }
+        } catch (Exception e) {
+            userFullName = "N/A";
+            userEmail = "N/A";
+        }
+
+        lblUserName.setText("Name: " + userFullName);
+        lblUserEmail.setText("Email: " + userEmail);
+
         if (event != null) {
             lblEventDates.setText("From: " + event.getDateDebut() + " to " + event.getDateFin());
         } else {
             lblEventDates.setText("Dates: Unknown");
         }
-        generateQRCode(ticket, event);
+        generateQRCode(ticket, event, userFullName, userEmail);
     }
 
-    private void generateQRCode(Ticket ticket, Evenement event) {
+    // Update QR code generation to use fetched user info
+    private void generateQRCode(Ticket ticket, Evenement event, String userFullName, String userEmail) {
         try {
-            // Structure QR code content
             StringBuilder qrContent = new StringBuilder();
             qrContent.append("Evenement: ").append(ticket.getTitreEvenement()).append("\n")
                     .append("Prix: ").append(ticket.getPrix()).append("\n")
                     .append("Payement: ").append(ticket.getPayée()).append("\n")
                     .append("Dates: ").append(event != null ?
-                            event.getDateDebut() + " au " + event.getDateFin() : "Unconnue").append("\n");
+                            event.getDateDebut() + " au " + event.getDateFin() : "Unconnue").append("\n")
+                    .append("User Name: ").append(userFullName).append("\n")
+                    .append("User Email: ").append(userEmail).append("\n");
 
-            // Placeholder for user details (to be uncommented when Utilisateur is integrated)
-            // qrContent.append("User Name: ").append(ticket.getNom_user()).append("\n")
-            //         .append("User Email: ").append(ticket.getEmail_user()).append("\n");
-
-            // Generate QR code
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix bitMatrix = qrCodeWriter.encode(qrContent.toString(), BarcodeFormat.QR_CODE, 150, 150);
             qrCodeBufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
             Image qrImage = SwingFXUtils.toFXImage(qrCodeBufferedImage, null);
             qrCodeImage.setImage(qrImage);
 
-            // Enable download button if QR code is generated successfully
             btnDownload.setDisable(false);
         } catch (WriterException e) {
-            // Show error alert to user
             showAlert("Error", "Echec de génération du code QR : " + e.getMessage());
             btnDownload.setDisable(true);
         }

@@ -14,6 +14,7 @@ public class MainFX extends Application {
         launch(args);
     }
 
+    /*
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
@@ -31,6 +32,8 @@ public class MainFX extends Application {
         }
 
     }
+
+    */
 
     /*
 
@@ -52,10 +55,9 @@ public class MainFX extends Application {
         }
 
     }
+
+
     */
-
-
-    /*
 
     @Override
     public void start(Stage primaryStage) {
@@ -75,5 +77,4 @@ public class MainFX extends Application {
         }
 
     }
-*/
 }

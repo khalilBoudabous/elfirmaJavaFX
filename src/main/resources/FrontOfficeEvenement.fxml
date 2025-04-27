@@ -7,37 +7,45 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.FrontOfficeEvenement">
-    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-        <Tab text="Acceuil">
-            <AnchorPane />
-        </Tab>
-        <Tab text="Produits">
-            <AnchorPane />
-        </Tab>
-        <Tab text="Explorer terrain">
-            <AnchorPane />
-        </Tab>
-        <Tab fx:id="tabEvents" text="Evénements">
-            <AnchorPane AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-                <ScrollPane fitToWidth="true" fitToHeight="true" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-                    <AnchorPane>
-                        <GridPane fx:id="gridEvents" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" hgap="20" vgap="20">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="ALWAYS" />
-                                <ColumnConstraints hgrow="ALWAYS" />
-                            </columnConstraints>
-                        </GridPane>
-                    </AnchorPane>
-                </ScrollPane>
-            </AnchorPane>
-        </Tab>
-        <Tab text="Tickets">
-            <AnchorPane>
-                <ListView fx:id="listTickets" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"/>
-            </AnchorPane>
-        </Tab>
-    </TabPane>
+    <children>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+            <Tab text="Acceuil">
+                <AnchorPane />
+            </Tab>
+            <Tab text="Produits">
+                <AnchorPane />
+            </Tab>
+            <Tab text="Explorer terrain">
+                <AnchorPane />
+            </Tab>
+            <Tab fx:id="tabEvents" text="Evénements">
+                <AnchorPane AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+                    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+                        <!-- Replaced single translate button with two -->
+                        <Button fx:id="btnTranslateEventsEn" text="Translate Events to English" onAction="#handleTranslateEventsEn"/>
+                        <Button fx:id="btnTranslateEventsAr" text="Translate Events to Arabic" onAction="#handleTranslateEventsAr"/>
+                        <ScrollPane fitToWidth="true" fitToHeight="true">
+                            <AnchorPane>
+                                <GridPane fx:id="gridEvents" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" hgap="20" vgap="20">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                </GridPane>
+                            </AnchorPane>
+                        </ScrollPane>
+                    </VBox>
+                </AnchorPane>
+            </Tab>
+            <Tab text="Tickets">
+                <AnchorPane>
+                    <ListView fx:id="listTickets" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"/>
+                </AnchorPane>
+            </Tab>
+        </TabPane>
+    </children>
 </AnchorPane>

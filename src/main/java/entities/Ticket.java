@@ -8,6 +8,9 @@ public class Ticket {
     
     // New user id field
     private int userId;
+    private String nomUser;
+    private String emailUser;
+    private Utilisateur utilisateur; // Add user entity reference
 
     public Ticket(int id, int id_evenement, String titreEvenement, float prix, Boolean payée, int userId) {
         this.id = id;
@@ -67,6 +70,36 @@ public class Ticket {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getNomUser() {
+        if (utilisateur != null) {
+            return utilisateur.getNom() + " " + utilisateur.getPrenom();
+        }
+        return nomUser;
+    }
+
+    public void setNomUser(String nomUser) {
+        this.nomUser = nomUser;
+    }
+
+    public String getEmailUser() {
+        if (utilisateur != null) {
+            return utilisateur.getEmail();
+        }
+        return emailUser;
+    }
+
+    public void setEmailUser(String emailUser) {
+        this.emailUser = emailUser;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
     }
 
     @Override

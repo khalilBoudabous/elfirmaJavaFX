@@ -15,11 +15,7 @@
             AnchorPane.rightAnchor="0.0">
 
     <children>
-        <VBox spacing="10"
-              AnchorPane.topAnchor="0.0"
-              AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0"
-              AnchorPane.rightAnchor="0.0">
+        <VBox spacing="10" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <padding>
                 <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
@@ -33,10 +29,15 @@
                 <Text fx:id="txtLieu" />
                 <Label text="Informations pratiques:" style="-fx-font-weight: bold;" />
                 <Text fx:id="txtInfos" />
-                <Button fx:id="btnInscription"
-                        text="S'inscrire"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
-                        onAction="#handleInscription" />
+                <HBox spacing="10">
+                    <Button fx:id="btnInscription"
+                            text="S'inscrire"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                            onAction="#handleInscription" />
+                    <!-- Replaced single translate button with two buttons for language selection -->
+                    <Button fx:id="btnTranslateEn" text="Translate to English" onAction="#handleTranslateEn" />
+                    <Button fx:id="btnTranslateAr" text="Translate to Arabic" onAction="#handleTranslateAr" />
+                </HBox>
             </children>
         </VBox>
     </children>

@@ -200,6 +200,25 @@ public class UtilisateurService {
         return "[\"ROLE_ADMIN\"]";
     }
 
-
-
+    public Utilisateur getUtilisateurById(int userId) throws SQLException {
+        String sql = "SELECT * FROM utilisateur WHERE id = ?";
+        try (Connection cnx = MyDatabase.getInstance().getConnection();
+             PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String email = rs.getString("email");
+                Utilisateur u = createUserByType(rs.getString("type"));
+                u.setId(id);
+                u.setNom(nom);
+                u.setPrenom(prenom);
+                u.setEmail(email);
+                return u;
+            }
+        }
+        return null; // Return null if no user is found
+    }
 }

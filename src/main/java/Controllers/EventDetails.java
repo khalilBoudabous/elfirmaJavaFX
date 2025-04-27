@@ -8,6 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
 public class EventDetails {
 
     @FXML private Text txtTitre;
@@ -73,6 +79,59 @@ public class EventDetails {
         } catch (Exception e) {
             showAlert("Erreur", "Erreur lors de l'inscription: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleTranslateEn() {
+        translateInterface("en");
+    }
+
+    @FXML
+    private void handleTranslateAr() {
+        translateInterface("ar");
+    }
+    
+    private void translateInterface(String targetLang) {
+        try {
+            String translatedTitre = translateText(txtTitre.getText(), targetLang);
+            String translatedDescription = translateText(txtDescription.getText(), targetLang);
+            String translatedDates = translateText(txtDates.getText(), targetLang);
+            String translatedLieu = translateText(txtLieu.getText(), targetLang);
+            String translatedInfos = translateText(txtInfos.getText(), targetLang);
+            txtTitre.setText(translatedTitre);
+            txtDescription.setText(translatedDescription);
+            txtDates.setText(translatedDates);
+            txtLieu.setText(translatedLieu);
+            txtInfos.setText(translatedInfos);
+        } catch (Exception e) {
+            showAlert("Erreur", "La traduction a échoué: " + e.getMessage());
+        }
+    }
+
+    private String translateText(String text, String targetLang) throws Exception {
+        // Use the free Google Translate API endpoint.
+        String urlStr = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl=" 
+                        + targetLang + "&dt=t&q=" + URLEncoder.encode(text, "UTF-8");
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            response.append(line);
+        }
+        reader.close();
+        // The response is a JSON-like array. Extract the translated text.
+        // This is a minimal parser; in production use a JSON parser.
+        String resp = response.toString();
+        // Assume response structure: [[["translated text", "original", ...], ...], ...]
+        int start = resp.indexOf("\"");
+        int end = resp.indexOf("\"", start + 1);
+        if(start >= 0 && end > start) {
+            return resp.substring(start + 1, end);
+        }
+        return text;
     }
 
     private void showAlert(String title, String message) {

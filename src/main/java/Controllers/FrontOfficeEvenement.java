@@ -111,18 +111,25 @@ public class FrontOfficeEvenement {
                                 new Alert(Alert.AlertType.INFORMATION, "Ce ticket est déjà payé.").showAndWait();
                                 return;
                             }
-                            Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "Voulez-vous procéder au paiement ?", ButtonType.YES, ButtonType.NO);
-                            Optional<ButtonType> result = conf.showAndWait();
-                            if (result.isPresent() && result.get() == ButtonType.YES) {
-                                try {
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PaiementForm.fxml"));
+                                Parent paymentRoot = loader.load();
+                                PaymentController controller = loader.getController();
+                                // Pass ticket data to the payment form
+                                controller.setTicket(ticket);
+                                Stage stage = new Stage();
+                                stage.setTitle("Paiement");
+                                stage.setScene(new Scene(paymentRoot));
+                                stage.showAndWait();
+                                // After form closes, check if payment succeeded
+                                if(controller.isPaymentSuccess()){
                                     ticket.setPayée(true);
                                     ticketService.modifier(ticket);
-                                    new Alert(Alert.AlertType.INFORMATION, "Paiement effectué.").showAndWait();
+                                    new Alert(Alert.AlertType.INFORMATION, "Paiement effectué via Stripe.").showAndWait();
                                     loadTickets();
-                                } catch (Exception ex) {
-                                    new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
                                 }
+                            } catch(Exception ex) {
+                                new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
                             }
                         });
                         Button btnViewDetails = new Button("View Details");
@@ -242,4 +249,5 @@ public class FrontOfficeEvenement {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

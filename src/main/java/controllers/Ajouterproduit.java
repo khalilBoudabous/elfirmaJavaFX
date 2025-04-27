@@ -1,7 +1,10 @@
 package controllers;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import entities.Categorie;
 import entities.Produit;
+import io.github.cdimascio.dotenv.Dotenv;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +47,9 @@ public class Ajouterproduit {
     private final ProduitService produitService = new ProduitService();
     private final CategorieService categorieService = new CategorieService();
 
+    // Cloudinary
+    private final Cloudinary cloudinary;
+
     // Variables
     private File selectedImageFile;
     private String generatedCodePromo;
@@ -57,6 +64,16 @@ public class Ajouterproduit {
     private static final int MAX_DESC_LENGTH = 500;
     private static final String CODE_PROMO_PATTERN = "^[A-Z0-9]{8}$"; // 8 caractères alphanumériques
     private static final String NOM_PATTERN = "^[a-zA-Z\\s-]+$"; // Lettres, espaces, tirets (pas de chiffres)
+
+    public Ajouterproduit() {
+        // Load environment variables
+        Dotenv dotenv = Dotenv.load();
+        String cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
+        if (cloudinaryUrl == null || cloudinaryUrl.isEmpty()) {
+            throw new IllegalStateException("CLOUDINARY_URL not found in .env file");
+        }
+        cloudinary = new Cloudinary(cloudinaryUrl);
+    }
 
     @FXML
     public void initialize() {
@@ -122,7 +139,7 @@ public class Ajouterproduit {
                 productImage.setImage(image);
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Erreur lors du chargement de l'image", e);
-                new Alert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'image : " + e.getMessage()).showAndWait(); // Correction ici
+                new Alert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'image : " + e.getMessage()).showAndWait();
             }
         }
     }
@@ -212,9 +229,22 @@ public class Ajouterproduit {
                 return;
             }
 
+            // Upload image to Cloudinary
+            String imageUrl;
+            try {
+                Map uploadResult = cloudinary.uploader().upload(selectedImageFile, ObjectUtils.asMap(
+                        "resource_type", "image",
+                        "public_id", "products/" + nomProduit + "_" + System.currentTimeMillis()
+                ));
+                imageUrl = (String) uploadResult.get("secure_url");
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Erreur lors de l'upload de l'image vers Cloudinary", e);
+                showError("Erreur lors de l'upload de l'image vers Cloudinary : " + e.getMessage());
+                return;
+            }
+
             // Créer le produit et l'ajouter
-            String imagePath = selectedImageFile.getAbsolutePath();
-            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imagePath, description, nomProduit, codePromo, discountPercentage);
+            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imageUrl, description, nomProduit, codePromo, discountPercentage);
             produitService.ajouter(produit);
 
             showInfo("Produit ajouté avec succès!");

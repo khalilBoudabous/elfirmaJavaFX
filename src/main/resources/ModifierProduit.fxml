@@ -36,5 +36,6 @@
    <Label text="Pourcentage de Réduction (%)" />
    <TextField fx:id="discountPercentageField" promptText="Entrez le pourcentage (0-100)" />
 
+   <Label fx:id="errorLabel" text="" style="-fx-text-fill: red;" />
    <Button fx:id="ajout" text="Modifier Produit" onAction="#modifierProduit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
 </VBox>

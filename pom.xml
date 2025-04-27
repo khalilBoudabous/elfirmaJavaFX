@@ -13,6 +13,14 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
@@ -31,8 +39,20 @@
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.37.0</version>
+        </dependency>
+
+        <!-- Ajout de la dépendance pour lire le fichier .env -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

@@ -21,14 +21,17 @@ import javafx.stage.Stage;
 import services.ProduitService;
 import services.CategorieService;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Affichierproduitagriculteur {
+
+    private static final Logger logger = Logger.getLogger(Affichierproduitagriculteur.class.getName());
 
     private final ProduitService produitService = new ProduitService();
     private final CategorieService categorieService = new CategorieService();
@@ -71,6 +74,7 @@ public class Affichierproduitagriculteur {
                 categoryBox.getChildren().add(checkBox);
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erreur lors du chargement des catégories", e);
             e.printStackTrace();
         }
     }
@@ -87,6 +91,7 @@ public class Affichierproduitagriculteur {
             updatePagination();
             updatePage(0);
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erreur lors du chargement des produits", e);
             e.printStackTrace();
         }
     }
@@ -172,10 +177,33 @@ public class Affichierproduitagriculteur {
         """));
 
         ImageView imageView = new ImageView();
-        File imageFile = new File(produit.getImage());
-        if (imageFile.exists()) {
-            imageView.setImage(new Image(imageFile.toURI().toString()));
+        String imageUrl = produit.getImage();
+        logger.info("Loading image for product '" + produit.getNom_produit() + "' with URL: " + imageUrl);
+
+        if (imageUrl != null && !imageUrl.isEmpty() && imageUrl.startsWith("https://res.cloudinary.com")) {
+            try {
+                Image image = new Image(imageUrl, 200, 160, true, true, true); // Async, preserve ratio, smooth scaling
+                image.progressProperty().addListener((obs, oldValue, newValue) -> {
+                    if (newValue.doubleValue() == 1.0) {
+                        logger.info("Image loaded successfully for product: " + produit.getNom_produit());
+                    }
+                });
+                image.errorProperty().addListener((obs, oldError, newError) -> {
+                    if (newError) {
+                        logger.warning("Failed to load Cloudinary image for product '" + produit.getNom_produit() + "': " + imageUrl);
+                        imageView.setImage(loadPlaceholderImage(produit.getNom_produit()));
+                    }
+                });
+                imageView.setImage(image);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Exception loading Cloudinary image for product '" + produit.getNom_produit() + "': " + imageUrl, e);
+                imageView.setImage(loadPlaceholderImage(produit.getNom_produit()));
+            }
+        } else {
+            logger.warning("Invalid or missing Cloudinary URL for product '" + produit.getNom_produit() + "': " + imageUrl);
+            imageView.setImage(loadPlaceholderImage(produit.getNom_produit()));
         }
+
         imageView.setFitWidth(200);
         imageView.setFitHeight(160);
         imageView.setPreserveRatio(true);
@@ -203,14 +231,13 @@ public class Affichierproduitagriculteur {
             Categorie cat = categorieService.getById(produit.getCategorie_id());
             if (cat != null) nomCategorie = cat.getNom_categorie();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erreur lors de la récupération de la catégorie", e);
             e.printStackTrace();
         }
         Label catLabel = new Label("Catégorie: " + nomCategorie);
         catLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #424242;");
 
-
-
-        HBox buttonBox = new HBox(10); // Ajout d'un espacement entre les boutons
+        HBox buttonBox = new HBox(10);
         buttonBox.setPadding(new Insets(10, 0, 0, 0));
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setMinHeight(40);
@@ -281,9 +308,24 @@ public class Affichierproduitagriculteur {
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        card.getChildren().addAll(imageView, nomLabel, descLabel, prixLabel, quantiteLabel, catLabel,  spacer, buttonBox);
+        card.getChildren().addAll(imageView, nomLabel, descLabel, prixLabel, quantiteLabel, catLabel, spacer, buttonBox);
 
         return card;
+    }
+
+    private Image loadPlaceholderImage(String productName) {
+        String placeholderPath = "/images/placeholder.png";
+        try {
+            Image placeholder = new Image(placeholderPath);
+            logger.info("Placeholder image loaded successfully for product '" + productName + "': " + placeholderPath);
+            return placeholder;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to load placeholder image for product '" + productName + "': " + placeholderPath, e);
+            // Fallback to a default Cloudinary placeholder
+            String defaultCloudinaryPlaceholder = "https://res.cloudinary.com/ducdgzame/image/upload/v1/placeholder.png";
+            logger.info("Falling back to default Cloudinary placeholder for product '" + productName + "': " + defaultCloudinaryPlaceholder);
+            return new Image(defaultCloudinaryPlaceholder);
+        }
     }
 
     private void ouvrirFenetreDetails(Produit produit) {
@@ -300,6 +342,7 @@ public class Affichierproduitagriculteur {
             stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre de détails", e);
             e.printStackTrace();
         }
     }
@@ -317,6 +360,7 @@ public class Affichierproduitagriculteur {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erreur lors de l'ouverture du formulaire de paiement", e);
             e.printStackTrace();
         }
     }

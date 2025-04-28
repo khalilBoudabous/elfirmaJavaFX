@@ -61,14 +61,28 @@ public class DiscussionService {
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                discussions.add(new Discussion(
+                Discussion d = new Discussion(
                         resultSet.getInt("id"),
                         resultSet.getInt("createur_id"),
                         resultSet.getString("titre"),
                         resultSet.getDate("date_creation").toLocalDate(),
                         resultSet.getString("description"),
                         resultSet.getString("color_code")
-                ));
+                );
+                // Calcul du nombre de messages non lus pour l'utilisateur courant (exemple userId=1)
+                int userId = 1; // À remplacer par l'utilisateur connecté
+                String unreadQuery = "SELECT COUNT(*) FROM message WHERE discussion_id = ? AND emetteur_id != ? AND lu = 0";
+                try (PreparedStatement unreadStmt = cnx.prepareStatement(unreadQuery)) {
+                    unreadStmt.setInt(1, d.getId());
+                    unreadStmt.setInt(2, userId);
+                    ResultSet unreadRs = unreadStmt.executeQuery();
+                    if (unreadRs.next()) {
+                        d.setNbNonLus(unreadRs.getInt(1));
+                    }
+                } catch (SQLException e) {
+                    d.setNbNonLus(0);
+                }
+                discussions.add(d);
             }
         } catch (SQLException e) {
             System.err.println("Error retrieving all discussions: " + e.getMessage());

@@ -10,6 +10,7 @@ public class Discussion {
     private LocalDate dateCreation;
     private String description;
     private String colorCode;
+    private Integer nbNonLus = 0;
 
     public Discussion(int id, int createurId, String titre, LocalDate dateCreation, String description, String colorCode) {
         this.id = id;
@@ -75,6 +76,14 @@ public class Discussion {
         this.colorCode = colorCode;
     }
 
+    public Integer getNbNonLus() {
+        return nbNonLus;
+    }
+
+    public void setNbNonLus(Integer nbNonLus) {
+        this.nbNonLus = nbNonLus;
+    }
+
     @Override
     public String toString() {
         return "Discussion{" +
@@ -84,6 +93,7 @@ public class Discussion {
                 ", dateCreation=" + dateCreation +
                 ", description='" + description + '\'' +
                 ", colorCode='" + colorCode + '\'' +
+                ", nbNonLus=" + nbNonLus +
                 '}';
     }
 }

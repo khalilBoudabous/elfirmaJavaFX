@@ -9,11 +9,16 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="1000.0" spacing="10.0" styleClass="conversation-item" stylesheets="@conversationStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DiscussionController">
    <children>
-      <Label fx:id="titre" styleClass="title-label" text="Titre">
-         <VBox.margin>
-            <Insets left="25.0" top="10.0" />
-         </VBox.margin>
-      </Label>
+      <HBox alignment="CENTER_LEFT" spacing="8.0">
+         <children>
+            <Label fx:id="titre" styleClass="title-label" text="Titre">
+               <VBox.margin>
+                  <Insets left="25.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="badgeNotif" text="" styleClass="badge-notif" visible="false" />
+         </children>
+      </HBox>
       <Label fx:id="desc" styleClass="description-label" text="Description">
          <VBox.margin>
             <Insets left="25.0" top="10.0" />

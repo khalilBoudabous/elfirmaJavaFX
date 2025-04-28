@@ -106,20 +106,23 @@ public class MessageService {
     }
 
     public void updateMessage(Message message) {
-        String query = "UPDATE message SET emetteur_id = ?, discussion_id = ?, contenu = ?, date_envoi = ?, image = ? WHERE id = ?";
+        String query = "UPDATE message SET emetteur_id = ?, discussion_id = ?, contenu = ?, image = ? WHERE id = ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
-
             statement.setInt(1, message.getEmetteurId());
             statement.setInt(2, message.getDiscussionId());
             statement.setString(3, message.getContenu());
-            statement.setTimestamp(4, Timestamp.valueOf(message.getDateEnvoi()));
-            statement.setString(5, message.getImage());
-            statement.setInt(6, message.getId());
-
-            statement.executeUpdate();
-            System.out.println("Message updated successfully.");
+            statement.setString(4, message.getImage());
+            statement.setInt(5, message.getId());
+            
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Message mis à jour avec succès.");
+            } else {
+                System.err.println("Aucun message n'a été mis à jour. ID non trouvé : " + message.getId());
+            }
         } catch (SQLException e) {
-            System.err.println("Error updating message: " + e.getMessage());
+            System.err.println("Erreur lors de la mise à jour du message : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la mise à jour du message", e);
         }
     }
 

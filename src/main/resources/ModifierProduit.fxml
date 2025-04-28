@@ -32,6 +32,7 @@
          <VBox spacing="5" alignment="CENTER_LEFT">
             <Label text="Description" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
             <TextArea fx:id="descriptionArea" promptText="Entrez la description" wrapText="true" prefHeight="100" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px;" />
+            <Button fx:id="generateDescriptionButton" text="Générer Description" onAction="#generateDescription" style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-radius: 5; -fx-background-radius: 5;" />
          </VBox>
 
          <!-- Quantity -->

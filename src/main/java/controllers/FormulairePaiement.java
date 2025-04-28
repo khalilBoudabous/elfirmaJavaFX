@@ -3,9 +3,8 @@ package controllers;
 import entities.Produit;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.ProduitService;
 import com.stripe.Stripe;
@@ -13,10 +12,18 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class FormulairePaiement implements Initializable {
@@ -34,6 +41,7 @@ public class FormulairePaiement implements Initializable {
     private Produit produit;
     private ProduitService produitService = new ProduitService();
     private float finalPrice;
+    private String paymentIntentId; // To store the PaymentIntent ID for the invoice
 
     private static final String CARD_NUMBER_PATTERN = "^\\d{16}$";
     private static final String EXPIRY_DATE_PATTERN = "^(0[1-9]|1[0-2])\\/\\d{2}$";
@@ -59,6 +67,11 @@ public class FormulairePaiement implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Set a default value for amountLabel
+        if (produit == null) {
+            amountLabel.setText("0.00 USD");
+        }
+
         // Add a listener to codePromoField to validate the promo code as the user types
         codePromoField.textProperty().addListener((obs, oldValue, newValue) -> {
             System.out.println("Code promo field changed: " + newValue);
@@ -67,8 +80,14 @@ public class FormulairePaiement implements Initializable {
     }
 
     public void setProduit(Produit produit) {
+        if (produit == null) {
+            System.out.println("Produit is null in setProduit");
+            amountLabel.setText("0.00 USD");
+            return;
+        }
         this.produit = produit;
         finalPrice = produit.getPrix();
+        System.out.println("Setting amount to: " + finalPrice);
         amountLabel.setText(String.format("%.2f USD", finalPrice));
     }
 
@@ -79,9 +98,23 @@ public class FormulairePaiement implements Initializable {
 
         if (enteredCode.isEmpty()) {
             codePromoStatusLabel.setText("");
-            finalPrice = produit.getPrix();
-            amountLabel.setText(String.format("%.2f USD", finalPrice));
-            System.out.println("Promo code is empty, resetting price to: " + finalPrice + " USD");
+            codePromoStatusLabel.setStyle(""); // Clear the style
+            if (produit != null) {
+                finalPrice = produit.getPrix();
+                amountLabel.setText(String.format("%.2f USD", finalPrice));
+                System.out.println("Promo code is empty, resetting price to: " + finalPrice + " USD");
+            } else {
+                System.out.println("Produit is null when resetting promo code");
+                amountLabel.setText("0.00 USD");
+            }
+            return;
+        }
+
+        if (produit == null) {
+            System.out.println("Produit is null in validateCodePromo");
+            codePromoStatusLabel.setText("Erreur : produit non défini.");
+            codePromoStatusLabel.setStyle("-fx-text-fill: red;");
+            amountLabel.setText("0.00 USD");
             return;
         }
 
@@ -111,6 +144,12 @@ public class FormulairePaiement implements Initializable {
             codePromoStatusLabel.setText("Erreur lors de la vérification.");
             codePromoStatusLabel.setStyle("-fx-text-fill: red;");
             System.out.println("SQL error during promo code validation: " + e.getMessage());
+            if (produit != null) {
+                finalPrice = produit.getPrix();
+                amountLabel.setText(String.format("%.2f USD", finalPrice));
+            } else {
+                amountLabel.setText("0.00 USD");
+            }
         }
     }
 
@@ -165,7 +204,21 @@ public class FormulairePaiement implements Initializable {
 
             // Vérifier le statut du paiement
             if ("succeeded".equals(paymentIntent.getStatus())) {
+                paymentIntentId = paymentIntent.getId(); // Store the PaymentIntent ID for the invoice
                 showAlert("Succès", "Paiement effectué avec succès ! Montant : " + String.format("%.2f USD", finalPrice));
+
+                // Ask if the user wants an invoice
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Facture");
+                confirmation.setHeaderText("Paiement Confirmé");
+                confirmation.setContentText("Voulez-vous avoir une facture ?");
+                Optional<ButtonType> result = confirmation.showAndWait();
+
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    generateAndDownloadInvoice();
+                }
+
+                // Close the window after payment
                 Stage stage = (Stage) payButton.getScene().getWindow();
                 stage.close();
             } else {
@@ -178,6 +231,141 @@ public class FormulairePaiement implements Initializable {
         }
     }
 
+    private void generateAndDownloadInvoice() {
+        try {
+            // Generate a unique transaction ID (in case PaymentIntent ID isn't sufficient)
+            String transactionId = UUID.randomUUID().toString();
+
+            // Get current date and time
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String dateTime = now.format(formatter);
+
+            // Prepare invoice data
+            String cardholderName = cardNameField.getText().trim();
+            String finalAmount = String.format("%.2f USD", finalPrice);
+            String promoCode = codePromoField.getText().trim().isEmpty() ? "Aucun" : codePromoField.getText().trim();
+            String promoStatus = codePromoStatusLabel.getText().isEmpty() ? "Non appliqué" : codePromoStatusLabel.getText();
+            String productName = produit != null ? produit.getNom_produit() : "Produit non spécifié";
+
+            // Show FileChooser to let the user select where to save the PDF
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer la facture");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+            fileChooser.setInitialFileName("Facture_" + transactionId.substring(0, 8) + ".pdf");
+            java.io.File file = fileChooser.showSaveDialog(payButton.getScene().getWindow());
+
+            if (file != null) {
+                // Create a new PDF document
+                try (PDDocument document = new PDDocument()) {
+                    PDPage page = new PDPage();
+                    document.addPage(page);
+
+                    // Start a content stream to write to the page
+                    try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                        // Set initial position and line spacing
+                        float yPosition = 750; // Start near the top of the page
+                        float leading = 20; // Line spacing
+                        float margin = 50; // Left margin
+
+                        // Begin text
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Facture de Paiement");
+                        contentStream.endText();
+
+                        // Move to next line
+                        yPosition -= leading;
+
+                        // Add invoice details
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Transaction ID: " + paymentIntentId);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Date et Heure: " + dateTime);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Produit: " + productName);
+                        contentStream.endText();
+                        yPosition -= leading * 2; // Extra space
+
+                        // Payment details section
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Détails du Paiement");
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        // Add payment details
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Nom sur la carte: " + cardholderName);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        // Include last 4 digits of the card number
+                        String lastFourDigits = cardNumberField.getText().trim().substring(cardNumberField.getText().length() - 4);
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Carte: **** **** **** " + lastFourDigits);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Montant: " + finalAmount);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Code Promo: " + promoCode);
+                        contentStream.endText();
+                        yPosition -= leading;
+
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Statut du Code Promo: " + promoStatus);
+                        contentStream.endText();
+                        yPosition -= leading * 2;
+
+                        // Thank you message
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12);
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText("Merci pour votre achat !");
+                        contentStream.endText();
+                    }
+
+                    // Save the document
+                    document.save(file);
+                }
+
+                showAlert("Succès", "Facture téléchargée avec succès !");
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", "Échec de la génération de la facture : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void cancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
@@ -185,7 +373,7 @@ public class FormulairePaiement implements Initializable {
     }
 
     private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

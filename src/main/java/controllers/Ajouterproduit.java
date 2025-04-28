@@ -17,9 +17,17 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.ProduitService;
 import services.CategorieService;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +50,8 @@ public class Ajouterproduit {
     @FXML private TextField prixField;
     @FXML private TextField discountPercentageField;
     @FXML private TextField codePromoField;
+    @FXML private Button generateDescriptionButton; // Button for generating description
+    @FXML private Button ajout;
 
     // Services
     private final ProduitService produitService = new ProduitService();
@@ -50,10 +60,12 @@ public class Ajouterproduit {
     // Cloudinary
     private final Cloudinary cloudinary;
 
+    // OpenAI API Key
+    private final String openAiApiKey;
+
     // Variables
     private File selectedImageFile;
     private String generatedCodePromo;
-    @FXML private Button ajout;
 
     // Constantes pour les validations
     private static final int MAX_QUANTITE = 10000;
@@ -65,14 +77,29 @@ public class Ajouterproduit {
     private static final String CODE_PROMO_PATTERN = "^[A-Z0-9]{8}$"; // 8 caractères alphanumériques
     private static final String NOM_PATTERN = "^[a-zA-Z\\s-]+$"; // Lettres, espaces, tirets (pas de chiffres)
 
+    // Retry configuration for OpenAI API
+    private static final int MAX_RETRIES = 3;
+    private static final long INITIAL_RETRY_DELAY_MS = 5000; // 5 seconds initial delay
+
     public Ajouterproduit() {
         // Load environment variables
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv = Dotenv.configure()
+                .directory(System.getProperty("user.dir"))
+                .ignoreIfMissing()
+                .load();
+
+        // Load Cloudinary URL
         String cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
         if (cloudinaryUrl == null || cloudinaryUrl.isEmpty()) {
             throw new IllegalStateException("CLOUDINARY_URL not found in .env file");
         }
         cloudinary = new Cloudinary(cloudinaryUrl);
+
+        // Load OpenAI API key
+        openAiApiKey = dotenv.get("OPENAI_API_KEY");
+        if (openAiApiKey == null || openAiApiKey.isEmpty()) {
+            throw new IllegalStateException("OPENAI_API_KEY not found in .env file");
+        }
     }
 
     @FXML
@@ -96,6 +123,9 @@ public class Ajouterproduit {
 
         generatedCodePromo = generateCodePromo();
         codePromoField.setText(generatedCodePromo);
+
+        // Debug: Confirm button is loaded
+        System.out.println("generateDescriptionButton: " + (generateDescriptionButton != null ? "Loaded" : "Not Loaded"));
     }
 
     private String generateCodePromo() {
@@ -114,6 +144,7 @@ public class Ajouterproduit {
             categorieComboBox.getItems().addAll(categories);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erreur lors du chargement des catégories", e);
+            showError("Erreur lors du chargement des catégories : " + e.getMessage());
         }
     }
 
@@ -139,9 +170,126 @@ public class Ajouterproduit {
                 productImage.setImage(image);
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Erreur lors du chargement de l'image", e);
-                new Alert(Alert.AlertType.ERROR, "Erreur lors du chargement de l'image : " + e.getMessage()).showAndWait();
+                showError("Erreur lors du chargement de l'image : " + e.getMessage());
             }
         }
+    }
+
+    @FXML
+    private void generateDescription(ActionEvent event) {
+        System.out.println("generateDescription method called"); // Debug
+
+        String nomProduit = nomProduitField.getText().trim();
+        if (nomProduit.isEmpty()) {
+            showWarning("Veuillez entrer le nom du produit avant de générer une description.");
+            return;
+        }
+
+        try {
+            System.out.println("Calling OpenAI API for product: " + nomProduit); // Debug
+            // Generate description using OpenAI API
+            String generatedDescription = generateProductDescription(nomProduit);
+            System.out.println("Generated description: " + generatedDescription); // Debug
+
+            if (generatedDescription.equals("Description non générée.") || generatedDescription.startsWith("Erreur")) {
+                // Fallback to local description if API fails
+                generatedDescription = generateFallbackDescription(nomProduit);
+                System.out.println("Fallback description: " + generatedDescription); // Debug
+                showWarning("Impossible de générer la description via l'API. Une description par défaut a été utilisée.");
+            }
+
+            descriptionArea.setText(generatedDescription);
+
+            // Validate description length
+            if (generatedDescription.length() < MIN_DESC_LENGTH || generatedDescription.length() > MAX_DESC_LENGTH) {
+                showWarning("La description générée doit contenir entre " + MIN_DESC_LENGTH + " et " + MAX_DESC_LENGTH + " caractères.");
+                if (generatedDescription.length() > MAX_DESC_LENGTH) {
+                    descriptionArea.setText(generatedDescription.substring(0, MAX_DESC_LENGTH));
+                }
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Erreur inattendue lors de la génération de la description", e);
+            showError("Erreur inattendue : " + e.getMessage());
+        }
+    }
+
+    private String generateProductDescription(String productName) {
+        int retryCount = 0;
+        long delay = INITIAL_RETRY_DELAY_MS;
+
+        while (retryCount <= MAX_RETRIES) {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                String prompt = "Génère une description de produit pour : " + productName;
+                System.out.println("Prompt sent to OpenAI: " + new String(prompt.getBytes(), StandardCharsets.UTF_8)); // Debug with proper encoding
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                String jsonBody = "{\"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}], \"max_tokens\": 100}";
+                System.out.println("Request body: " + new String(jsonBody.getBytes(), StandardCharsets.UTF_8)); // Debug with proper encoding
+                RequestBody body = RequestBody.create(jsonBody, JSON);
+                Request request = new Request.Builder()
+                        .url("https://api.openai.com/v1/chat/completions")
+                        .header("Authorization", "Bearer " + openAiApiKey)
+                        .post(body)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                System.out.println("API Response Code: " + response.code()); // Debug
+
+                if (response.code() == 429) {
+                    retryCount++;
+                    if (retryCount > MAX_RETRIES) {
+                        logger.log(Level.SEVERE, "Nombre maximum de tentatives atteint après " + MAX_RETRIES + " essais pour 429 erreur");
+                        return "Erreur lors de la génération de la description : Trop de requêtes (Code: 429). Veuillez réessayer plus tard.";
+                    }
+                    logger.log(Level.WARNING, "Erreur 429 - Trop de requêtes. Tentative " + retryCount + " après un délai de " + delay + "ms");
+                    Thread.sleep(delay);
+                    delay *= 2; // Exponential backoff
+                    continue;
+                }
+
+                if (!response.isSuccessful()) {
+                    String errorBody = response.body() != null ? response.body().string() : "No response body";
+                    logger.log(Level.SEVERE, "Erreur API OpenAI : Code " + response.code() + " - " + response.message() + " - Body: " + errorBody);
+                    return "Erreur lors de la génération de la description : " + response.message() + " (Code: " + response.code() + ")";
+                }
+
+                String responseBody = response.body().string();
+                System.out.println("Raw API Response: " + responseBody); // Debug
+                return parseGeneratedDescription(responseBody);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Erreur lors de la génération de la description avec l'API AI", e);
+                return "Erreur lors de la génération de la description : " + e.getMessage();
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, "Interruption lors de la pause pour la rétentative", e);
+                Thread.currentThread().interrupt();
+                return "Erreur lors de la génération de la description : Interruption pendant la rétentative";
+            }
+        }
+        return "Erreur lors de la génération de la description : Trop de requêtes après plusieurs tentatives. Veuillez réessayer plus tard.";
+    }
+
+    private String parseGeneratedDescription(String responseBody) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(responseBody);
+            JsonNode choices = root.path("choices");
+            if (choices.isArray() && choices.size() > 0) {
+                String description = choices.get(0).path("message").path("content").asText().trim();
+                System.out.println("Parsed description: " + description); // Debug
+                return description;
+            }
+            logger.log(Level.WARNING, "Réponse OpenAI vide ou mal formée : " + responseBody);
+            return "Description non générée.";
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Erreur lors du parsing de la réponse OpenAI", e);
+            return "Description non générée : " + e.getMessage();
+        }
+    }
+
+    private String generateFallbackDescription(String productName) {
+        // Simple fallback description in French
+        return "Découvrez notre " + productName + ", un produit de qualité supérieure, parfait pour tous vos besoins. Profitez de ses caractéristiques uniques et de son design élégant.";
     }
 
     @FXML

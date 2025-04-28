@@ -1,0 +1,190 @@
+/* Modern Chat Design */
+.root {
+    -fx-background-color: #F6F8FB;
+    -fx-font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.message-item {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-effect: none;
+    -fx-spacing: 0;
+    -fx-margin: 0 0 0 0;
+}
+
+.message-bubble {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0.0, 0, 2);
+    -fx-padding: 18 22 18 22;
+    -fx-min-height: 60;
+    -fx-max-width: 600;
+    -fx-alignment: TOP_LEFT;
+    -fx-spacing: 10;
+    -fx-margin: 10 0 10 0;
+    -fx-position-shape: true;
+    -fx-font-size: 15px;
+}
+
+/* Message pair : fond légèrement différent */
+.message-item.pair .message-bubble {
+    -fx-background-color: #e6f0ff;
+}
+
+/* Message de l'utilisateur courant (à droite) */
+.message-item.me .message-bubble {
+    -fx-background-color: #4F8CFF;
+    -fx-text-fill: white;
+}
+
+/* Avatar moderne */
+.message-avatar {
+    -fx-background-color: linear-gradient(135deg, #4F8CFF 60%, #A084E8 100%);
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-min-width: 44;
+    -fx-min-height: 44;
+    -fx-max-width: 44;
+    -fx-max-height: 44;
+    -fx-background-radius: 22px;
+    -fx-alignment: center;
+    -fx-margin: 0 14 0 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 4, 0.0, 0, 1);
+}
+
+/* Username */
+.username-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4F8CFF;
+    -fx-padding: 0 0 0 0;
+}
+
+/* Heure */
+#heure {
+    -fx-font-size: 12px;
+    -fx-text-fill: #999;
+    -fx-padding: 0 0 0 8;
+}
+
+/* Message Label */
+.message-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #333;
+    -fx-padding: 2 0 2 0;
+}
+
+/* Image dans le message */
+.message-image {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 6, 0.0, 0, 1);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-margin: 8 0 8 0;
+}
+
+/* Action Buttons (modern flat) */
+.button-translate, .button-upload, .button-suppr, .button-modif, .button-like, .button-dislike {
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-max-width: 36;
+    -fx-max-height: 36;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+    -fx-background-color: #F0F4FA;
+    -fx-text-fill: #4F8CFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 2, 0.0, 0, 1);
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-margin: 0 4 0 0;
+    -fx-transition: all 0.2s;
+}
+.button-translate:hover, .button-upload:hover, .button-suppr:hover, .button-modif:hover, .button-like:hover, .button-dislike:hover {
+    -fx-background-color: #4F8CFF;
+    -fx-text-fill: white;
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+}
+.button-suppr {
+    -fx-background-color: #FFE3E3;
+    -fx-text-fill: #E74C3C;
+}
+.button-suppr:hover {
+    -fx-background-color: #E74C3C;
+    -fx-text-fill: white;
+}
+.button-modif {
+    -fx-background-color: #FFF6E3;
+    -fx-text-fill: #D9B353;
+}
+.button-modif:hover {
+    -fx-background-color: #D9B353;
+    -fx-text-fill: white;
+}
+.button-like {
+    -fx-background-color: #E3FFE3;
+    -fx-text-fill: #4CAF50;
+}
+.button-like:hover {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+.button-dislike {
+    -fx-background-color: #FFE3E3;
+    -fx-text-fill: #E74C3C;
+}
+.button-dislike:hover {
+    -fx-background-color: #E74C3C;
+    -fx-text-fill: white;
+}
+
+/* Barre de saisie moderne */
+#messageContent {
+    -fx-background-color: #fff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #E0E6ED;
+    -fx-border-width: 1.5;
+    -fx-padding: 12 18 12 18;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 4, 0.0, 0, 1);
+}
+
+/* Scrollbar moderne */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #E0E6ED;
+    -fx-background-radius: 8px;
+}
+
+/* Responsive */
+@media screen and (max-width: 700px) {
+    .message-bubble {
+        -fx-max-width: 95vw;
+    }
+}
+
+.button-report {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #ff7043;
+    -fx-background-radius: 18px;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-border-color: #ff7043;
+    -fx-border-width: 1px;
+    -fx-padding: 4 10;
+    -fx-effect: dropshadow(gaussian, #ff7043, 4, 0.1, 0, 1);
+    -fx-transition: all 0.2s;
+}
+.button-report:hover {
+    -fx-background-color: #ff7043;
+    -fx-text-fill: #fff;
+    -fx-effect: dropshadow(gaussian, #ff7043, 8, 0.2, 0, 2);
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox alignment="TOP_LEFT" spacing="10.0" styleClass="message-item" stylesheets="@msgStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MessageController">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <children>
+      <!-- Avatar -->
+      <Label fx:id="avatar" text="A" styleClass="message-avatar" />
+      <!-- Bulle de message -->
+      <VBox spacing="10.0" alignment="TOP_LEFT" styleClass="message-bubble">
+         <padding>
+            <Insets bottom="10.0" left="0.0" right="0.0" top="0.0" />
+         </padding>
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <children>
+                  <Label fx:id="username" styleClass="username-label" text="Username" />
+                  <Label fx:id="heure" style="-fx-font-size:10px;-fx-text-fill:#999;" text="12:00" />
+               </children>
+            </HBox>
+            <Label fx:id="msg" maxWidth="500.0" styleClass="message-label" text="Msg" wrapText="true" />
+            <ImageView fx:id="messageImage" styleClass="message-image" fitHeight="80.0" fitWidth="120.0" visible="false" />
+            <!-- Actions -->
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <children>
+                  <Button fx:id="translateButton" mnemonicParsing="false" onAction="#translateMessage" styleClass="button-translate" text="🌐" />
+                  <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#uploadImage" styleClass="button-upload" text="📷" />
+                  <Button mnemonicParsing="false" onAction="#suppmsg" styleClass="button-suppr" text="🗑️" />
+                  <Button mnemonicParsing="false" onAction="#modifmsg" styleClass="button-modif" text="✏️" />
+                  <Button fx:id="likeButton" mnemonicParsing="false" onAction="#handleLike" styleClass="button-like" text="👍" />
+                  <Button fx:id="dislikeButton" mnemonicParsing="false" onAction="#handleDislike" styleClass="button-dislike" text="👎" />
+                  <Button fx:id="reportButton" mnemonicParsing="false" onAction="#reportMsg" styleClass="button-report" text="��" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>

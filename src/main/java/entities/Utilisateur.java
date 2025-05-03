@@ -75,8 +75,17 @@ public abstract class Utilisateur {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+///
+    private boolean blocked;
 
+    // getters/setters
+    public boolean isBlocked() {
+        return blocked;
+    }
 
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
 
     public abstract String getType() throws SQLException;
 

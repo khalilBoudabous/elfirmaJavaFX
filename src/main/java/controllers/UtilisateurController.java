@@ -1,9 +1,6 @@
 package controllers;
 
-import entities.Agriculteur;
-import entities.Expert;
-import entities.Fournisseur;
-import entities.Utilisateur;
+import entities.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,8 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationMessage;
 import services.UtilisateurService;
 
 import java.io.IOException;
@@ -28,10 +23,15 @@ public class UtilisateurController {
     @FXML private VBox formAgriculteur, formExpert, formFournisseur;
     @FXML private PasswordField passwordField;
     @FXML
+
     private TableView<Utilisateur> userTable;
 
     private final ValidationSupport validationSupport = new ValidationSupport();
 
+    @FXML private Label captchaLabel;
+    @FXML private TextField captchaInput;
+
+    private String generatedCaptcha;
 
     @FXML
     private ToggleGroup roleGroup;
@@ -61,7 +61,7 @@ public class UtilisateurController {
             formFournisseur.setVisible(radioFournisseur.isSelected());
             formFournisseur.setManaged(radioFournisseur.isSelected());
         });
-
+        generateCaptcha();
     }
 
 
@@ -73,6 +73,13 @@ public class UtilisateurController {
 
     @FXML
     public void ajouterUtilisateur() {
+        // ➡️ First, check CAPTCHA
+        if (!captchaInput.getText().equalsIgnoreCase(generatedCaptcha)) {
+            new Alert(Alert.AlertType.ERROR, "CAPTCHA incorrect ! Veuillez réessayer.").show();
+            generateCaptcha(); // regenerate a new captcha
+            captchaInput.clear();
+            return;
+        }
         boolean isValid = true;
 
         // Validation des champs communs
@@ -143,19 +150,19 @@ public class UtilisateurController {
             u.setEmail(email);
             u.setPassword(password);
             u.setTelephone(telephone);
-            //u.setRoles("user"); // ou autre valeur si besoin
+
 
             utilisateurService.ajouter(u);
-            chargerVueListe(); // Ajoutez cette ligne
+            chargerVueListe();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
             alert.setContentText("Utilisateur ajouté avec succès !");
             alert.showAndWait();
 
-            // Tu peux aussi vider les champs ici si tu veux
-            viderChamps();
 
+            viderChamps();
+            generateCaptcha();
         }
     }
 
@@ -170,12 +177,14 @@ public class UtilisateurController {
         nomEntrepriseField.clear();
         idFiscaleField.clear();
         categorieProduitField.clear();
+        captchaInput.clear();
     }
 
     private void chargerVueListe() {
+
         try {
             // Corrigez l'orthographe si nécessaire (Afficher au lieu de Afficer)
-            Parent root = FXMLLoader.load(getClass().getResource("/AfficherListUtilisateur.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) nomField.getScene().getWindow();
             stage.setScene(scene);
@@ -186,5 +195,31 @@ public class UtilisateurController {
             alert.setContentText("Impossible de charger la liste : " + e.getMessage());
             alert.showAndWait();
         }
+
     }
+    @FXML
+    private void goToLoginPage() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml")); // Adjust path if needed
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) nomField.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setContentText("Could not load login page: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+    private void generateCaptcha() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder captcha = new StringBuilder();
+        for (int i = 0; i < 5; i++) { // simple 5 letters/digits captcha
+            captcha.append(chars.charAt((int)(Math.random() * chars.length())));
+        }
+        generatedCaptcha = captcha.toString();
+        captchaLabel.setText("CAPTCHA : " + generatedCaptcha);
+    }
+
 }

@@ -1,9 +1,6 @@
 package controllers;
 
-import entities.Agriculteur;
-import entities.Expert;
-import entities.Fournisseur;
-import entities.Utilisateur;
+import entities.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -101,11 +98,14 @@ public class ModifierUtilisateurController implements Initializable {
         try {
             mettreAJourUtilisateur();
             utilisateurService.modifier(currentUser);
-            retourListe();
+
+            // Close the modification window
+            Stage stage = (Stage) nomField.getScene().getWindow();
+            stage.close();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Erreur de mise à jour: " + e.getMessage()).show();
         }
-    }
+        }
 
     private void mettreAJourUtilisateur() {
         currentUser.setNom(nomField.getText());

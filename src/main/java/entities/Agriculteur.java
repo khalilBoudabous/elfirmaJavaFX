@@ -4,6 +4,7 @@ public class Agriculteur extends Utilisateur {
 
     private String adresseExploitation;
 
+
     public String getAdresseExploitation() {
         return adresseExploitation;
     }
@@ -15,4 +16,6 @@ public class Agriculteur extends Utilisateur {
     public String getType() {
         return "agriculteur";
     }
+
+
 }

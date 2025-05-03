@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+
+<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PaymentController">
+    <Label text="Paiement" styleClass="label title"/>
+    <TextField fx:id="tfCardNumber" styleClass="text-field" promptText="Card Number"/>
+    <TextField fx:id="tfExpiry" styleClass="text-field" promptText="MM/YY"/>
+    <TextField fx:id="tfCVC" styleClass="text-field" promptText="CVC"/>
+    <TextField fx:id="tfAmount" styleClass="text-field" promptText="Amount"/>
+    <Button text="Submit Payment" styleClass="button" onAction="#handleSubmitPayment"/>
+    <stylesheets>
+        <URL value="@/stylesheet.css" />
+    </stylesheets>
+</VBox>

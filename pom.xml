@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.example</groupId>
-    <artifactId>FirmaPIDEV</artifactId>
+    <artifactId>pidevElfirma</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -22,60 +22,100 @@
     </repositories>
 
     <dependencies>
+        <!-- Base -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.23</version>
         </dependency>
 
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
         </dependency>
-
         <dependency>
-            <groupId>com.cloudinary</groupId>
-            <artifactId>cloudinary-http44</artifactId>
-            <version>1.37.0</version>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>21.0.2</version>
         </dependency>
 
+        <!-- UI Enhancements -->
         <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jfxtras-all</artifactId>
+            <version>8.0-r5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jfxtras-agenda</artifactId>
+            <version>8.0-r6</version>
         </dependency>
 
+        <!-- QR Code -->
         <dependency>
-            <groupId>com.stripe</groupId>
-            <artifactId>stripe-java</artifactId>
-            <version>29.0.0</version>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
         </dependency>
 
+        <!-- PDF -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>2.0.27</version>
         </dependency>
 
+        <!-- Stripe -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>29.0.0</version> <!-- Choix de la version la plus récente -->
+        </dependency>
+
+        <!-- Env -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <!-- Cloudinary -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.37.0</version>
+        </dependency>
+
+        <!-- HTTP Client -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>4.10.0</version>
         </dependency>
 
+        <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -87,6 +127,14 @@
                 <configuration>
                     <mainClass>test.MainFX</mainClass>
                     <executable>C:\Users\diable\.jdks\jbr-17.0.12\bin\java</executable>
+                    <options>
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
+                        <option>--add-opens</option>
+                        <option>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

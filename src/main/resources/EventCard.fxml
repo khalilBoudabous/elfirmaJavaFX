@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<AnchorPane fx:id="cardPane" prefHeight="200.0" prefWidth="300.0" styleClass="event-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EventCard">
+    <children>
+        <VBox spacing="5" prefWidth="300.0">
+            <children>
+                <Text fx:id="txtTitre" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+                <Text fx:id="txtLieu" />
+                <Text fx:id="txtDateDebut" />
+                <Text fx:id="txtDateFin" />
+                <Text fx:id="txtPrix" />
+                <Text fx:id="txtPlaces" />
+                <Button fx:id="btnDetails" text="Voir Détails" style="-fx-background-color: #2196F3; -fx-text-fill: white;" onAction="#handleShowDetails" />
+                <Button fx:id="btnParticiper" text="Participer" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" onAction="#handleParticipation" />
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@/cardstyles.css" />
+    </stylesheets>
+</AnchorPane>

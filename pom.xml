@@ -69,6 +69,11 @@
             <artifactId>jfxtras-agenda</artifactId>
             <version>8.0-r6</version>
         </dependency>
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jfxtras-agenda</artifactId>
+            <version>17-r1</version>
+        </dependency>
 
         <!-- QR Code -->
         <dependency>
@@ -157,7 +162,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>test.MainFX</mainClass>
-                    <executable>C:\Users\diable\.jdks\jbr-17.0.12\bin\java</executable>
+
                     <options>
                         <option>--add-opens</option>
                         <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>

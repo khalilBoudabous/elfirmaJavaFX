@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.UtilisateurController"
+            prefHeight="800" prefWidth="1550"
+            stylesheets="@add.css">
+
+    <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+
+            <!-- Title -->
+            <Label text="Rôle :" styleClass="form-label"/>
+
+            <!-- Fields -->
+            <TextField fx:id="nomField" promptText="Nom" styleClass="form-field"/>
+            <TextField fx:id="prenomField" promptText="Prénom" styleClass="form-field"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="form-field"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="form-field"/>
+            <TextField fx:id="telephoneField" promptText="Téléphone" styleClass="form-field"/>
+
+            <!-- Role Selection -->
+            <HBox spacing="10" alignment="CENTER">
+                <RadioButton fx:id="radioAgriculteur" text="Agriculteur" toggleGroup="$roleGroup" styleClass="radio-button"/>
+                <RadioButton fx:id="radioExpert" text="Expert" toggleGroup="$roleGroup" styleClass="radio-button"/>
+                <RadioButton fx:id="radioFournisseur" text="Fournisseur" toggleGroup="$roleGroup" styleClass="radio-button"/>
+            </HBox>
+
+            <!-- Dynamic Fields -->
+            <VBox fx:id="formAgriculteur" visible="false" managed="false" spacing="10">
+                <TextField fx:id="adresseExploitationField" promptText="Adresse d'exploitation" styleClass="form-field"/>
+            </VBox>
+
+            <VBox fx:id="formExpert" visible="false" managed="false" spacing="10">
+                <TextField fx:id="domaineExpertiseField" promptText="Domaine d'expertise" styleClass="form-field"/>
+            </VBox>
+
+            <VBox fx:id="formFournisseur" visible="false" managed="false" spacing="10">
+                <TextField fx:id="nomEntrepriseField" promptText="Nom entreprise" styleClass="form-field"/>
+                <TextField fx:id="idFiscaleField" promptText="ID fiscale" styleClass="form-field"/>
+                <TextField fx:id="categorieProduitField" promptText="Catégorie produit" styleClass="form-field"/>
+            </VBox>
+
+
+            <VBox spacing="10" alignment="CENTER">
+                <Label fx:id="captchaLabel" text="CAPTCHA: " styleClass="form-label"/>
+                <TextField fx:id="captchaInput" promptText="Entrez le CAPTCHA" styleClass="form-field"/>
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Sign In" onAction="#ajouterUtilisateur" styleClass="button"/>
+                <Button text="Login" onAction="#goToLoginPage" styleClass="button"/>
+            </HBox>
+
+        </VBox>
+
+    </StackPane>
+
+</AnchorPane>

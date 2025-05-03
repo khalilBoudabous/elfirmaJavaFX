@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.LoginController"
+            prefHeight="800" prefWidth="1550"
+            stylesheets="@styles.css">
+
+    <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <Label text="Login" styleClass="header-label"/>
+
+        <!-- Wrapping the form inside a VBox to center it -->
+        <VBox alignment="CENTER" spacing="10">
+            <GridPane hgap="10" vgap="10" alignment="CENTER">
+                <Label text="Email:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="emailField" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Enter email"/>
+
+                <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="passwordField" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Enter password"/>
+            </GridPane>
+        </VBox>
+
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Login" onAction="#handleLogin" styleClass="button" defaultButton="true"/>
+            <Button text="sign in" onAction="#redirectToAjouterUtilisateur" styleClass="button"/>
+        </HBox>
+
+        <Hyperlink text="Forgot Password?" onAction="#handleForgotPassword" styleClass="hyperlink"/>
+
+        <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+    </VBox>
+
+</AnchorPane>

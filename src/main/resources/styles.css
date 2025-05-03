@@ -1,0 +1,92 @@
+.root {
+    -fx-background-image: url("/images/background.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+VBox {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-padding: 30px;
+    -fx-spacing: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 10, 0, 0, 5);
+    -fx-max-width: 400px;
+    -fx-alignment: center;
+}
+
+
+/* Form style */
+GridPane {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-alignment: center;
+}
+
+/* Fields */
+.text-field, .password-field {
+    -fx-pref-width: 250px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #81C784;
+    -fx-border-width: 1.5px;
+    -fx-font-size: 14px;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 6px;
+}
+
+.button:hover {
+    -fx-background-color: #1B5E20;
+}
+
+/* Hyperlink */
+.hyperlink {
+    -fx-text-fill: #388E3C;
+    -fx-font-size: 13px;
+    -fx-underline: true;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #1B5E20;
+}
+
+/* Error label */
+.error-label {
+    -fx-text-fill: #D32F2F;
+    -fx-font-size: 12px;
+}
+/* Header label "Login" */
+.header-label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32; /* Dark green */
+}
+
+/* Labels inside form (Email, Password) */
+GridPane Label {
+    -fx-text-fill: #2E7D32; /* Dark green */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Hyperlink "Forgot Password?" */
+.hyperlink {
+    -fx-text-fill: #388E3C; /* Light green */
+    -fx-font-size: 13px;
+    -fx-underline: true;
+    -fx-font-weight: bold;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #1B5E20; /* Darker green when hover */
+}

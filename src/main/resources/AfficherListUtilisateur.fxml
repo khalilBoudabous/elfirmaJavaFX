@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<?import javafx.scene.chart.PieChart?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ListeUtilisateursController"
+            prefHeight="800" prefWidth="1550"
+            stylesheets="@list.css">
+
+    <VBox spacing="30" alignment="CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+
+        <!-- Title -->
+        <Label text="Liste des Utilisateurs" styleClass="page-title"/>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Rechercher par nom :" styleClass="form-label"/>
+            <TextField fx:id="searchField" promptText="Tapez un nom..." styleClass="form-field"/>
+        </HBox>
+        <!-- TableView -->
+        <TableView fx:id="userTable" prefHeight="400" prefWidth="800">
+            <columns>
+                <TableColumn fx:id="nomColumn" text="Nom" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="nom"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Prénom" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="prenom"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Email" prefWidth="150">
+                    <cellValueFactory><PropertyValueFactory property="email"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Rôle" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Blocked" prefWidth="100">
+                    <cellValueFactory><PropertyValueFactory property="blocked"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Action" prefWidth="150">
+                    <cellFactory/>
+                </TableColumn>
+            </columns>
+        </TableView>
+
+        <!-- Buttons below -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Retour" onAction="#retourAjout"/>
+            <Button text="Ajouter Utilisateur" onAction="#ajouterUtilisateur"/>
+            <Button text="Exporter PDF" onAction="#genererPDF"/>
+            <Button text="Trier par Nom" onAction="#trierParNom"/>
+        </HBox>
+
+        <!-- PieChart -->
+        <PieChart fx:id="rolePieChart" prefHeight="300" prefWidth="300"/>
+
+    </VBox>
+
+</AnchorPane>

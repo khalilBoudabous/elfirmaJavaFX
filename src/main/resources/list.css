@@ -1,0 +1,106 @@
+/* Background */
+.root {
+    -fx-background-image: url("/images/list.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+/* Center everything */
+AnchorPane {
+    -fx-alignment: center;
+}
+
+VBox {
+    -fx-alignment: center;
+    -fx-spacing: 30px;
+}
+
+/* Page title */
+.page-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32; /* Dark green */
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #81C784;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);
+}
+
+/* TableView Header */
+table-view .column-header-background {
+    -fx-background-color: #ffffff;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #2E7D32; /* dark green */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Table row background */
+.table-row-cell:odd {
+    -fx-background-color: #f1f8e9;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 45px;
+    -fx-background-radius: 8px;
+}
+
+.button:hover {
+    -fx-background-color: #1B5E20;
+}
+
+/* Action buttons inside table */
+.table-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-background-radius: 50%;
+}
+
+.table-button:hover {
+    -fx-background-color: #2E7D32;
+}
+
+/* HBox inside table */
+.hbox-center {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+.chart-title {
+    -fx-text-fill: white; /* Title color */
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-text-fill: white; /* Legend color */
+}
+
+.chart-legend-item {
+    -fx-text-fill: white;
+}
+
+.chart-pie-label {
+    -fx-fill: white; /* Text on the pie slices */
+}
+.form-label {
+    -fx-text-fill: green;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}

@@ -1,0 +1,69 @@
+/* Background */
+.root {
+    -fx-background-image: url("/images/background.jpg"); /* Optional, you can remove if you want */
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+/* VBox Container */
+VBox {
+    -fx-background-color: rgba(255, 255, 255, 0.8); /* Glass white effect */
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #2E7D32; /* Dark green border */
+    -fx-border-width: 2px;
+    -fx-padding: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 15, 0, 0, 8);
+    -fx-max-width: 400px;
+    -fx-alignment: center;
+}
+
+/* Header Titles */
+.header-label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1B5E20; /* Dark dark green */
+}
+
+/* Labels (messages, errors) */
+Label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1B5E20; /* All labels dark green */
+    -fx-font-weight: bold;
+}
+
+/* Error label special style */
+.error-label, #messageLabel {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
+
+/* Text fields and password fields */
+.text-field, .password-field, TextField, PasswordField {
+    -fx-pref-width: 250px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #81C784; /* Soft green */
+    -fx-border-width: 1.5px;
+    -fx-font-size: 14px;
+    -fx-padding: 0 10px;
+    -fx-text-fill: #1B5E20; /* Text inside input is dark green */
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #1B5E20;
+}

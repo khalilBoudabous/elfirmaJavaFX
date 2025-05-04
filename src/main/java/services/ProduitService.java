@@ -1,10 +1,11 @@
 package services;
 
 import entities.Produit;
+import utils.MyDatabase;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import utils.MyDatabase;
 
 public class ProduitService implements Service<Produit> {
 
@@ -96,6 +97,28 @@ public class ProduitService implements Service<Produit> {
                     rs.getString("code_promo"),
                     rs.getFloat("discount_percentage")
             );
+        }
+        return null;
+    }
+
+    public Produit getProduitById(long id) throws SQLException {
+        String sql = "SELECT * FROM produit WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Produit(
+                        rs.getInt("id"),
+                        rs.getInt("quantite"),
+                        rs.getInt("categorie_id"),
+                        rs.getFloat("prix"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("nom_produit"),
+                        rs.getString("code_promo"),
+                        rs.getFloat("discount_percentage")
+                );
+            }
         }
         return null;
     }

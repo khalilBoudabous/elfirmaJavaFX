@@ -4,16 +4,17 @@ import java.sql.SQLException;
 
 public abstract class Utilisateur {
 
-    private Long id;
-
+    private long id;
     private String email;
     private String roles;
     private String password;
     private String nom;
     private String prenom;
     private String telephone;
+    private boolean blocked;
+    private String produits; // New field for purchased product IDs
 
-
+    // Getters and setters
     public long getId() {
         return id;
     }
@@ -21,7 +22,6 @@ public abstract class Utilisateur {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public String getEmail() {
         return email;
@@ -31,7 +31,6 @@ public abstract class Utilisateur {
         this.email = email;
     }
 
-
     public String getRoles() {
         return roles;
     }
@@ -39,7 +38,6 @@ public abstract class Utilisateur {
     public void setRoles(String roles) {
         this.roles = roles;
     }
-
 
     public String getPassword() {
         return password;
@@ -49,7 +47,6 @@ public abstract class Utilisateur {
         this.password = password;
     }
 
-
     public String getNom() {
         return nom;
     }
@@ -57,7 +54,6 @@ public abstract class Utilisateur {
     public void setNom(String nom) {
         this.nom = nom;
     }
-
 
     public String getPrenom() {
         return prenom;
@@ -67,7 +63,6 @@ public abstract class Utilisateur {
         this.prenom = prenom;
     }
 
-
     public String getTelephone() {
         return telephone;
     }
@@ -75,10 +70,7 @@ public abstract class Utilisateur {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-///
-    private boolean blocked;
 
-    // getters/setters
     public boolean isBlocked() {
         return blocked;
     }
@@ -87,6 +79,13 @@ public abstract class Utilisateur {
         this.blocked = blocked;
     }
 
-    public abstract String getType() throws SQLException;
+    public String getProduits() {
+        return produits;
+    }
 
+    public void setProduits(String produits) {
+        this.produits = produits;
+    }
+
+    public abstract String getType() throws SQLException;
 }

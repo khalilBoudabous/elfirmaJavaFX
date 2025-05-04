@@ -7,7 +7,7 @@ public class Ticket {
     private Boolean payée = false;
     
     // New user id field
-    private int userId;
+    private long userId;
     private String nomUser;
     private String emailUser;
     private Utilisateur utilisateur; // Reference to the user who owns the ticket
@@ -64,11 +64,11 @@ public class Ticket {
     }
     
     // Getter and setter for userId
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

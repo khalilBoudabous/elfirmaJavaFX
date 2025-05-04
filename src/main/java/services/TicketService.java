@@ -40,7 +40,7 @@ public class TicketService implements Service<Ticket> {
         String sql = "update ticket set prix = ?, utilisateur_id = ?, evenement_id = ?, is_paid = ?, Titre_evenement = ? where id = ?";
         PreparedStatement ts = cnx.prepareStatement(sql);
         ts.setFloat(1, ticket.getPrix());
-        ts.setInt(2, ticket.getUserId());
+        ts.setLong(2, ticket.getUserId());
         ts.setInt(3, ticket.getId_evenement());
         ts.setBoolean(4, ticket.getPayée());
         ts.setString(5, ticket.getTitreEvenement());

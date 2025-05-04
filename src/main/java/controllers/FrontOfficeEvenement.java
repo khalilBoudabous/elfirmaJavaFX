@@ -66,19 +66,21 @@ public class FrontOfficeEvenement {
     @FXML
     public void initialize() {
         instance = this;
-        currentMonth = LocalDate.now(); // Initialize to the current month
+        currentMonth = LocalDate.now();
         updateCalendarView();
-        loadEvents();
-        loadTickets();
         setupCalendar();
+        // Ne pas charger les tickets ici
     }
 
     public void initData(long userId) {
         UtilisateurService service = new UtilisateurService();
         try {
             loggedInUser = service.getUtilisateurById(userId);
+            loadEvents(); // OK après login
+            loadTickets(); // Charger ici après avoir défini loggedInUser
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert("Erreur", "Impossible de récupérer l'utilisateur.");
         }
     }
 

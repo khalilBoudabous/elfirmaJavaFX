@@ -77,14 +77,15 @@ public class LoginController {
             Parent root = loader.load();
 
             FrontOfficeEvenement controller = loader.getController();
-            controller.initData(user.getId()); // Pass the logged-in user to the controller
+            controller.initData(user.getId()); // Appel correct
 
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Front Office");
-            stage.show(); // Ensure the stage is shown
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showError("Erreur lors du chargement de la page utilisateur.");
         }
     }
 

@@ -261,4 +261,29 @@ public class AfficherEvenement {
             showAlert("Erreur", "Échec de la génération du PDF: " + e.getMessage());
         }
     }
+
+    private void openAjoutProduitForm() {
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getResource("/AjouterProduit.fxml"));
+        Stage stage = new Stage();
+
+        try {
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.setTitle("Ajouter Produit");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // Refresh data after modification if needed
+            // loadData(); // Uncomment if product data needs to be refreshed
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir le formulaire d'ajout de produit");
+        }
+    }
+
+    public void AjouterProduit(ActionEvent actionEvent) {
+        openAjoutProduitForm();
+    }
 }

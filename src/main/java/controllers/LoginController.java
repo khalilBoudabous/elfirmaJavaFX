@@ -41,6 +41,8 @@ public class LoginController {
                    } else {
                        if (user.getType().equalsIgnoreCase("admin")) {
                            redirectToListPage();
+                       } else if (user.getType().equalsIgnoreCase("fournisseur")) {
+                           redirectToDbEvenement();
                        } else {
                            redirectToProfile(user);
                        }
@@ -89,6 +91,19 @@ public class LoginController {
         }
     }
 
+    private void redirectToDbEvenement() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dbEvenement.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("DB Evenement");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Erreur lors du chargement de la page DB Evenement.");
+        }
+    }
 
     @FXML
     private void redirectToAjouterUtilisateur() {

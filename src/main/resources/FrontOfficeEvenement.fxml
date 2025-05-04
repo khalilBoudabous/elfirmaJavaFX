@@ -16,23 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Pagination?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.HBox?>
-
 <?import jfxtras.scene.control.agenda.Agenda?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FrontOfficeEvenement">
     <children>
         <!-- Navigation Bar -->
@@ -53,7 +37,13 @@
                 <AnchorPane />
             </Tab>
             <Tab text="Produits">
-
+                <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <ScrollPane fitToWidth="true" fitToHeight="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <content>
+                            <fx:include source="Affichierproduitagriculteur.fxml" />
+                        </content>
+                    </ScrollPane>
+                </AnchorPane>
             </Tab>
             <Tab text="Explorer terrain">
                 <AnchorPane />
@@ -63,7 +53,6 @@
                     <VBox spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <HBox>
                             <children>
-                                <!-- Replaced single translate button with two -->
                                 <Button fx:id="btnTranslateEventsEn" onAction="#handleTranslateEventsEn" text="Translate Events to English">
                                     <HBox.margin>
                                         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />

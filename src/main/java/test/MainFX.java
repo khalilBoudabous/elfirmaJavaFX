@@ -87,7 +87,7 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/login.fxml"));
+                getClass().getResource("/FrontOfficeEvenement.fxml"));
 
         try {
             Parent root=fxmlLoader.load();

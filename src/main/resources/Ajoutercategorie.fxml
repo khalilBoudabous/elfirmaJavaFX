@@ -1,51 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Ajoutercategorie" style="-fx-background-color: #F5F5F5;">
-   <!-- Center: Add Category Form -->
+   <!-- Top: Header -->
+   <top>
+      <HBox alignment="CENTER" style="-fx-background-color: #2E7D32; -fx-padding: 20;">
+         <Label text="Ajouter une Nouvelle Catégorie" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 1);" />
+      </HBox>
+   </top>
+
+   <!-- Center: Scrollable Form -->
    <center>
-      <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #F1F8E9; -fx-border-color: #388E3C; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-         <!-- Title -->
-         <Label text="Ajouter une catégorie" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1B5E20; -fx-padding: 0 0 30 0;" />
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #F5F5F5; -fx-border-color: transparent;">
+         <VBox alignment="CENTER" style="-fx-padding: 40;">
+            <!-- Form Container -->
+            <VBox maxWidth="800" alignment="CENTER" spacing="15" style="-fx-padding: 30; -fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 2);">
+               <!-- Category Form -->
+               <GridPane hgap="20" vgap="15" alignment="CENTER">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="600" />
+                  </columnConstraints>
 
-         <!-- Category Name -->
-         <VBox spacing="5" alignment="CENTER_LEFT" style="-fx-max-width: 600;">
-            <Label text="Nom" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2E7D32;" />
-            <TextField fx:id="tfNom" promptText="Entrez le nom de la catégorie" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px; -fx-padding: 10;" HBox.hgrow="ALWAYS">
-               <tooltip>
-                  <Tooltip text="Entrez le nom de la catégorie" />
-               </tooltip>
-            </TextField>
+                  <!-- Row 1: Category Name -->
+                  <VBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="0">
+                     <Label text="Nom" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+                     <TextField fx:id="tfNom" promptText="Entrez le nom de la catégorie" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px; -fx-pref-width: 100%;">
+                        <tooltip>
+                           <Tooltip text="Entrez le nom de la catégorie" />
+                        </tooltip>
+                     </TextField>
+                  </VBox>
+
+                  <!-- Row 2: Description -->
+                  <VBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                     <Label text="Description" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2E7D32;" />
+                     <TextArea fx:id="taDescription" promptText="Entrez la description" wrapText="true" prefHeight="150" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 14px; -fx-pref-width: 100%;" />
+                  </VBox>
+               </GridPane>
+
+               <!-- Buttons -->
+               <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20 0 0 0;">
+                  <Button fx:id="cancelButton" text="Annuler" onAction="#cancel" style="-fx-background-color: #B0BEC5; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 40; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);">
+                     <tooltip>
+                        <Tooltip text="Annuler et fermer" />
+                     </tooltip>
+                  </Button>
+                  <Button fx:id="ajouter" text="Ajouter Catégorie" onAction="#ajouterCategorie" style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10 40; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);">
+                     <tooltip>
+                        <Tooltip text="Ajouter la catégorie" />
+                     </tooltip>
+                  </Button>
+               </HBox>
+            </VBox>
          </VBox>
-
-         <!-- Description -->
-         <VBox spacing="5" alignment="CENTER_LEFT" style="-fx-max-width: 600;">
-            <Label text="Description" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2E7D32;" />
-            <TextArea fx:id="taDescription" promptText="Entrez la description" wrapText="true" prefHeight="150" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
-         </VBox>
-
-         <!-- Buttons -->
-         <HBox spacing="15" alignment="CENTER">
-            <Button fx:id="cancelButton" text="Annuler" onAction="#cancel" style="-fx-background-color: #B0BEC5; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 35; -fx-cursor: hand;">
-               <tooltip>
-                  <Tooltip text="Annuler et fermer" />
-               </tooltip>
-            </Button>
-            <Button fx:id="ajouter" text="Ajouter catégorie" onAction="#ajouterCategorie" style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 35; -fx-cursor: hand;">
-               <tooltip>
-                  <Tooltip text="Ajouter la catégorie" />
-               </tooltip>
-            </Button>
-         </HBox>
-      </VBox>
+      </ScrollPane>
    </center>
+
+   <!-- Bottom: Footer -->
+   <bottom>
+      <HBox alignment="CENTER" style="-fx-background-color: #E8F5E9; -fx-padding: 10; -fx-border-color: #C8E6C9; -fx-border-width: 1 0 0 0;">
+         <Label text="© 2023 EL_FIRMA" style="-fx-font-size: 12px; -fx-text-fill: #2E7D32;" />
+      </HBox>
+   </bottom>
 </BorderPane>

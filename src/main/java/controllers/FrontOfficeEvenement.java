@@ -123,14 +123,26 @@ public class FrontOfficeEvenement {
                 .orElse(null);
     }
 
+    public Long getCurrentUserId() {
+        if (loggedInUser != null) {
+            return loggedInUser.getId();
+        } else {
+            showAlert("Erreur", "Utilisateur non connecté.");
+            return null;
+        }
+    }
+
     public void loadTickets() {
+        Long userId = getCurrentUserId();
+        if (userId == null) return;
+
         try {
             List<Ticket> allTickets = ticketService.recuperer();
             List<Ticket> userTickets = new ArrayList<>();
 
             // Filter tickets for the logged-in user
             for (Ticket ticket : allTickets) {
-                if (ticket.getUtilisateur().getId() == loggedInUser.getId()) {
+                if (ticket.getUtilisateur().getId() == userId) {
                     userTickets.add(ticket);
                 }
             }

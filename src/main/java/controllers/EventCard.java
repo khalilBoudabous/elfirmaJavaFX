@@ -75,7 +75,11 @@ public class EventCard {
 			ticket.setPrix(event.getPrix());
 			ticket.setTitreEvenement(event.getTitre());
 			ticket.setPayée(false);
-			ticket.setUtilisateur(utilisateurService.getUtilisateurById(getCurrentUserId())); // Set Utilisateur
+
+			Long userId = controllers.FrontOfficeEvenement.instance.getCurrentUserId();
+			if (userId == null) return;
+
+			ticket.setUtilisateur(utilisateurService.getUtilisateurById(userId)); // Set Utilisateur
 
 			ts.ajouter(ticket);
 
@@ -93,13 +97,6 @@ public class EventCard {
 			showAlert("Erreur", "Erreur lors de la participation: " + e.getMessage());
 		}
 	}
-
-    // New helper method to supply a valid user id.
-    private int getCurrentUserId() {
-        // QUICK FIX: Return a valid user id that exists in your 'utilisateur' table.
-        // Alternatively, query your database to retrieve the currently logged in user's id.
-        return 1; // Ensure a user with id = 1 exists in your database!
-    }
 
 	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);

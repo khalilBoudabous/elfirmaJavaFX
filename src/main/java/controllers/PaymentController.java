@@ -79,7 +79,7 @@ public class PaymentController {
         try {
             // Load the API key from .env using java-dotenv
             io.github.cdimascio.dotenv.Dotenv dotenv = io.github.cdimascio.dotenv.Dotenv.load();
-            String stripeKey = dotenv.get("STRIPE_API_KEY");
+            String stripeKey = dotenv.get("STRIPE_SECRET_KEY");
             if (stripeKey == null || stripeKey.isEmpty()) {
                 throw new Exception("Stripe API key not set.");
             }

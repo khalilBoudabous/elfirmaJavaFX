@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import services.EvenementService;
 import services.TicketService;
+import services.UtilisateurService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -47,6 +48,7 @@ public class AfficherEvenement {
     private TableView<Ticket> tvTickets;
 
     private final TicketService ticketService = new TicketService();
+    private final UtilisateurService utilisateurService = new UtilisateurService();
 
 
     @FXML
@@ -143,6 +145,9 @@ public class AfficherEvenement {
         try {
             // Rafraîchir les événements
             ObservableList<Evenement> data = FXCollections.observableArrayList(es.recuperer());
+            for (Evenement event : data) {
+                event.setUtilisateur(utilisateurService.getUtilisateurById(event.getUtilisateur().getId())); // Fetch Utilisateur
+            }
             tvEvenements.setItems(data);
 
             // Rafraîchir les tickets si l'onglet est actif

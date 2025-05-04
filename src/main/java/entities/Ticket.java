@@ -10,7 +10,7 @@ public class Ticket {
     private int userId;
     private String nomUser;
     private String emailUser;
-    private Utilisateur utilisateur; // Add user entity reference
+    private Utilisateur utilisateur; // Reference to the user who owns the ticket
 
     public Ticket(int id, int id_evenement, String titreEvenement, float prix, Boolean payée, int userId) {
         this.id = id;
@@ -104,13 +104,13 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "ticket{" +
+        return "Ticket{" +
                 "id=" + id +
                 ", id_evenement=" + id_evenement +
+                ", titreEvenement='" + titreEvenement + '\'' +
                 ", prix=" + prix +
                 ", payée=" + payée +
-                ", titreEvenement='" + titreEvenement + '\'' +
-                ", userId=" + userId +
+                ", utilisateur=" + (utilisateur != null ? utilisateur.getNom() + " " + utilisateur.getPrenom() : "N/A") +
                 '}';
     }
 }

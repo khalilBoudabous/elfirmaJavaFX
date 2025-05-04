@@ -73,15 +73,16 @@ public class LoginController {
 
     private void redirectToProfile(Utilisateur user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Profile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FrontOfficeEvenement.fxml"));
             Parent root = loader.load();
 
-            ProfileController controller = loader.getController();
-            controller.initData(user.getId());
+            FrontOfficeEvenement controller = loader.getController();
+            controller.initData(user.getId()); // Pass the logged-in user to the controller
 
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Profile");
+            stage.setTitle("Front Office");
+            stage.show(); // Ensure the stage is shown
         } catch (IOException e) {
             e.printStackTrace();
         }

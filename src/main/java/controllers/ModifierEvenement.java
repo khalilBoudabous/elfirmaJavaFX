@@ -12,6 +12,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import services.EvenementService;
 import services.TicketService;
+import services.UtilisateurService;
+import java.sql.SQLException;
 
 import java.sql.Date;
 
@@ -26,6 +28,7 @@ public class ModifierEvenement {
 
     private Evenement currentEvent;
     private final EvenementService es = new EvenementService();
+    private final UtilisateurService utilisateurService = new UtilisateurService();
     @FXML
     private ComboBox tfLieu;
 
@@ -42,6 +45,11 @@ public class ModifierEvenement {
         tfLieu.setValue(LieuEvenement.valueOf(currentEvent.getLieu()));
         tfNombrePlaces.setText(String.valueOf(currentEvent.getNombrePlaces()));
         tfPrix.setText(String.valueOf(currentEvent.getPrix()));
+        try {
+            currentEvent.setUtilisateur(utilisateurService.getUtilisateurById(currentEvent.getUtilisateur().getId()));
+        } catch (SQLException e) {
+            afficherAlerte("Erreur", "Échec de récupération de l'utilisateur : " + e.getMessage());
+        }
     }
 
     @FXML

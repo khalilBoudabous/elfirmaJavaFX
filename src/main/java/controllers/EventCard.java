@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import services.EvenementService;
 import services.TicketService;
+import services.UtilisateurService;
 
 import java.io.IOException;
 
@@ -25,8 +26,9 @@ public class EventCard {
 	@FXML private Text txtPlaces;
 	@FXML private Button btnParticiper;
 	@FXML private Button btnDetails;
-
 	private Evenement event;
+	private UtilisateurService utilisateurService = new UtilisateurService();
+
 
 	public void setEventData(Evenement event) {
 		this.event = event;
@@ -73,8 +75,7 @@ public class EventCard {
 			ticket.setPrix(event.getPrix());
 			ticket.setTitreEvenement(event.getTitre());
 			ticket.setPayée(false);
-			// Replace hardcoded user id with a valid current user id
-			ticket.setUserId(getCurrentUserId());
+			ticket.setUtilisateur(utilisateurService.getUtilisateurById(getCurrentUserId())); // Set Utilisateur
 
 			ts.ajouter(ticket);
 

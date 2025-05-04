@@ -8,6 +8,7 @@ public class Evenement {
     private Date dateDebut, dateFin;
     private float prix;
     private String lieu;
+    private Utilisateur utilisateur; // Reference to the user who created the event
 
     public Evenement(String titre, String description, Date dateDebut, Date dateFin, String lieu,int nombrePlaces, float prix) {
         this.nombrePlaces = nombrePlaces;
@@ -94,6 +95,14 @@ public class Evenement {
         this.dateFin = dateFin;
     }
 
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
     @Override
     public String toString() {
         return "Evenement{" +
@@ -105,6 +114,7 @@ public class Evenement {
                 ", dateFin=" + dateFin +
                 ", prix=" + prix +
                 ", lieu='" + lieu + '\'' +
+                ", utilisateur=" + (utilisateur != null ? utilisateur.getNom() + " " + utilisateur.getPrenom() : "N/A") +
                 '}';
     }
 }

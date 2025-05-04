@@ -61,11 +61,11 @@ public class MainFX extends Application {
 
     */
 
-    /*
+/*
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/dbEvenement.fxml"));
+                getClass().getResource("/FrontOfficeEvenement.fxml"));
 
         try {
             Parent root=fxmlLoader.load();
@@ -90,7 +90,7 @@ public class MainFX extends Application {
                 getClass().getResource("/login.fxml"));
 
         try {
-            Parent root=fxmlLoader.load();
+            Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
@@ -100,6 +100,9 @@ public class MainFX extends Application {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
     }
+
+
+
+
 }

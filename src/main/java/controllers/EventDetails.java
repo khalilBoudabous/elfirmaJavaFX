@@ -24,6 +24,7 @@ public class EventDetails {
     @FXML private Button btnInscription;
 
     private Evenement event;
+    private services.UtilisateurService utilisateurService = new services.UtilisateurService();
 
     public void setEventDetails(Evenement event) {
         this.event = event;
@@ -56,8 +57,7 @@ public class EventDetails {
             ticket.setPrix(event.getPrix());
             ticket.setTitreEvenement(event.getTitre());
             ticket.setPayée(false);
-            // Use a valid current user id instead of hardcoded value.
-            ticket.setUserId(getCurrentUserId());
+            ticket.setUtilisateur(utilisateurService.getUtilisateurById(getCurrentUserId())); // Set Utilisateur
 
             ts.ajouter(ticket);
 

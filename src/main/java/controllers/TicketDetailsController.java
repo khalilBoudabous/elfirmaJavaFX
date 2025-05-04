@@ -46,20 +46,10 @@ public class TicketDetailsController {
         lblEventTitle.setText(ticket.getTitreEvenement());
         lblPrice.setText("Price: " + ticket.getPrix());
 
-        // Fetch user info by userId
-        String userFullName = "";
-        String userEmail = "";
-        try {
-            UtilisateurService utilisateurService = new UtilisateurService();
-            Utilisateur user = utilisateurService.getUtilisateurById(ticket.getUserId());
-            if (user != null) {
-                userFullName = user.getNom() + " " + user.getPrenom();
-                userEmail = user.getEmail();
-            }
-        } catch (Exception e) {
-            userFullName = "N/A";
-            userEmail = "N/A";
-        }
+        // Use the Utilisateur object directly
+        Utilisateur user = ticket.getUtilisateur();
+        String userFullName = user != null ? user.getNom() + " " + user.getPrenom() : "N/A";
+        String userEmail = user != null ? user.getEmail() : "N/A";
 
         lblUserName.setText("Name: " + userFullName);
         lblUserEmail.setText("Email: " + userEmail);

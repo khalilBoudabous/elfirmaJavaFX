@@ -5,20 +5,21 @@ import utils.MyDatabase;
 import entities.Ticket;
 import java.util.*;
 import java.sql.*;
+import services.UtilisateurService;
 
 public class TicketService implements Service<Ticket> {
 
     private Connection cnx;
-    private UtilisateurService utilisateurService = new UtilisateurService();
+    private final UtilisateurService utilisateurService = new UtilisateurService();
 
     public TicketService() {cnx = MyDatabase.getInstance().getCnx();}
 
     @Override
     public void ajouter(Ticket ticket) throws SQLException {
-        String sql = "insert into ticket(prix, utilisateur_id, evenement_id, is_paid, Titre_evenement) values(?,?,?,?,?)";
+        String sql = "INSERT INTO ticket (prix, utilisateur_id, evenement_id, is_paid, Titre_evenement) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ts = cnx.prepareStatement(sql)) {
             ts.setFloat(1, ticket.getPrix());
-            ts.setInt(2, ticket.getUserId());
+            ts.setLong(2, ticket.getUtilisateur().getId()); // Set utilisateur_id
             ts.setInt(3, ticket.getId_evenement());
             ts.setBoolean(4, ticket.getPayée());
             ts.setString(5, ticket.getTitreEvenement());
@@ -79,29 +80,20 @@ public class TicketService implements Service<Ticket> {
     @Override
     public List<Ticket> recuperer() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
-        String sql = "select * from ticket";
+        String sql = "SELECT * FROM ticket";
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
-            int id = rs.getInt("id");
-            float prix = rs.getFloat("prix");
-            int id_evenement = rs.getInt("evenement_id");
-            boolean paye = rs.getBoolean("is_paid");
-            String titreEvenement = rs.getString("Titre_evenement");
-            int userId = rs.getInt("utilisateur_id");
-
-            Ticket ticket = new Ticket(id, id_evenement, titreEvenement, prix, paye, userId);
-            
-
-            // Optionally, fetch user name from UtilisateurService
-            // Utilisateur user = utilisateurService.getUtilisateurById(userId);
-            // if (user != null) {
-            //     ticket.setNomUser(user.getNom() + " " + user.getPrenom());
-            //     // always sync email from user entity:
-            //      ticket.setEmailUser(user.getEmail());
-            // }
-
+            Ticket ticket = new Ticket(
+                rs.getInt("id"),
+                rs.getInt("evenement_id"),
+                rs.getString("Titre_evenement"),
+                rs.getFloat("prix"),
+                rs.getBoolean("is_paid"),
+                rs.getInt("utilisateur_id")
+            );
+            ticket.setUtilisateur(utilisateurService.getUtilisateurById(rs.getInt("utilisateur_id"))); // Fetch and set Utilisateur
             tickets.add(ticket);
         }
         return tickets;

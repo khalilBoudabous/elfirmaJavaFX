@@ -16,6 +16,10 @@ import entities.Ticket;
 import entities.Evenement;
 import services.EvenementService;
 import services.TicketService;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import entities.Utilisateur;
+import services.UtilisateurService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class FrontOfficeEvenement {
 
@@ -48,12 +53,15 @@ public class FrontOfficeEvenement {
     private Button btnPreviousMonth;
     @FXML
     private Button btnNextMonth;
+    @FXML
+    private BorderPane productPane; // Add a placeholder for the product view
 
     private LocalDate currentMonth;
 
     private final EvenementService evenementService = new EvenementService();
     private final TicketService ticketService = new TicketService();
     private List<Evenement> eventsCache;
+    private Utilisateur loggedInUser;
 
     @FXML
     public void initialize() {
@@ -63,6 +71,15 @@ public class FrontOfficeEvenement {
         loadEvents();
         loadTickets();
         setupCalendar();
+    }
+
+    public void initData(long userId) {
+        UtilisateurService service = new UtilisateurService();
+        try {
+            loggedInUser = service.getUtilisateurById(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateCalendarView() {
@@ -106,7 +123,17 @@ public class FrontOfficeEvenement {
 
     public void loadTickets() {
         try {
-            listTickets.setItems(FXCollections.observableArrayList(ticketService.recuperer()));
+            List<Ticket> allTickets = ticketService.recuperer();
+            List<Ticket> userTickets = new ArrayList<>();
+
+            // Filter tickets for the logged-in user
+            for (Ticket ticket : allTickets) {
+                if (ticket.getUtilisateur().getId() == loggedInUser.getId()) {
+                    userTickets.add(ticket);
+                }
+            }
+
+            listTickets.setItems(FXCollections.observableArrayList(userTickets));
             listTickets.setCellFactory(lv -> new ListCell<Ticket>() {
                 @Override
                 protected void updateItem(Ticket ticket, boolean empty) {
@@ -185,8 +212,8 @@ public class FrontOfficeEvenement {
                                 controller.setTicketData(ticket, event);
                                 Stage stage = new Stage();
                                 stage.setTitle("Ticket Details");
-                                stage.setScene(new Scene(pane));
                                 stage.setMaximized(true);
+                                stage.setScene(new Scene(pane));
                                 stage.show();
                             } catch (IOException ex) {
                                 new Alert(Alert.AlertType.ERROR, "Erreur: " + ex.getMessage()).showAndWait();
@@ -332,4 +359,6 @@ public class FrontOfficeEvenement {
         java.util.Date utilDate = (date instanceof java.sql.Date) ? new java.util.Date(date.getTime()) : date;
         return utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
+
+
 }

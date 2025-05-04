@@ -3,6 +3,7 @@ package controllers;
 import entities.Evenement;
 import entities.LieuEvenement;
 import entities.Ticket;
+import entities.Utilisateur;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import services.EvenementService;
 import services.TicketService;
+import services.UtilisateurService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,10 +36,19 @@ public class AjouterEvenement implements Initializable {
     @FXML private ComboBox<LieuEvenement> tfLieu;
     @FXML private DatePicker tfDateDebut;
 
+    private final UtilisateurService utilisateurService = new UtilisateurService();
+    private Utilisateur user; // Define the user variable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tfLieu.getItems().setAll(LieuEvenement.values());
+        try {
+            // Initialize the user variable with a valid Utilisateur instance
+            user = utilisateurService.getUtilisateurById(user.getId()); // Assuming this method exists
+        } catch (Exception e) {
+            afficherAlerte("Erreur", "Impossible de récupérer l'utilisateur actuel : " + e.getMessage());
+        }
     }
+    
 
     @Deprecated
     public void AfficherEvenement(ActionEvent actionEvent) {
@@ -107,7 +118,6 @@ public class AjouterEvenement implements Initializable {
         if (!validerDates()) return;
 
         EvenementService es = new EvenementService();
-        TicketService ts = new TicketService();
 
         try {
             int nombrePlaces = validerNombreEntier(tfNombrePlaces.getText(), "nombre de places");
@@ -123,6 +133,8 @@ public class AjouterEvenement implements Initializable {
                     nombrePlaces,
                     prix
             );
+
+            evenement.setUtilisateur(user); // Set Utilisateur
 
             // Ajout de l'événement
             es.ajouter(evenement);

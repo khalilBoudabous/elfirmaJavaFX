@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import services.ProduitService;
 import services.CategorieService;
+import services.UtilisateurService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -358,7 +359,6 @@ public class Affichierproduitagriculteur {
     private void ouvrirFormulairePaiement(Produit produit) {
         try {
             System.out.println("Tentative de chargement de FormulairePaiement.fxml...");
-            // Essayez différents chemins pour localiser le fichier FXML
             String[] possiblePaths = {
                     "/FormulairePaiement.fxml",
                     "/fxml/FormulairePaiement.fxml",
@@ -389,12 +389,22 @@ public class Affichierproduitagriculteur {
             stage.setTitle("Formulaire de Paiement");
             stage.setScene(new Scene(root));
             stage.setMaximized(true);
-            stage.show();
-            System.out.println("Fenêtre FormulairePaiement affichée avec succès.");
-        } catch (Exception e) { // Changé de IOException à Exception pour capturer toutes les erreurs possibles
+            stage.showAndWait(); // Wait for the payment form to close
+
+            // Check if the payment was successful
+            if (controller.isPaymentSuccessful()) {
+                // Save the purchased product to the user's account
+                UtilisateurService utilisateurService = new UtilisateurService();
+                long userId =FrontOfficeEvenement.instance.getCurrentUserId(); // Replace with the actual method to get the logged-in user's ID
+                utilisateurService.addProduitToUser(userId, produit.getId());
+
+                // Refresh the "Produit acheté" page
+                FrontOfficeEvenement.refreshEvents(); // Ensure this method refreshes the purchased products list
+                System.out.println("Produit ajouté à l'utilisateur avec succès.");
+            }
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Erreur lors de l'ouverture du formulaire de paiement", e);
             e.printStackTrace();
-            // Afficher une alerte à l'utilisateur
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Impossible d'ouvrir le formulaire de paiement");

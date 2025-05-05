@@ -42,6 +42,7 @@ public class FormulairePaiement implements Initializable {
     private ProduitService produitService = new ProduitService();
     private float finalPrice;
     private String paymentIntentId; // To store the PaymentIntent ID for the invoice
+    private boolean paymentSuccessful = false;
 
     private static final String CARD_NUMBER_PATTERN = "^\\d{16}$";
     private static final String EXPIRY_DATE_PATTERN = "^(0[1-9]|1[0-2])\\/\\d{2}$";
@@ -204,6 +205,7 @@ public class FormulairePaiement implements Initializable {
 
             // Vérifier le statut du paiement
             if ("succeeded".equals(paymentIntent.getStatus())) {
+                paymentSuccessful = true; // Set paymentSuccessful to true
                 paymentIntentId = paymentIntent.getId(); // Store the PaymentIntent ID for the invoice
                 showAlert("Succès", "Paiement effectué avec succès ! Montant : " + String.format("%.2f USD", finalPrice));
 
@@ -222,13 +224,19 @@ public class FormulairePaiement implements Initializable {
                 Stage stage = (Stage) payButton.getScene().getWindow();
                 stage.close();
             } else {
+                paymentSuccessful = false; // Set paymentSuccessful to false
                 showAlert("Erreur", "Le paiement a échoué. Statut : " + paymentIntent.getStatus());
             }
 
         } catch (StripeException e) {
+            paymentSuccessful = false; // Set paymentSuccessful to false
             System.err.println("Erreur lors du traitement du paiement avec Stripe : " + e.getMessage());
             showAlert("Erreur", "Erreur lors du paiement : " + e.getMessage());
         }
+    }
+
+    public boolean isPaymentSuccessful() {
+        return paymentSuccessful;
     }
 
     private void generateAndDownloadInvoice() {

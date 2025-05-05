@@ -1,9 +1,9 @@
 package entities;
 
+import java.sql.SQLException;
+
 public class Agriculteur extends Utilisateur {
-
     private String adresseExploitation;
-
 
     public String getAdresseExploitation() {
         return adresseExploitation;
@@ -12,10 +12,9 @@ public class Agriculteur extends Utilisateur {
     public void setAdresseExploitation(String adresseExploitation) {
         this.adresseExploitation = adresseExploitation;
     }
+
     @Override
-    public String getType() {
+    public String getType() throws SQLException {
         return "agriculteur";
     }
-
-
 }

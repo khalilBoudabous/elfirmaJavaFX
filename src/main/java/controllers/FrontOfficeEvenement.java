@@ -1,24 +1,22 @@
 package controllers;
 
+import entities.Evenement;
+import entities.Produit;
+import entities.Ticket;
+import entities.Utilisateur;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import jfxtras.scene.control.agenda.Agenda;
 import jfxtras.scene.control.agenda.Agenda.AppointmentGroupImpl;
-import entities.Ticket;
-import entities.Evenement;
 import services.EvenementService;
+import services.ProduitService;
 import services.TicketService;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import entities.Utilisateur;
 import services.UtilisateurService;
 
 import java.io.BufferedReader;
@@ -28,80 +26,173 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class FrontOfficeEvenement {
 
+    private static final Logger logger = Logger.getLogger(FrontOfficeEvenement.class.getName());
+
     public static FrontOfficeEvenement instance;
 
-    @FXML
-    private GridPane gridEvents;
-    @FXML
-    private ListView<Ticket> listTickets;
-    @FXML
-    private Agenda calendarAgenda;
-    @FXML
-    private Label lblCurrentMonth;
-    @FXML
-    private Button btnPreviousMonth;
-    @FXML
-    private Button btnNextMonth;
-    @FXML
-    private BorderPane productPane; // Add a placeholder for the product view
+    @FXML private GridPane gridEvents;
+    @FXML private ListView<Ticket> listTickets;
+    @FXML private Agenda calendarAgenda;
+    @FXML private Label lblCurrentMonth;
+    @FXML private Button btnPreviousMonth;
+    @FXML private Button btnNextMonth;
+    @FXML private Button btnTranslateEventsEn;
+    @FXML private Button btnTranslateEventsAr;
+    @FXML private TabPane tabPane;
 
     private LocalDate currentMonth;
-
     private final EvenementService evenementService = new EvenementService();
     private final TicketService ticketService = new TicketService();
+    private final UtilisateurService utilisateurService = new UtilisateurService();
+    private final ProduitService produitService = new ProduitService();
     private List<Evenement> eventsCache;
     private Utilisateur loggedInUser;
+    private ProduitAcheteController produitAcheteController;
 
     @FXML
     public void initialize() {
+        logger.info("Initializing FrontOfficeEvenement");
         instance = this;
         currentMonth = LocalDate.now();
         updateCalendarView();
         setupCalendar();
-        // Ne pas charger les tickets ici
+        initializePurchasedProductsTab();
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab != null && newTab.getText().equals("Produits Achetés")) {
+                logger.info("Produits Achetés tab selected");
+                if (produitAcheteController == null) {
+                    logger.warning("ProduitAcheteController is null, attempting to reinitialize");
+                    initializePurchasedProductsTab();
+                }
+                loadPurchasedProducts();
+            }
+        });
+        tabPane.getTabs().addListener((javafx.collections.ListChangeListener<Tab>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    logger.info("New tabs added, rechecking for Produits Achetés");
+                    initializePurchasedProductsTab();
+                }
+            }
+        });
     }
 
     public void initData(long userId) {
-        UtilisateurService service = new UtilisateurService();
+        logger.info("initData called with userId: " + userId);
         try {
-            loggedInUser = service.getUtilisateurById(userId);
-            loadEvents(); // OK après login
-            loadTickets(); // Charger ici après avoir défini loggedInUser
+            loggedInUser = utilisateurService.getUtilisateurById(userId);
+            if (loggedInUser == null) {
+                logger.severe("Utilisateur non trouvé pour ID: " + userId);
+                showAlert("Erreur", "Utilisateur non trouvé pour ID: " + userId);
+                return;
+            }
+            logger.info("Logged-in user: " + loggedInUser.getNom() + " (ID: " + userId + ")");
+            loadEvents();
+            loadTickets();
+            if (produitAcheteController != null) {
+                produitAcheteController.setUserId(userId);
+            } else {
+                logger.warning("ProduitAcheteController is null during initData, attempting to reinitialize");
+                initializePurchasedProductsTab();
+                if (produitAcheteController != null) {
+                    produitAcheteController.setUserId(userId);
+                }
+            }
         } catch (SQLException e) {
+            logger.severe("SQLException in initData: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de récupérer l'utilisateur.");
+            showAlert("Erreur", "Impossible de récupérer l'utilisateur: " + e.getMessage());
         }
     }
 
+    private void initializePurchasedProductsTab() {
+        logger.info("Initializing Produits Achetés tab");
+        if (tabPane == null) {
+            logger.severe("TabPane is null");
+            showAlert("Erreur", "TabPane non initialisé.");
+            return;
+        }
+        Tab produitAcheteTab = tabPane.getTabs().stream()
+                .filter(tab -> tab.getText() != null && tab.getText().equals("Produits Achetés"))
+                .findFirst()
+                .orElse(null);
+        if (produitAcheteTab == null) {
+            logger.warning("Tab 'Produits Achetés' not found in TabPane. Available tabs: " +
+                    tabPane.getTabs().stream().map(Tab::getText).collect(Collectors.joining(", ")));
+            return;
+        }
+        if (produitAcheteTab.getContent() == null || produitAcheteController == null) {
+            try {
+                logger.info("Attempting to load ProduitAchete.fxml from path: /ProduitAchete.fxml");
+                URL fxmlUrl = getClass().getResource("/ProduitAchete.fxml");
+                if (fxmlUrl == null) {
+                    logger.severe("ProduitAchete.fxml not found in resources");
+                    showAlert("Erreur", "Fichier ProduitAchete.fxml introuvable dans les ressources.");
+                    return;
+                }
+                logger.info("FXML URL resolved: " + fxmlUrl.toString());
+                FXMLLoader loader = new FXMLLoader(fxmlUrl);
+                Parent content = loader.load();
+                produitAcheteController = loader.getController();
+                if (produitAcheteController == null) {
+                    logger.severe("ProduitAcheteController is null after loading FXML");
+                    showAlert("Erreur", "Échec de l'initialisation du contrôleur ProduitAchete.");
+                    return;
+                }
+                produitAcheteTab.setContent(content);
+                logger.info("ProduitAcheteController initialized successfully");
+                if (loggedInUser != null) {
+                    produitAcheteController.setUserId(loggedInUser.getId());
+                }
+            } catch (IOException e) {
+                logger.severe("Failed to load ProduitAchete.fxml: " + e.getMessage());
+                e.printStackTrace();
+                showAlert("Erreur", "Impossible de charger ProduitAchete.fxml: " + e.getMessage());
+            }
+        }
+    }
+
+    private void loadPurchasedProducts() {
+        logger.info("Loading purchased products");
+        if (loggedInUser == null) {
+            logger.warning("No logged-in user");
+            showAlert("Erreur", "Utilisateur non connecté.");
+            return;
+        }
+        if (produitAcheteController == null) {
+            logger.severe("ProduitAcheteController is null");
+            showAlert("Erreur", "Contrôleur ProduitAchete non initialisé.");
+            return;
+        }
+        logger.info("Calling setUserId for user: " + loggedInUser.getId());
+        produitAcheteController.setUserId(loggedInUser.getId());
+    }
+
     private void updateCalendarView() {
-        // Update the displayed month label
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
         lblCurrentMonth.setText(currentMonth.format(formatter));
-
-        // Set the Agenda's displayed range to the current month
         calendarAgenda.setDisplayedLocalDateTime(currentMonth.atStartOfDay());
     }
 
     @FXML
     private void handlePreviousMonth() {
-        currentMonth = currentMonth.minusMonths(1); // Move to the previous month
+        currentMonth = currentMonth.minusMonths(1);
         updateCalendarView();
     }
 
     @FXML
     private void handleNextMonth() {
-        currentMonth = currentMonth.plusMonths(1); // Move to the next month
+        currentMonth = currentMonth.plusMonths(1);
         updateCalendarView();
     }
 
@@ -110,8 +201,10 @@ public class FrontOfficeEvenement {
             List<Evenement> events = evenementService.recuperer();
             eventsCache = events;
             populateEventGrid(events);
+            setupCalendar();
         } catch (SQLException e) {
-            showAlert("Erreur", "Failed to load events: " + e.getMessage());
+            logger.severe("Failed to load events: " + e.getMessage());
+            showAlert("Erreur", "Impossible de charger les événements: " + e.getMessage());
         }
     }
 
@@ -127,8 +220,7 @@ public class FrontOfficeEvenement {
         if (loggedInUser != null) {
             return loggedInUser.getId();
         } else {
-            showAlert("Erreur", "Utilisateur non connecté.");
-            return null;
+            throw new IllegalStateException("Utilisateur non connecté.");
         }
     }
 
@@ -140,7 +232,6 @@ public class FrontOfficeEvenement {
             List<Ticket> allTickets = ticketService.recuperer();
             List<Ticket> userTickets = new ArrayList<>();
 
-            // Filter tickets for the logged-in user
             for (Ticket ticket : allTickets) {
                 if (ticket.getUtilisateur().getId() == userId) {
                     userTickets.add(ticket);
@@ -163,14 +254,12 @@ public class FrontOfficeEvenement {
                         } else {
                             dates = "Dates inconnues";
                         }
-                        // Label for ticket information
                         Label info = new Label("Event: " + ticket.getTitreEvenement() +
                                 " | " + dates + " | Prix: " + ticket.getPrix() + " | Etat de payement: " + ticket.getPayée());
-                        info.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;"); // Inline style for label
+                        info.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
 
-                        // Buttons
                         Button btnCancel = new Button("Annuler");
-                        btnCancel.setStyle("-fx-pref-width: 80px;"); // Fixed width
+                        btnCancel.setStyle("-fx-pref-width: 80px;");
                         btnCancel.setOnAction(e -> {
                             Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
                                     "Voulez-vous vraiment annuler votre participation ?", ButtonType.YES, ButtonType.NO);
@@ -190,7 +279,7 @@ public class FrontOfficeEvenement {
                         });
 
                         Button btnPayer = new Button("Payer");
-                        btnPayer.setStyle("-fx-pref-width: 80px;"); // Fixed width
+                        btnPayer.setStyle("-fx-pref-width: 80px;");
                         btnPayer.setOnAction(e -> {
                             if (ticket.getPayée()) {
                                 new Alert(Alert.AlertType.INFORMATION, "Ce ticket est déjà payé.").showAndWait();
@@ -217,7 +306,7 @@ public class FrontOfficeEvenement {
                         });
 
                         Button btnViewDetails = new Button("View Details");
-                        btnViewDetails.setStyle("-fx-pref-width: 80px;"); // Fixed width
+                        btnViewDetails.setStyle("-fx-pref-width: 80px;");
                         btnViewDetails.setOnAction(e -> {
                             try {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/TicketDetails.fxml"));
@@ -234,19 +323,18 @@ public class FrontOfficeEvenement {
                             }
                         });
 
-                        // Button container with fixed width
                         HBox buttonContainer = new HBox(10, btnCancel, btnPayer, btnViewDetails);
-                        buttonContainer.setStyle("-fx-pref-width: 270px; -fx-alignment: center-right;"); // Fixed width and right alignment
+                        buttonContainer.setStyle("-fx-pref-width: 270px; -fx-alignment: center-right;");
 
-                        // Main container for label and buttons
                         HBox container = new HBox(20, info, buttonContainer);
-                        container.setStyle("-fx-padding: 10px; -fx-alignment: center-left;"); // Padding and alignment
+                        container.setStyle("-fx-padding: 10px; -fx-alignment: center-left;");
                         setGraphic(container);
                     }
                 }
             });
             loadEvents();
         } catch (Exception ex) {
+            logger.severe("Failed to load tickets: " + ex.getMessage());
             new Alert(Alert.AlertType.ERROR, "Erreur de chargement des tickets: " + ex.getMessage()).showAndWait();
         }
     }
@@ -273,6 +361,7 @@ public class FrontOfficeEvenement {
             gridEvents.getChildren().clear();
             populateEventGrid(eventsCache);
         } catch (Exception e) {
+            logger.severe("Failed to translate events: " + e.getMessage());
             showAlert("Erreur", "La traduction des événements a échoué: " + e.getMessage());
         }
     }
@@ -327,6 +416,7 @@ public class FrontOfficeEvenement {
             controller.setEventData(event);
             return card;
         } catch (IOException e) {
+            logger.severe("Failed to create event card: " + e.getMessage());
             e.printStackTrace();
             return new AnchorPane();
         }
@@ -344,35 +434,31 @@ public class FrontOfficeEvenement {
         calendarAgenda.setAllowDragging(false);
         calendarAgenda.setAllowResize(false);
 
-        // Define appointment groups for styling
         AppointmentGroupImpl upcomingGroup = new AppointmentGroupImpl();
-        upcomingGroup.setStyleClass("group0"); // Green for upcoming events
+        upcomingGroup.setStyleClass("group0");
         AppointmentGroupImpl pastGroup = new AppointmentGroupImpl();
-        pastGroup.setStyleClass("group1"); // Grey for past events
+        pastGroup.setStyleClass("group1");
 
         if (eventsCache != null) {
             for (Evenement event : eventsCache) {
                 LocalDateTime start = convertToLocalDateTime(event.getDateDebut());
                 LocalDateTime end = convertToLocalDateTime(event.getDateFin());
                 calendarAgenda.appointments().add(
-                    new Agenda.AppointmentImplLocal()
-                        .withStartLocalDateTime(start)
-                        .withEndLocalDateTime(end)
-                        .withSummary(event.getTitre())
-                        .withDescription(event.getLieu())
-                        .withAppointmentGroup(
-                            start.isBefore(LocalDateTime.now()) ? pastGroup : upcomingGroup
-                        )
+                        new Agenda.AppointmentImplLocal()
+                                .withStartLocalDateTime(start)
+                                .withEndLocalDateTime(end)
+                                .withSummary(event.getTitre())
+                                .withDescription(event.getLieu())
+                                .withAppointmentGroup(
+                                        start.isBefore(LocalDateTime.now()) ? pastGroup : upcomingGroup
+                                )
                 );
             }
         }
     }
 
     private LocalDateTime convertToLocalDateTime(Date date) {
-        // Convert java.sql.Date to java.util.Date if necessary
         java.util.Date utilDate = (date instanceof java.sql.Date) ? new java.util.Date(date.getTime()) : date;
         return utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
-
-
 }

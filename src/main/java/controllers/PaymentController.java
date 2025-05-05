@@ -1,14 +1,15 @@
 package controllers;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-import java.util.regex.Pattern;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.util.regex.Pattern;
 
 public class PaymentController {
 
@@ -38,6 +39,10 @@ public class PaymentController {
 
     @FXML
     public void handleSubmitPayment() {
+        if (payButton == null) {
+            showAlert("Erreur", "Le bouton de paiement n'est pas initialisé.");
+            return;
+        }
         processPayment();
     }
 

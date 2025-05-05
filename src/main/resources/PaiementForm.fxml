@@ -2,16 +2,18 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PaymentController">
-    <Label text="Paiement" styleClass="label title"/>
-    <TextField fx:id="tfCardNumber" styleClass="text-field" promptText="Card Number"/>
-    <TextField fx:id="tfExpiry" styleClass="text-field" promptText="MM/YY"/>
-    <TextField fx:id="tfCVC" styleClass="text-field" promptText="CVC"/>
-    <TextField fx:id="tfAmount" styleClass="text-field" promptText="Amount"/>
-    <Button text="Submit Payment" styleClass="button" onAction="#handleSubmitPayment"/>
-    <stylesheets>
-        <URL value="@/stylesheet.css" />
-    </stylesheets>
+<VBox spacing="20" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PaymentController" style="-fx-padding: 40; -fx-background-color: #F1F8E9; -fx-border-color: #388E3C; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+    <Label text="Paiement" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1B5E20; -fx-padding: 0 0 30 0;" />
+
+    <TextField fx:id="tfCardNumber" promptText="Numéro de carte" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px; -fx-padding: 10;" />
+
+    <TextField fx:id="tfExpiry" promptText="Date d'expiration (MM/YY)" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px; -fx-padding: 10;" />
+
+    <TextField fx:id="tfCVC" promptText="CVV" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px; -fx-padding: 10;" />
+
+    <TextField fx:id="tfAmount" promptText="Montant à payer" style="-fx-border-color: #81C784; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5; -fx-font-size: 16px; -fx-padding: 10;" />
+
+    <Button fx:id="payButton" text="Soumettre le paiement" onAction="#handleSubmitPayment" style="-fx-background-color: #2E7D32; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 12 35; -fx-cursor: hand;" />
 </VBox>

@@ -444,6 +444,7 @@ public class FrontOfficeEvenement {
     public static void refreshEvents() {
         if (instance != null) {
             instance.loadEvents();
+            instance.loadTickets(); // Reload tickets to reflect payment updates
         }
     }
 

@@ -94,4 +94,169 @@
 .grid-pane {
     -fx-padding: 10px;
     -fx-background-color: #ffffff;
+}/* Navbar Styling */
+.nav-bar {
+    -fx-background-color: linear-gradient(to right, #2e7d32, #4caf50); /* Green gradient */
+    -fx-padding: 10px 20px;
+    -fx-alignment: center-left;
+    -fx-spacing: 12px; /* Slightly increased spacing for balance */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow */
+}
+
+.nav-bar .image-view {
+    -fx-effect: none; /* Remove any default effects on the image */
+    -fx-preserve-ratio: true;
+    -fx-smooth: true; /* Ensure smooth image rendering */
+}
+
+.nav-title {
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", sans-serif; /* Modern font */
+}
+
+/* TabPane Styling */
+.tab-pane {
+    -fx-background-color: #f5f5f5; /* Light background */
+    -fx-padding: 10px;
+}
+
+/* Tab Header Background */
+.tab-pane .tab-header-background {
+    -fx-background-color: #ffffff; /* White tab header */
+}
+
+/* Tab Styling */
+.tab-pane .tab {
+    -fx-background-color: #e0e0e0; /* Gray for unselected tabs */
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px 8px 0 0; /* Rounded top corners */
+    -fx-border-radius: 8px 8px 0 0;
+    -fx-border-color: transparent;
+    -fx-transition: all 0.3s ease; /* Smooth transitions */
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #4caf50; /* Green for selected tab */
+    -fx-text-fill: #ffffff;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #333333; /* Dark text for unselected tabs */
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #ffffff; /* White text for selected tab */
+}
+
+/* Tab Content Area */
+.tab-pane .tab-content-area {
+    -fx-background-color: #ffffff; /* White content area */
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0 8px 8px 8px;
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: #4caf50; /* Green theme */
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.button:hover {
+    -fx-background-color: #388e3c; /* Darker green on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+}
+
+/* ScrollPane Styling */
+.scroll-pane {
+    -fx-background: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+/* GridPane Styling */
+.grid-pane {
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+}
+
+/* ListView Styling for Tickets Tab */
+#listTickets {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+    -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
+}
+
+/* Styling for each ticket item (list cell) */
+#listTickets .list-cell {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 6px;
+    -fx-padding: 15px;
+    -fx-margin-bottom: 8px; /* Space between items */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-alignment: center-left;
+}
+
+/* Hover effect for ticket items */
+#listTickets .list-cell:hover {
+    -fx-background-color: #e8f5e9; /* Light green tint */
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* Selected ticket item styling */
+#listTickets .list-cell:selected {
+    -fx-background-color: #c8e6c9; /* Slightly darker green */
+    -fx-text-fill: #2e7d32; /* Dark green text */
+    -fx-font-weight: bold;
+}
+
+/* Empty list cell styling */
+#listTickets .list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-effect: none;
+}
+
+/* Custom scrollbar for ListView */
+#listTickets .scroll-bar:vertical {
+    -fx-pref-width: 8px;
+    -fx-background-color: transparent;
+}
+
+#listTickets .scroll-bar:vertical .thumb {
+    -fx-background-color: #4caf50; /* Green thumb */
+    -fx-background-radius: 4px;
+}
+
+#listTickets .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #388e3c; /* Darker green on hover */
+}
+
+/* Placeholder styling for empty ListView */
+#listTickets:empty .placeholder .label {
+    -fx-text-fill: #888888;
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-font-family: "Segoe UI", sans-serif;
 }

@@ -1,7 +1,6 @@
 package controllers;
 
 import entities.Evenement;
-import entities.Produit;
 import entities.Ticket;
 import entities.Utilisateur;
 import javafx.collections.FXCollections;
@@ -10,7 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jfxtras.scene.control.agenda.Agenda;
 import jfxtras.scene.control.agenda.Agenda.AppointmentGroupImpl;
@@ -30,7 +32,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -247,19 +252,39 @@ public class FrontOfficeEvenement {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        String dates;
+                        // Create labels for ticket information
                         Evenement event = getEventById(ticket.getId_evenement());
-                        if (event != null) {
-                            dates = "Du " + event.getDateDebut() + " au " + event.getDateFin();
-                        } else {
-                            dates = "Dates inconnues";
-                        }
-                        Label info = new Label("Event: " + ticket.getTitreEvenement() +
-                                " | " + dates + " | Prix: " + ticket.getPrix() + " | Etat de payement: " + ticket.getPayée());
-                        info.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+                        String dates = event != null ? "Du " + event.getDateDebut() + " au " + event.getDateFin() : "Dates inconnues";
 
+                        Label titleLabel = new Label(ticket.getTitreEvenement());
+                        titleLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+
+                        Label dateLabel = new Label(dates);
+                        dateLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 12px; -fx-text-fill: #666666;");
+
+                        Label priceLabel = new Label("Prix: " + ticket.getPrix());
+                        priceLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 12px; -fx-text-fill: #666666;");
+
+                        Label paymentLabel = new Label("État: " + (ticket.getPayée() ? "Payé" : "Non payé"));
+                        paymentLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 12px; -fx-text-fill: " +
+                                (ticket.getPayée() ? "#2ecc71" : "#e74c3c") + ";");
+
+                        // Organize info in a VBox
+                        VBox infoVBox = new VBox(5, titleLabel, dateLabel, priceLabel, paymentLabel);
+                        infoVBox.setStyle("-fx-padding: 15px;");
+
+                        // Create buttons with wider widths and modern styling
                         Button btnCancel = new Button("Annuler");
-                        btnCancel.setStyle("-fx-pref-width: 80px;");
+                        btnCancel.setStyle(
+                                "-fx-pref-width: 100px; " +
+                                        "-fx-background-color: #e74c3c; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-family: 'Segoe UI'; " +
+                                        "-fx-font-size: 12px; " +
+                                        "-fx-padding: 8px; " +
+                                        "-fx-background-radius: 5px; " +
+                                        "-fx-cursor: hand;"
+                        );
                         btnCancel.setOnAction(e -> {
                             Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
                                     "Voulez-vous vraiment annuler votre participation ?", ButtonType.YES, ButtonType.NO);
@@ -279,7 +304,16 @@ public class FrontOfficeEvenement {
                         });
 
                         Button btnPayer = new Button("Payer");
-                        btnPayer.setStyle("-fx-pref-width: 80px;");
+                        btnPayer.setStyle(
+                                "-fx-pref-width: 100px; " +
+                                        "-fx-background-color: #3498db; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-family: 'Segoe UI'; " +
+                                        "-fx-font-size: 12px; " +
+                                        "-fx-padding: 8px; " +
+                                        "-fx-background-radius: 5px; " +
+                                        "-fx-cursor: hand;"
+                        );
                         btnPayer.setOnAction(e -> {
                             if (ticket.getPayée()) {
                                 new Alert(Alert.AlertType.INFORMATION, "Ce ticket est déjà payé.").showAndWait();
@@ -305,8 +339,17 @@ public class FrontOfficeEvenement {
                             }
                         });
 
-                        Button btnViewDetails = new Button("View Details");
-                        btnViewDetails.setStyle("-fx-pref-width: 80px;");
+                        Button btnViewDetails = new Button("Détails");
+                        btnViewDetails.setStyle(
+                                "-fx-pref-width: 100px; " +
+                                        "-fx-background-color: #2ecc71; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-family: 'Segoe UI'; " +
+                                        "-fx-font-size: 12px; " +
+                                        "-fx-padding: 8px; " +
+                                        "-fx-background-radius: 5px; " +
+                                        "-fx-cursor: hand;"
+                        );
                         btnViewDetails.setOnAction(e -> {
                             try {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/TicketDetails.fxml"));
@@ -323,11 +366,21 @@ public class FrontOfficeEvenement {
                             }
                         });
 
-                        HBox buttonContainer = new HBox(10, btnCancel, btnPayer, btnViewDetails);
-                        buttonContainer.setStyle("-fx-pref-width: 270px; -fx-alignment: center-right;");
+                        // Organize buttons in a VBox with spacing
+                        VBox buttonVBox = new VBox(10, btnCancel, btnPayer, btnViewDetails);
+                        buttonVBox.setStyle("-fx-padding: 15px; -fx-alignment: center;");
 
-                        HBox container = new HBox(20, info, buttonContainer);
-                        container.setStyle("-fx-padding: 10px; -fx-alignment: center-left;");
+                        // Create main HBox with card-like styling
+                        HBox container = new HBox(20, infoVBox, buttonVBox);
+                        container.setStyle(
+                                "-fx-background-color: #ffffff; " +
+                                        "-fx-border-color: #dddddd; " +
+                                        "-fx-border-radius: 10px; " +
+                                        "-fx-background-radius: 10px; " +
+                                        "-fx-padding: 15px; " +
+                                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+                        );
+
                         setGraphic(container);
                     }
                 }

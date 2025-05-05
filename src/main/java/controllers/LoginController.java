@@ -19,7 +19,11 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
 
+    private static Utilisateur loggedInUser;
 
+    public static Utilisateur getLoggedInUser() {
+        return loggedInUser;
+    }
 
     private final UtilisateurService userService = new UtilisateurService();
        @FXML
@@ -39,10 +43,11 @@ public class LoginController {
                    if (user.isBlocked()) {
                        showError("Compte bloqué, contacter l'administrateur !");
                    } else {
+                       loggedInUser = user; // Set the logged-in user
                        if (user.getType().equalsIgnoreCase("admin")) {
                            redirectToListPage();
                        } else if (user.getType().equalsIgnoreCase("fournisseur")) {
-                           redirectToDbEvenement();
+                           redirectToDbEvenement(user);
                        } else {
                            redirectToProfile(user);
                        }
@@ -63,6 +68,7 @@ public class LoginController {
             Parent root = loader.load();
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.setTitle("User List");
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,6 +90,7 @@ public class LoginController {
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Front Office");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,13 +98,24 @@ public class LoginController {
         }
     }
 
-    private void redirectToDbEvenement() {
+    private void redirectToDbEvenement(Utilisateur user) {
+        if (user == null) {
+            showError("Erreur : utilisateur non connecté.");
+            return;
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dbEvenement.fxml"));
             Parent root = loader.load();
+
+            AfficherEvenement controller = loader.getController();
+
+             controller.getCurrentUserId();// Pass the logged-in user object
+
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("DB Evenement");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

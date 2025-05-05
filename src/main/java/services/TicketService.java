@@ -76,7 +76,6 @@ public class TicketService implements Service<Ticket> {
         }
     }
 
-
     @Override
     public List<Ticket> recuperer() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();

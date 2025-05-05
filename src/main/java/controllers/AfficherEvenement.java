@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import services.EvenementService;
 import services.TicketService;
 import services.UtilisateurService;
+import entities.Utilisateur;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,18 +47,35 @@ public class AfficherEvenement {
     private TableColumn<Ticket, Float> tcPrix;
     @FXML
     private TableView<Ticket> tvTickets;
+    @FXML private TableColumn<Ticket, String> tcNom;
+    @FXML private TableColumn<Ticket, String> tcPrenom;
+    @FXML private TableColumn<Ticket, String> tcEmail;
 
     private final TicketService ticketService = new TicketService();
     private final UtilisateurService utilisateurService = new UtilisateurService();
 
+    private Utilisateur loggedInUser;
 
     @FXML
     void initialize() {
+        // Retrieve the logged-in user from LoginController
+        loggedInUser = LoginController.getLoggedInUser();
+        if (loggedInUser == null) {
+            showAlert("Erreur", "Utilisateur non connecté.");
+            return;
+        }
         configureColumns();
         setupActionColumns();
         configureTicketColumns();
         loadData();
+    }
 
+    public Long getCurrentUserId() {
+        if (loggedInUser == null) {
+            showAlert("Erreur", "Utilisateur non connecté.");
+            return null;
+        }
+        return loggedInUser.getId();
     }
 
     private void configureColumns() {
@@ -143,15 +161,16 @@ public class AfficherEvenement {
 
     private void loadData() {
         try {
-            // Rafraîchir les événements
-            ObservableList<Evenement> data = FXCollections.observableArrayList(es.recuperer());
-            for (Evenement event : data) {
-                event.setUtilisateur(utilisateurService.getUtilisateurById(event.getUtilisateur().getId())); // Fetch Utilisateur
-            }
+            // Filter events by the logged-in Fournisseur
+            ObservableList<Evenement> data = FXCollections.observableArrayList(
+                es.recuperer().stream()
+                    .filter(event -> event.getUtilisateur().getId() == loggedInUser.getId())
+                    .toList()
+            );
             tvEvenements.setItems(data);
 
-            // Rafraîchir les tickets si l'onglet est actif
-            if(tvTickets != null && tvTickets.getScene() != null) {
+            // Load tickets if the tab is active
+            if (tvTickets != null && tvTickets.getScene() != null) {
                 loadTicketsData();
             }
         } catch (SQLException e) {
@@ -210,11 +229,40 @@ public class AfficherEvenement {
                 }
             }
         });
+        tcNom.setCellValueFactory(cellData -> {
+            Utilisateur utilisateur = cellData.getValue().getUtilisateur();
+            return utilisateur != null ? new javafx.beans.property.SimpleStringProperty(utilisateur.getNom()) : null;
+        });
+        tcPrenom.setCellValueFactory(cellData -> {
+            Utilisateur utilisateur = cellData.getValue().getUtilisateur();
+            return utilisateur != null ? new javafx.beans.property.SimpleStringProperty(utilisateur.getPrenom()) : null;
+        });
+        tcEmail.setCellValueFactory(cellData -> {
+            Utilisateur utilisateur = cellData.getValue().getUtilisateur();
+            return utilisateur != null ? new javafx.beans.property.SimpleStringProperty(utilisateur.getEmail()) : null;
+        });
     }
 
     private void loadTicketsData() {
         try {
-            ObservableList<Ticket> ticketData = FXCollections.observableArrayList(ticketService.recuperer());
+            if (loggedInUser == null) {
+                showAlert("Erreur", "Utilisateur non connecté.");
+                return;
+            }
+
+            // Retrieve events created by the current user
+            List<Evenement> userEvents = es.recuperer().stream()
+                .filter(event -> event.getUtilisateur().getId() == loggedInUser.getId())
+                .toList();
+
+            // Retrieve tickets related to those events
+            ObservableList<Ticket> ticketData = FXCollections.observableArrayList(
+                ticketService.recuperer().stream()
+                    .filter(ticket -> userEvents.stream()
+                        .anyMatch(event -> event.getId() == ticket.getId_evenement()))
+                    .toList()
+            );
+
             tvTickets.setItems(ticketData);
         } catch (SQLException e) {
             showAlert("Erreur", "Échec du chargement des tickets : " + e.getMessage());
@@ -263,21 +311,17 @@ public class AfficherEvenement {
     }
 
     private void openAjoutProduitForm() {
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/AjouterProduit.fxml"));
-        Stage stage = new Stage();
-
         try {
-            Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setMaximized(true);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterProduit.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
             stage.setTitle("Ajouter Produit");
+            stage.setMaximized(true);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Refresh data after modification if needed
-            // loadData(); // Uncomment if product data needs to be refreshed
         } catch (IOException e) {
             showAlert("Erreur", "Impossible d'ouvrir le formulaire d'ajout de produit");
         }

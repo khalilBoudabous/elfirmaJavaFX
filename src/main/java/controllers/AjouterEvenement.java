@@ -37,16 +37,17 @@ public class AjouterEvenement implements Initializable {
     @FXML private DatePicker tfDateDebut;
 
     private final UtilisateurService utilisateurService = new UtilisateurService();
-    private Utilisateur user; // Define the user variable
+    private Utilisateur loggedInUser;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tfLieu.getItems().setAll(LieuEvenement.values());
-        try {
-            // Initialize the user variable with a valid Utilisateur instance
-            user = utilisateurService.getUtilisateurById(user.getId()); // Assuming this method exists
-        } catch (Exception e) {
-            afficherAlerte("Erreur", "Impossible de récupérer l'utilisateur actuel : " + e.getMessage());
+        // Retrieve the logged-in user from LoginController
+        loggedInUser = LoginController.getLoggedInUser();
+        if (loggedInUser == null) {
+            afficherAlerte("Erreur", "Utilisateur non connecté.");
+            return;
         }
+        tfLieu.getItems().setAll(LieuEvenement.values());
     }
     
 
@@ -122,10 +123,9 @@ public class AjouterEvenement implements Initializable {
         try {
             int nombrePlaces = validerNombreEntier(tfNombrePlaces.getText(), "nombre de places");
             float prix = validerPrix(tfPrix.getText());
-            String titreEvenement = tfTitre.getText();
 
             Evenement evenement = new Evenement(
-                    titreEvenement,
+                    tfTitre.getText(),
                     tfDescription.getText(),
                     Date.valueOf(tfDateDebut.getValue()),
                     Date.valueOf(tfDateFin.getValue()),
@@ -134,21 +134,16 @@ public class AjouterEvenement implements Initializable {
                     prix
             );
 
-            evenement.setUtilisateur(user); // Set Utilisateur
+            // Set the logged-in user for the event
+            evenement.setUtilisateur(loggedInUser);
 
-            // Ajout de l'événement
+            // Add the event
             es.ajouter(evenement);
-
-            // Vérification de l'ID généré
-            if(evenement.getId() == 0) {
-                throw new SQLException("Échec de la génération de l'ID de l'événement");
-            }
-
 
             afficherAlerte("Succès", "Événement ajouté avec succès !");
             reinitialiserChamps();
 
-            // Fermeture de la fenêtre
+            // Close the window
             Stage stage = (Stage) tfTitre.getScene().getWindow();
             stage.close();
 

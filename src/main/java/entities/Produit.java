@@ -5,9 +5,10 @@ public class Produit {
     private float prix;
     private String image, description, nom_produit, code_promo; // Nouveau champ
     private float discount_percentage; // Nouveau champ
+    private long fournisseurId; // New field for fournisseur ID
 
     // Constructeur complet
-    public Produit(int id, int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage) {
+    public Produit(int id, int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage, long fournisseurId) {
         this.id = id;
         this.quantite = quantite;
         this.categorie_id = categorie_id;
@@ -17,10 +18,11 @@ public class Produit {
         this.nom_produit = nom_produit;
         this.code_promo = code_promo;
         this.discount_percentage = discount_percentage;
+        this.fournisseurId = fournisseurId;
     }
 
     // Constructeur pour ajout
-    public Produit(int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage) {
+    public Produit(int quantite, int categorie_id, float prix, String image, String description, String nom_produit, String code_promo, float discount_percentage, long fournisseurId) {
         this.quantite = quantite;
         this.categorie_id = categorie_id;
         this.prix = prix;
@@ -29,6 +31,7 @@ public class Produit {
         this.nom_produit = nom_produit;
         this.code_promo = code_promo;
         this.discount_percentage = discount_percentage;
+        this.fournisseurId = fournisseurId;
     }
 
     // Constructeur sans code promo (pour compatibilité avec les anciens produits)
@@ -41,6 +44,7 @@ public class Produit {
         this.nom_produit = nom_produit;
         this.code_promo = null;
         this.discount_percentage = 0;
+        this.fournisseurId = 0;
     }
 
     // Getters et setters
@@ -116,6 +120,14 @@ public class Produit {
         this.discount_percentage = discount_percentage;
     }
 
+    public long getFournisseurId() {
+        return fournisseurId;
+    }
+
+    public void setFournisseurId(long fournisseurId) {
+        this.fournisseurId = fournisseurId;
+    }
+
     @Override
     public String toString() {
         return "Produit{" +
@@ -128,6 +140,7 @@ public class Produit {
                 ", nom_produit='" + nom_produit + '\'' +
                 ", code_promo='" + code_promo + '\'' +
                 ", discount_percentage=" + discount_percentage +
+                ", fournisseurId=" + fournisseurId +
                 '}';
     }
 }

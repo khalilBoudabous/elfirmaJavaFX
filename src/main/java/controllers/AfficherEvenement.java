@@ -59,6 +59,10 @@ public class AfficherEvenement {
 
     private Utilisateur loggedInUser;
 
+    public void initData(Utilisateur user) {
+        this.loggedInUser = user; // Initialize the logged-in user
+    }
+
     @FXML
     void initialize() {
         // Retrieve the logged-in user from LoginController
@@ -303,6 +307,9 @@ public class AfficherEvenement {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterProduit.fxml"));
             Parent root = loader.load();
+
+            Ajouterproduit controller = loader.getController();
+            controller.initData(loggedInUser); // Pass the logged-in user
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));

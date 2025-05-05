@@ -17,8 +17,8 @@ public class ProduitService implements Service<Produit> {
 
     @Override
     public void ajouter(Produit produit) throws SQLException {
-        String sql = "INSERT INTO produit (nom_produit, description, image, quantite, prix, categorie_id, code_promo, discount_percentage) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO produit (nom_produit, description, image, quantite, prix, categorie_id, code_promo, discount_percentage, fournisseur_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, produit.getNom_produit());
         ps.setString(2, produit.getDescription());
@@ -28,6 +28,7 @@ public class ProduitService implements Service<Produit> {
         ps.setInt(6, produit.getCategorie_id());
         ps.setString(7, produit.getCode_promo());
         ps.setFloat(8, produit.getDiscount_percentage());
+        ps.setLong(9, produit.getFournisseurId()); // Set fournisseur ID
         ps.executeUpdate();
     }
 
@@ -72,7 +73,8 @@ public class ProduitService implements Service<Produit> {
                     rs.getString("description"),
                     rs.getString("nom_produit"),
                     rs.getString("code_promo"),
-                    rs.getFloat("discount_percentage")
+                    rs.getFloat("discount_percentage"),
+                    rs.getLong("fournisseur_id") // Retrieve fournisseur ID
             );
             produits.add(p);
         }
@@ -95,7 +97,8 @@ public class ProduitService implements Service<Produit> {
                     rs.getString("description"),
                     rs.getString("nom_produit"),
                     rs.getString("code_promo"),
-                    rs.getFloat("discount_percentage")
+                    rs.getFloat("discount_percentage"),
+                    rs.getLong("fournisseur_id") // Add fournisseur_id to match the constructor
             );
         }
         return null;
@@ -116,7 +119,8 @@ public class ProduitService implements Service<Produit> {
                         rs.getString("description"),
                         rs.getString("nom_produit"),
                         rs.getString("code_promo"),
-                        rs.getFloat("discount_percentage")
+                        rs.getFloat("discount_percentage"),
+                        rs.getLong("fournisseur_id") // Add fournisseur_id to match the constructor
                 );
             }
         }

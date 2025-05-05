@@ -86,7 +86,7 @@ public class Affichierproduit {
         chargerProduits();
     }
 
-    private void chargerProduits() {
+    public void chargerProduits() {
         try {
             List<Produit> produits = produitService.recuperer();
             filteredProduits = filterProduits(produits);

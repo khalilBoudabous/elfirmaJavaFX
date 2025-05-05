@@ -109,8 +109,7 @@ public class LoginController {
             Parent root = loader.load();
 
             AfficherEvenement controller = loader.getController();
-
-             controller.getCurrentUserId();// Pass the logged-in user object
+            controller.initData(user); // Pass the logged-in user
 
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));

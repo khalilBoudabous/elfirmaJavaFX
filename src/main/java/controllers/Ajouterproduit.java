@@ -2,28 +2,24 @@ package controllers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Categorie;
 import entities.Produit;
+import entities.Utilisateur;
 import io.github.cdimascio.dotenv.Dotenv;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import services.ProduitService;
+import okhttp3.*;
 import services.CategorieService;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
+import services.ProduitService;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,6 +76,12 @@ public class Ajouterproduit {
     // Retry configuration for OpenAI API
     private static final int MAX_RETRIES = 3;
     private static final long INITIAL_RETRY_DELAY_MS = 5000; // 5 seconds initial delay
+
+    private Utilisateur loggedInUser; // Add a field for the logged-in user
+
+    public void initData(Utilisateur user) {
+        this.loggedInUser = user; // Initialize the logged-in user
+    }
 
     public Ajouterproduit() {
         // Load environment variables
@@ -377,6 +379,11 @@ public class Ajouterproduit {
                 return;
             }
 
+            if (loggedInUser == null) {
+                showError("Utilisateur non connecté. Veuillez vous reconnecter.");
+                return;
+            }
+
             // Upload image to Cloudinary
             String imageUrl;
             try {
@@ -392,7 +399,7 @@ public class Ajouterproduit {
             }
 
             // Créer le produit et l'ajouter
-            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imageUrl, description, nomProduit, codePromo, discountPercentage);
+            Produit produit = new Produit(quantite, selectedCategorie.getId(), prix, imageUrl, description, nomProduit, codePromo, discountPercentage, loggedInUser.getId());
             produitService.ajouter(produit);
 
             showInfo("Produit ajouté avec succès!");
@@ -439,16 +446,20 @@ public class Ajouterproduit {
 
     private void redirectToProductList() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Affichierproduitagriculteur.fxml"));
-            Parent root = loader.load();
+            // Get the current stage and its controller
             Stage stage = (Stage) nomProduitField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Liste des Produits");
-            stage.setMaximized(true);
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dbEvenement.fxml"));
+            Parent root = loader.load();
+
+            Affichierproduit controller = loader.getController();
+            //controller.initData(loggedInUser); // Pass the logged-in user
+            controller.chargerProduits(); // Refresh the product list
+
+            // Update the scene with the refreshed data
+            stage.getScene().setRoot(root);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erreur lors du chargement de la page AffichierProduit", e);
-            showError("Erreur de redirection : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur lors de la mise à jour de la liste des produits", e);
+            showError("Erreur de mise à jour : " + e.getMessage());
         }
     }
 

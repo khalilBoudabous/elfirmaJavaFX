@@ -87,7 +87,7 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#AjouterEvenement" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Ajouter évenement" textFill="WHITE" />
                   <!-- New button to generate PDF of participant details -->
-                  <Button mnemonicParsing="false" onAction="#generatePDF" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Générer PDF" textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#genererPDF" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Générer PDF" textFill="WHITE" />
                   <Button mnemonicParsing="false" onAction="#AjouterProduit" prefHeight="44.0" prefWidth="186.0" style="-fx-background-color: #74A063;" stylesheets="@stylesheet.css" text="Ajouter Produit" textFill="WHITE" />
                </children>
             </VBox>

@@ -1,7 +1,12 @@
 package controllers;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import entities.Evenement;
 import entities.Ticket;
+import entities.Utilisateur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,19 +15,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import services.EvenementService;
 import services.TicketService;
 import services.UtilisateurService;
-import entities.Utilisateur;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -296,20 +299,6 @@ public class AfficherEvenement {
         }
         return true;
     }
-
-    @FXML
-    public void generatePDF(ActionEvent event) {
-        try {
-            List<Ticket> tickets = ticketService.recuperer();
-            // Specify output PDF file path; change if needed.
-            String outputPath = "c:\\Users\\Oumayma\\Downloads\\participants.pdf";
-            utils.PDFGenerator.generateTicketsPDF(tickets, outputPath);
-            showAlert("Succès", "PDF généré avec succès à : " + outputPath);
-        } catch (Exception e) {
-            showAlert("Erreur", "Échec de la génération du PDF: " + e.getMessage());
-        }
-    }
-
     private void openAjoutProduitForm() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterProduit.fxml"));
@@ -329,5 +318,76 @@ public class AfficherEvenement {
 
     public void AjouterProduit(ActionEvent actionEvent) {
         openAjoutProduitForm();
+    }
+
+    @FXML
+    private void genererPDF(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(tvEvenements.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                Document document = new Document();
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+                document.open();
+
+                // Add title
+                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+                Paragraph title = new Paragraph("Liste des Tickets", titleFont);
+                title.setAlignment(Element.ALIGN_CENTER);
+                title.setSpacingAfter(20);
+                document.add(title);
+
+                // Create table
+                PdfPTable table = new PdfPTable(5); // 5 columns (ID removed)
+                table.setWidthPercentage(100);
+                table.setSpacingBefore(10f);
+                table.setSpacingAfter(10f);
+
+                // Add table headers
+                String[] headers = {"Titre Événement", "Prix", "Payé", "Nom Utilisateur", "Email Utilisateur"};
+                for (String header : headers) {
+                    PdfPCell cell = new PdfPCell(new Phrase(header));
+                    cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+
+                // Add ticket data
+                List<Ticket> tickets = tvTickets.getItems();
+                for (Ticket ticket : tickets) {
+                    table.addCell(ticket.getTitreEvenement());
+                    table.addCell(String.format("%.2f", ticket.getPrix()));
+                    table.addCell(ticket.getPayée() ? "Oui" : "Non");
+
+                    Utilisateur utilisateur = ticket.getUtilisateur();
+                    if (utilisateur != null) {
+                        table.addCell(utilisateur.getNom());
+                        table.addCell(utilisateur.getEmail());
+                    } else {
+                        table.addCell("N/A");
+                        table.addCell("N/A");
+                    }
+                }
+
+                document.add(table);
+                document.close();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PDF Généré");
+                alert.setHeaderText(null);
+                alert.setContentText("La liste des tickets a été exportée avec succès!");
+                alert.showAndWait();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Une erreur s'est produite lors de la génération du PDF.");
+                alert.showAndWait();
+            }
+        }
     }
 }
